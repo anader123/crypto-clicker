@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 import axios from 'axios'; 
+import { connect } from 'react-redux'; 
 
-export default class Home extends Component {
+// Action Builder
+import {setInitialState} from '../../redux/reducer'; 
+
+class Home extends Component {
     constructor() {
         super(); 
 
@@ -9,7 +13,6 @@ export default class Home extends Component {
             email: '', 
             password: '',
             display: true,
-            click_balance: 0, 
             // error: false,
             // errorMessage: ''
         }
@@ -22,15 +25,15 @@ export default class Home extends Component {
         })
     };
 
-    login = () => {
-        const { email, password } = this.state; 
-        axios.post('/auth/login', {email, password})
+    register = () => {
+        const { email, password } = this.state;
+        console.log('frontend send')
+        axios.post('/auth/register', {email, password})
             .then(res => {
-                this.props.history.push('/dashboard');
-                // TODO:
-                // will need to set the data to something 
-                // might need to have state in App.js
+                this.props.setInitialState(res.data);
+                this.props.history.push('/dashboard'); 
             })
+            .catch(err => console.log(err))
             // .catch(err => {
             //     this.setState({
             //         error: true, 
@@ -39,15 +42,14 @@ export default class Home extends Component {
             // })
     };
 
-    register = () => {
-        const { email, password } = this.state;
-        axios.post('/auth/register', {email, password})
+    login = () => {
+        const { email, password } = this.state; 
+        axios.post('/auth/login', {email, password})
             .then(res => {
-                this.props.history.push('/dashboard'); 
-                // TODO:
-                // will need to set the data to something 
-                // might need to have state in App.js
+                this.props.setInitialState(res.data);
+                this.props.history.push('/dashboard');
             })
+            .catch(err => console.log(err))
             // .catch(err => {
             //     this.setState({
             //         error: true, 
@@ -93,7 +95,7 @@ export default class Home extends Component {
                                 name='password'
                                 value={this.state.password}
                                 onChange={this.handleChange}/>
-                        <button className='button' onClick={this.login}>Register</button>
+                        <button className='button' onClick={this.register}>Register</button>
                         <button className='button' onClick={this.changeDisplay}>Cancel</button>
                     </div>)
                 }
@@ -101,3 +103,9 @@ export default class Home extends Component {
         )
     }
 };
+
+function mapStateToProps(state) {
+    return state; 
+};
+
+export default connect(mapStateToProps, {setInitialState})(Home); 

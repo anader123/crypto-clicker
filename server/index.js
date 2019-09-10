@@ -39,10 +39,10 @@ massive(CONNECTION_STRING)
     .catch(err => console.log(err));
 
 // Auth Endpoints
-app.post('/auth/register', authCtrl.register);
 app.post('/auth/login', authCtrl.login);
-// app.delete('/auth/logout', authCtrl.logout);
-// app.delete('/auth/logout', authCtrl.delete);
+app.post('/auth/register', authCtrl.register);
+app.post('/auth/logout', authCtrl.logout);
+// app.delete('/auth/delete/:user_id', authCtrl.deleteUser);
 
 // Server Listening
 app.listen(SERVER_PORT, () => console.log(`Server is running on ${SERVER_PORT}`));

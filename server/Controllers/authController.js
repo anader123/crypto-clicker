@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const register = async (req, res) => {
     const { email, password } = req.body; 
     const db = req.app.get('db'); 
+    console.log('hit')
     const foundUser = await db.find_user([email]); 
 
     if(foundUser[0]) {
@@ -22,14 +23,17 @@ const register = async (req, res) => {
     // Deleting Unhashed Password 
     delete newUser[0].password;
 
-    // Making New Object for Click Balance
-    const accountBalance = {...newUserBalance[0], user_id: newUser[0].user_id, email: newUser[0].email};
-
     // Set Values to the Session 
     req.session.user = newUser[0];
     req.session.click_balance = newUserBalance[0].click_balance;
 
-    res.status(200).send(accountBalance)
+    const accountInfo = {
+        user_id: newUser[0].user_id, 
+        email: newUser[0].email, 
+        click_balance: newUserBalance[0].click_balance
+    };
+
+    res.status(200).send(accountInfo)
 };
 
 const login = async (req, res) => {
@@ -51,8 +55,8 @@ const login = async (req, res) => {
 
         const accountInfo = {
             user_id: foundUser[0].user_id, 
-            user_email: foundUser[0].email, 
-            click_balance: userBalance.click_balance
+            email: foundUser[0].email, 
+            click_balance: userBalance[0].click_balance
         };
 
         res.status(200).send(accountInfo); 
@@ -62,11 +66,23 @@ const login = async (req, res) => {
 };
 
 const logout = async (req, res) => {
-
+    const click_balance = req.body.click_balance; 
+    const user_id = req.session.user.user_id; 
+    const db = req.app.get('db'); 
+    db.update_balance([click_balance, user_id])
+        .then(() => {
+            req.session.destroy();
+            res.status(200).send('User logged out')
+        })
 };
 
 const deleteUser = async (req, res) => {
-
+    const user_id = req.session.user.user_id; 
+    const db = req.app.get('db'); 
+    db.deleteUser([user_id])
+        .then(() => {
+            res.status(200).send('Account has been deleted')
+        })
 };
 
 

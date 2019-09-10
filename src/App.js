@@ -5,23 +5,23 @@ import router from './utils/router';
 import React, { Component } from 'react'
 
 class App extends Component {
-    constructor() {
-      super(); 
+//     constructor() {
+//       super(); 
 
-      this.state = {
-        click_balance: 0, 
-        email: ''
-      }
-    };
+//       this.state = {
+//         click_balance: 0, 
+//         email: ''
+//       }
+//     };
 
-// TODO: 
-// will need to figure out a way to pass this down into routes
-updateUserInfo = (click_balance, email) => {
-    this.setState({
-      click_balance, 
-      email
-    })
-  }
+// // TODO: 
+// // will need to figure out a way to pass this down into routes
+// updateUserInfo = (click_balance, email) => {
+//     this.setState({
+//       click_balance, 
+//       email
+//     })
+//   }
     render() {
       return (
         <div>

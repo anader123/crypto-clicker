@@ -1,4 +1,4 @@
-DELETE u.*, b.*
+DELETE u.*, b.* 
 FROM users u 
-JOIN balances b ON u.user_id = b.user_id
+LEFT JOIN balances b ON b.user_id = u.user_id 
 WHERE u.user_id = $1; 

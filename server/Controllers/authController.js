@@ -77,12 +77,21 @@ const logout = async (req, res) => {
 };
 
 const deleteUser = async (req, res) => {
-    const user_id = req.session.user.user_id; 
+    const user_id = req.params; 
+    const { password } = req.body;
+    const authedPassword = bcrypt.compareSync(password, foundUser[0].password); 
     const db = req.app.get('db'); 
-    db.deleteUser([user_id])
+    // FIXME: 
+    // Not liking the sql query I made. 
+    // Also have the user submit their password in the future. 
+    if(authedPassword) {
+        db.delete_user([user_id])
         .then(() => {
+            req.session.destroy();
             res.status(200).send('Account has been deleted')
-        })
+        })} else {
+            res.status(401).send('Invalid credentials, please try again');
+        }
 };
 
 

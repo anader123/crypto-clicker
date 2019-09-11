@@ -16,15 +16,24 @@ class Dashboard extends Component {
 
     updateClicks = () => {
         axios.post()
-    }
+    };
+
+    deletePage = () => {
+        this.props.history.push('/delete');         
+    };
 
     render() {
         return (
             <div>
-                <h3>{this.props.click_balance}</h3>
+                <img alt='robo pic' src={`https://robohash.org/${this.props.email}.png`}></img>
                 <h3>{this.props.email}</h3>
+                <h3>{this.props.click_balance}</h3>
                 <button onClick={() => this.props.incrementClick(this.props.click_balance)}>Click Me</button>
+                {/* min number of clicks should be 50 to exchange */}
+                {/* maybe make it it's own component? */}
+                <button>Exchange Clicks</button>
                 <button onClick={this.logout}>Logout</button>
+                <button onClick={this.deletePage}>Delete Account</button>
             </div>
         )
     }

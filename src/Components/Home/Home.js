@@ -8,7 +8,8 @@ import {setInitialState} from '../../redux/reducer';
 class Home extends Component {
     constructor() {
         super(); 
-
+        //TODO: 
+        // Do I need to clear state of password in the .then? 
         this.state = {
             email: '', 
             password: '',

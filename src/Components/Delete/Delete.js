@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux'; 
+import './Delete.css';
 
 class Delete extends Component {
     constructor() {
@@ -46,15 +47,19 @@ class Delete extends Component {
 
     render() {
         return (
-            <div>
-                <h3>Are you sure that you want to delete your account?</h3>
+            <div className='delete-page-container'>
+                <h3 className='delete-page-title'>Are you sure that you want to delete your account?</h3>
                 <p>Please enter your password below to confirm that you would like to delete your account.</p>
-                <input type='password'
+                <input className='input-box'
+                        placeholder='Enter your password'
+                        type='password'
                         name='password'
                         value={this.state.password}
                         onChange={this.handleChange}/> 
-                <button className='btn' onClick={this.deleteAccount}>Delete Account</button>
-                <button className='btn' onClick={this.cancelDelete}>Cancel</button>
+                <div className='delete-page-buttons'>
+                    <button className='btn red-btn' onClick={this.deleteAccount}>Delete Account</button>
+                    <span className='span' onClick={this.cancelDelete}>Cancel</span>
+                </div>
             </div>
         )
     }

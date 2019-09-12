@@ -83,41 +83,49 @@ class Home extends Component {
                 {
                     this.state.display ?
                     (<div className='login-container'>
-                        <h3>Login</h3>
+                        <h3 className='login-title'>Login</h3>
                         <div>
                         <label className="login-label">E-Mail Address</label>
                         </div>
-                        <input  className='login-input'
+                        <input  className='input-box'
+                                placeholder='Enter your email'
                                 type='email'
                                 name='email'
                                 value={this.state.email}
                                 onChange={this.handleChange}/>
                         <label className="login-label">Password</label>
-                        <input  className='login-input'
+                        <input  className='input-box'
+                                placeholder='Enter your password'
                                 type='password'
                                 name='password'
                                 value={this.state.password}
                                 onChange={this.handleChange}/>
-                            <button className='btn login-btn' onClick={this.login}>Login</button>
-                            <span className='login-span' onClick={this.changeDisplay}>Register</span>
+                            <div className='login-button-container'>
+                                <button className='btn login-btn' onClick={this.login}>Login</button>
+                                <span className='login-span' onClick={this.changeDisplay}>Create an account</span>
+                            </div>
                     </div>)
                     :
                     (<div className='login-container'>
-                        <h3>Sign Up</h3>
+                        <h3 className='login-title'>Sign Up</h3>
                         <label className="login-label">E-Mail Address</label>
-                        <input  className='login-input'
+                        <input  className='input-box'
+                                placeholder='Enter your email'
                                 type='email'
                                 name='email'
                                 value={this.state.email}
                                 onChange={this.handleChange}/>
                         <label className="login-label">Password</label>
-                        <input  className='login-input'
+                        <input  className='input-box'
+                                placeholder='Enter your password'
                                 type='password'
                                 name='password'
                                 value={this.state.password}
                                 onChange={this.handleChange}/>
-                            <button className='btn login-btn' onClick={this.register}>Register</button>
-                            <span className='login-span' onClick={this.changeDisplay}>Cancel</span>
+                            <div className='login-button-container'>
+                                <button className='btn login-btn' onClick={this.register}>Register</button>
+                                <span className='login-span' onClick={this.changeDisplay}>Cancel</span>
+                            </div>
                     </div>)
                 }
             </div>

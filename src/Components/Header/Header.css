@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto+Condensed&display=swap');
+
+.header-container {
+    background-color: #000000; 
+    font-family: "Roboto", sans-serif;
+    /* font-family: 'Roboto Condensed'; */
+    height: 15vh;
+    font-size: 3em;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.eth-logo {
+    height: 1.2em;
+    width: auto;
+    background-color: white;
+    border-radius: 50%; 
+    border: gray, solid, 3px;
+    padding-top: .15em;
+    padding-bottom: .15em;
+    padding-right: .42em;
+    padding-left: .42em;
+    margin-left: .3em;
+}

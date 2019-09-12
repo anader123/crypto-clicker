@@ -1,1 +1,14 @@
+.App {
+    font-family: "Roboto", sans-serif;
+}
 
+.btn {
+    font-family: "Roboto", sans-serif;
+    padding: 13px;
+    font-size: .9em;
+    border-radius: 12px;
+}
+
+.btn:hover {
+    cursor: pointer;
+}

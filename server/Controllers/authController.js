@@ -3,7 +3,6 @@ const bcrypt = require('bcryptjs');
 const register = async (req, res) => {
     const { email, password } = req.body; 
     const db = req.app.get('db'); 
-    console.log('hit')
     const foundUser = await db.find_user([email]); 
 
     if(foundUser[0]) {
@@ -67,6 +66,8 @@ const login = async (req, res) => {
 
 const logout = async (req, res) => {
     const click_balance = req.body.click_balance; 
+    // TODO: 
+    // Might need to have the balance update from the session
     const user_id = req.session.user.user_id; 
     const db = req.app.get('db'); 
     db.update_balance([click_balance, user_id])
@@ -77,15 +78,15 @@ const logout = async (req, res) => {
 };
 
 const deleteUser = async (req, res) => {
-    const user_id = req.params; 
-    const { password } = req.body;
-    const authedPassword = bcrypt.compareSync(password, foundUser[0].password); 
+    const user_id = +req.params.user_id; 
+    const { email, password } = req.body;
     const db = req.app.get('db'); 
-    // FIXME: 
-    // Not liking the sql query I made. 
-    // Also have the user submit their password in the future. 
+    const foundUser = await db.find_user([email]); 
+    const authedPassword = bcrypt.compareSync(password, foundUser[0].password); 
+
     if(authedPassword) {
-        db.delete_user([user_id])
+        const db = req.app.get('db'); 
+        db.delete_user([user_id, user_id])
         .then(() => {
             req.session.destroy();
             res.status(200).send('Account has been deleted')
@@ -93,6 +94,18 @@ const deleteUser = async (req, res) => {
             res.status(401).send('Invalid credentials, please try again');
         }
 };
+
+// TODO: Keeping this here to show that I had a delete
+// const deleteUser = async (req, res) => {
+//     const user_id = +req.params.user_id; 
+//     const db = req.app.get('db'); 
+
+// db.delete_user([user_id, user_id])
+// .then(() => {
+//     req.session.destroy();
+//     res.status(200).send('Account has been deleted')
+//     })
+// };
 
 
 module.exports = {

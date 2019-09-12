@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios'; 
 import { connect } from 'react-redux'; 
+import './Home.css';
 
 // Action Builder
 import {setInitialState} from '../../redux/reducer'; 
@@ -19,6 +20,9 @@ class Home extends Component {
         }
     };
 
+    componentDidMount() {
+
+    };
 
     handleChange = (event) => {
         this.setState({
@@ -28,8 +32,11 @@ class Home extends Component {
 
     register = () => {
         const { email, password } = this.state;
-        console.log('frontend send')
-        axios.post('/auth/register', {email, password})
+        if(email.length < 6 || !email.includes('@') || password.length < 5) {
+            console.log('please make sure that you are entering in an email')
+        }
+        else {
+            axios.post('/auth/register', {email, password})
             .then(res => {
                 this.props.setInitialState(res.data);
                 this.props.history.push('/dashboard'); 
@@ -41,6 +48,7 @@ class Home extends Component {
             //         errorMessage: err.res.data
             //     })
             // })
+        }
     };
 
     login = () => {
@@ -75,29 +83,41 @@ class Home extends Component {
                 {
                     this.state.display ?
                     (<div className='login-container'>
-                        <input type='email'
+                        <h3>Login</h3>
+                        <div>
+                        <label className="login-label">E-Mail Address</label>
+                        </div>
+                        <input  className='login-input'
+                                type='email'
                                 name='email'
                                 value={this.state.email}
                                 onChange={this.handleChange}/>
-                        <input type='password'
+                        <label className="login-label">Password</label>
+                        <input  className='login-input'
+                                type='password'
                                 name='password'
                                 value={this.state.password}
                                 onChange={this.handleChange}/>
-                        <button className='button' onClick={this.login}>Login</button>
-                        <button className='button' onClick={this.changeDisplay}>Register</button>
+                            <button className='btn login-btn' onClick={this.login}>Login</button>
+                            <span className='login-span' onClick={this.changeDisplay}>Register</span>
                     </div>)
                     :
-                    (<div className='register-contaier'>
-                        <input type='email'
+                    (<div className='login-container'>
+                        <h3>Sign Up</h3>
+                        <label className="login-label">E-Mail Address</label>
+                        <input  className='login-input'
+                                type='email'
                                 name='email'
                                 value={this.state.email}
                                 onChange={this.handleChange}/>
-                        <input type='password'
+                        <label className="login-label">Password</label>
+                        <input  className='login-input'
+                                type='password'
                                 name='password'
                                 value={this.state.password}
                                 onChange={this.handleChange}/>
-                        <button className='button' onClick={this.register}>Register</button>
-                        <button className='button' onClick={this.changeDisplay}>Cancel</button>
+                            <button className='btn login-btn' onClick={this.register}>Register</button>
+                            <span className='login-span' onClick={this.changeDisplay}>Cancel</span>
                     </div>)
                 }
             </div>

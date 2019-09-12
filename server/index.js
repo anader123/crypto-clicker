@@ -42,9 +42,13 @@ massive(CONNECTION_STRING)
 app.post('/auth/login', authCtrl.login);
 app.post('/auth/register', authCtrl.register);
 app.post('/auth/logout', authCtrl.logout);
-app.delete('/auth/delete/:user_id', authCtrl.deleteUser);
+app.post('/auth/delete/:user_id', authCtrl.deleteUser);
+
+// TODO: Keeping this here to show that I had a delete
+// app.delete('/auth/delete/:user_id', authCtrl.deleteUser);
 
 app.post('/api/session_balance', balCtrl.updateSessionBalance)
+app.post('/api/exchanage', balCtrl.exchangeClicks)
 
 // Server Listening
 app.listen(SERVER_PORT, () => console.log(`Server is running on ${SERVER_PORT}`));

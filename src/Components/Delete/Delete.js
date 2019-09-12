@@ -13,7 +13,8 @@ class Delete extends Component {
     };
 
     deleteAccount = () => {
-        axios.delete(`/auth/delete/${this.props.user_id}`, {password: this.state.password})
+        console.log(this.state.password, this.props.email)
+        axios.post(`/auth/delete/${this.props.user_id}`, {password: this.state.password, email: this.props.email})
             .then(() => {
                 this.props.history.push('/');
                 this.setState({
@@ -21,6 +22,17 @@ class Delete extends Component {
                 })
             })
     };
+
+    // TODO: Keeping this here to show that I had a delete
+    // deleteAccount = () => {
+    //     axios.delete(`/auth/delete/${this.props.user_id}`)
+    //         .then(() => {
+    //             this.props.history.push('/');
+    //             this.setState({
+    //                 password: '' 
+    //             })
+    //         })
+    // };
 
     cancelDelete = () => {
         this.props.history.push('/dashboard');
@@ -40,9 +52,9 @@ class Delete extends Component {
                 <input type='password'
                         name='password'
                         value={this.state.password}
-                        onChnage={this.handleChange}/> 
-                <button onClick={this.deleteAccount}>Delete Account</button>
-                <button onClick={this.cancelDelete}>Cancel</button>
+                        onChange={this.handleChange}/> 
+                <button className='btn' onClick={this.deleteAccount}>Delete Account</button>
+                <button className='btn' onClick={this.cancelDelete}>Cancel</button>
             </div>
         )
     }

@@ -87,7 +87,7 @@ class Dashboard extends Component {
                     <div>
                         <h3 className='network-container'>Network: Ropsten</h3>
                         {/* TODO: change link to opensea and have their logo */}
-                            {/* <img className='kitty-profile-pic' alt='kitty pic' src={`https://img.cryptokitties.co/0x06012c8cf97bead5deae237070f9587f8e7a266d/${user_id}.png`}></img> */}
+                            {/* <div className='kitty-profile-pic' style={{backgroundImage: `https://img.cryptokitties.co/0x06012c8cf97bead5deae237070f9587f8e7a266d/${user_id}.png`}}></div> */}
                         <h3>Email: {email}</h3>
                     </div>
                     <div className='dashboard-buttons'>

@@ -47,10 +47,22 @@
     width: 18vh;
     height: auto;
     margin-top: 3em;
-    background-color: white;
+    background-color: rgb(255, 255, 255);
     padding-top: 5em;
     padding-bottom: 5em;
     padding-left: 8em;
     padding-right: 8em;
     border-radius: 50%;
+    transition: 400ms;
+}
+
+.eth-click:hover {
+    background-color: rgb(212, 205, 205);
+    cursor: pointer;
+    width: 19vh;
+    height: auto;
+    padding-top: 5.5em;
+    padding-bottom: 5.5em;
+    padding-left: 8.8em;
+    padding-right: 8.8em;
 }

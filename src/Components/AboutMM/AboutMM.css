@@ -1,4 +1,5 @@
 .about-page-container {
+    min-height: 73vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -17,4 +18,10 @@
     background-color: #F8921E;
     color: white;
     border-radius: 2px;
+}
+
+.mm-video {
+    height: 30vh;
+    width: 30vw; 
+    margin: 2em;
 }

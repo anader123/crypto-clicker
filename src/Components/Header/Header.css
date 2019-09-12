@@ -2,25 +2,37 @@
 
 .header-container {
     background-color: #000000; 
-    font-family: "Roboto", sans-serif;
-    /* font-family: 'Roboto Condensed'; */
-    height: 15vh;
-    font-size: 3em;
-    font-weight: bold;
+    height: 18vh;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.eth-logo {
-    height: 1.2em;
+.header-container h1 {
+    font-size: 3em;
+    font-weight: 200;
+    font-family: "Roboto", sans-serif;
+}
+
+.header-container h1 span {
+    font-weight: bold;
+    font-family: "Roboto", sans-serif;
+}
+
+.click-icon {
+    height: 3.2em;
+    margin-left: .5em;
+}
+
+/* .eth-logo {
+    height: 5em;
     width: auto;
     background-color: white;
     border-radius: 50%; 
     border: gray, solid, 3px;
     padding-top: .15em;
-    padding-bottom: .15em;
-    padding-right: .42em;
-    padding-left: .42em;
-    margin-left: .3em;
-}
+    padding-bottom: .3em;
+    padding-right: 1.2em;
+    padding-left: 1.2em;
+    margin-left: .8em;
+} */

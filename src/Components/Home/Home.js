@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios'; 
 import { connect } from 'react-redux'; 
 import './Home.css';
+import ethLogo from '../../img/ethlogo.png';
 
 // Action Builder
 import {setInitialState} from '../../redux/reducer'; 
@@ -85,6 +86,7 @@ class Home extends Component {
                     (<div className='login-container'>
                         <h3 className='login-title'>Login</h3>
                         <div>
+                            {/* <img className='eth-logo' src={ethLogo} alt='eth logo'/> */}
                         <label className="login-label">E-Mail Address</label>
                         </div>
                         <input  className='input-box'
@@ -100,14 +102,13 @@ class Home extends Component {
                                 name='password'
                                 value={this.state.password}
                                 onChange={this.handleChange}/>
-                            <div className='login-button-container'>
                                 <button className='btn login-btn' onClick={this.login}>Login</button>
                                 <span className='login-span' onClick={this.changeDisplay}>Create an account</span>
-                            </div>
                     </div>)
                     :
                     (<div className='login-container'>
                         <h3 className='login-title'>Sign Up</h3>
+                            {/* <img className='eth-logo' src={ethLogo} alt='eth logo'/> */}
                         <label className="login-label">E-Mail Address</label>
                         <input  className='input-box'
                                 placeholder='Enter your email'
@@ -122,10 +123,8 @@ class Home extends Component {
                                 name='password'
                                 value={this.state.password}
                                 onChange={this.handleChange}/>
-                            <div className='login-button-container'>
                                 <button className='btn login-btn' onClick={this.register}>Register</button>
                                 <span className='login-span' onClick={this.changeDisplay}>Cancel</span>
-                            </div>
                     </div>)
                 }
             </div>

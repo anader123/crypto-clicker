@@ -21,6 +21,7 @@
     border: none;
     outline: none;
     transform: 400ms;
+    /* box-shadow: 0 .3em .9em 0 rgba(116, 114, 114, 0.4);  */
 }
 
 .btn:hover {

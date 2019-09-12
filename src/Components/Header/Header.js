@@ -1,12 +1,14 @@
 import React from 'react';
 import './Header.css';
-import ethLogo from '../../img/ethlogo.png';
+import clickIcon from './../../img/click-icon.svg';
+// import ethLogo from '../../img/ethlogo.png';
 
 export default function Header() {
     return (
         <div className='header-container'>
-            <h1>CryptoClicker</h1>
-            <img className='eth-logo' src={ethLogo} alt='eth logo'/>
+            <h1>Crypto<span>Clicker</span></h1>
+            <img className='click-icon' src={clickIcon} alt='click icon'/>
+            {/* <img className='eth-logo' src={ethLogo} alt='eth logo'/> */}
         </div>
     )
 }

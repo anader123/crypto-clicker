@@ -1,22 +1,22 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto+Condensed&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Source+Code+Pro&display=swap');
 
 .App {
     min-height: 100vh;
-    font-family: 'Roboto Condensed', sans-serif;
-    /* font-family: "Roboto", sans-serif; */
+    font-family: 'Source Code Pro', monospace;
     background-color: #0F1922;
-    color: white;
+    /* color: white; */
+    color: #00ff00;
 }
 
 .btn {
-    font-family: "Roboto", sans-serif;
-    padding: 13px;
-    padding-left: 20px;
-    padding-right: 20px;
+    font-family: 'Source Code Pro', monospace;
+    background-color: rgb(148, 143, 143);
+    padding: 10px;
+    padding-left: 18px;
+    padding-right: 18px;
     font-size: .9em;
     border-radius: 4px;
-    background-color: rgb(35, 119, 37); 
-    color: white;
     font-weight: bold;
     border: none;
     outline: none;
@@ -30,7 +30,7 @@
 }
 
 .red-btn {
-    background-color: rgb(192, 58, 9);
+    background-color: rgb(148, 143, 143);
 }
 
 .red-btn:hover {
@@ -38,14 +38,22 @@
 }
 
 .input-box {
+    /* color: #00ff00; */
+    color: white;
     width: 35vw;
     background-color: transparent;
     border: none;
-    color: white;
     outline: none;
     border-bottom: 1px solid #445366;
     font-size: 1em;
     font-weight: 300;
     padding-bottom: 10px;
     margin-top: 10px;
-  }
+}
+
+.accent-line {
+    background-color: #ffffff;
+    height: .2vh;
+    width: 100vw;
+    margin-top: auto;
+}

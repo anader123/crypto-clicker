@@ -4,24 +4,33 @@
     background-color: #000000; 
     height: 18vh;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    color: #00ff00;
 }
 
 .header-container h1 {
     font-size: 3em;
     font-weight: 200;
-    font-family: "Roboto", sans-serif;
+    /* font-family: "Roboto", sans-serif; */
+    font-family: 'Source Code Pro', monospace;
 }
 
 .header-container h1 span {
     font-weight: bold;
-    font-family: "Roboto", sans-serif;
+    /* font-family: "Roboto", sans-serif; */
+    font-family: 'Source Code Pro', monospace;
 }
 
 .click-icon {
     height: 3.2em;
     margin-left: .5em;
+}
+
+.title-container {
+    display: flex;
+    margin-top: auto;
 }
 
 /* .eth-logo {

@@ -107,10 +107,19 @@ const deleteUser = async (req, res) => {
 //     })
 // };
 
+const checkSession = (req, res) => {
+    if(req.session.user === undefined) {
+        res.status(500).send('user is not signed in')
+    }
+    else {
+        res.status(200).send('user is signed in')
+    }
+};
 
 module.exports = {
     register, 
     login, 
     logout, 
-    deleteUser 
+    deleteUser,
+    checkSession 
 }

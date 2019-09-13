@@ -6,6 +6,7 @@ import ethLogo from '../../img/ethlogo.png';
 
 // Action Builder
 import {setInitialState} from '../../redux/reducer'; 
+import swal from 'sweetalert';
 
 class Home extends Component {
     constructor() {
@@ -16,8 +17,8 @@ class Home extends Component {
             email: '', 
             password: '',
             display: true,
-            // error: false,
-            // errorMessage: ''
+            clickTokens: null,
+            ethBalance: null 
         }
     };
 
@@ -34,7 +35,12 @@ class Home extends Component {
     register = () => {
         const { email, password } = this.state;
         if(email.length < 6 || !email.includes('@') || password.length < 5) {
-            console.log('please make sure that you are entering in an email')
+            swal({
+                icon: "error",
+                title: "Registration Error",
+                timer: 15000,
+                text: `Please make sure that you entering in a valid email and that your password is at least 5 characters long.`
+            })
         }
         else {
             axios.post('/auth/register', {email, password})
@@ -43,12 +49,6 @@ class Home extends Component {
                 this.props.history.push('/dashboard'); 
             })
             .catch(err => console.log(err))
-            // .catch(err => {
-            //     this.setState({
-            //         error: true, 
-            //         errorMessage: err.res.data
-            //     })
-            // })
         }
     };
 
@@ -59,22 +59,21 @@ class Home extends Component {
                 this.props.setInitialState(res.data);
                 this.props.history.push('/dashboard');
             })
-            .catch(err => console.log(err))
-            // .catch(err => {
-            //     this.setState({
-            //         error: true, 
-            //         errorMessage: err.res.data
-            //     })
-            // })
+            .catch(() => {
+                swal({
+                icon: "error",
+                title: "Login Error",
+                timer: 15000,
+                text: `Invalid Credentials: Please make sure that you entering in the correct email and password.`
+                })
+            })
     };
 
     changeDisplay = () => {
         this.setState({
             display: !this.state.display,
             email: '',
-            password: '',
-            // error: false,
-            // errorMessage: ''
+            password: ''
         })
     };
 
@@ -87,6 +86,7 @@ class Home extends Component {
                         <h3 className='login-title'>Login</h3>
                         <div>
                             {/* <img className='eth-logo' src={ethLogo} alt='eth logo'/> */}
+                        <div className='input-container'>
                         <label className="login-label">E-Mail Address</label>
                         </div>
                         <input  className='input-box'
@@ -102,27 +102,30 @@ class Home extends Component {
                                 name='password'
                                 value={this.state.password}
                                 onChange={this.handleChange}/>
-                                <button className='btn login-btn' onClick={this.login}>Login</button>
+                        </div>
+                                <button className='btn login-btn' onClick={this.login}>> Login</button>
                                 <span className='login-span' onClick={this.changeDisplay}>Create an account</span>
                     </div>)
                     :
                     (<div className='login-container'>
                         <h3 className='login-title'>Sign Up</h3>
                             {/* <img className='eth-logo' src={ethLogo} alt='eth logo'/> */}
-                        <label className="login-label">E-Mail Address</label>
-                        <input  className='input-box'
-                                placeholder='Enter your email'
-                                type='email'
-                                name='email'
-                                value={this.state.email}
-                                onChange={this.handleChange}/>
-                        <label className="login-label">Password</label>
-                        <input  className='input-box'
-                                placeholder='Enter your password'
-                                type='password'
-                                name='password'
-                                value={this.state.password}
-                                onChange={this.handleChange}/>
+                        <div className='input-container'>
+                            <label className="login-label">E-Mail Address</label>
+                            <input  className='input-box'
+                                    placeholder='Enter your email'
+                                    type='email'
+                                    name='email'
+                                    value={this.state.email}
+                                    onChange={this.handleChange}/>
+                            <label className="login-label">Password</label>
+                            <input  className='input-box'
+                                    placeholder='Enter your password'
+                                    type='password'
+                                    name='password'
+                                    value={this.state.password}
+                                    onChange={this.handleChange}/>
+                        </div>
                                 <button className='btn login-btn' onClick={this.register}>Register</button>
                                 <span className='login-span' onClick={this.changeDisplay}>Cancel</span>
                     </div>)

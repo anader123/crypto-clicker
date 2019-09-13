@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux'; 
+import { Link } from 'react-router-dom'; 
 import './Delete.css';
+import swal from 'sweetalert';
 
 class Delete extends Component {
     constructor() {
@@ -13,15 +15,31 @@ class Delete extends Component {
         }
     };
 
+    componentDidMount() {
+        axios.get('/auth/check_session')
+            .then({
+
+            })
+            .catch(() => {
+                this.props.history.push('/')
+            })
+    };
+
     deleteAccount = () => {
-        console.log(this.state.password, this.props.email)
         axios.post(`/auth/delete/${this.props.user_id}`, {password: this.state.password, email: this.props.email})
             .then(() => {
+                swal({
+                    icon: "success",
+                    title: "Account Deleted",
+                    timer: 10000,
+                    text: `Your account has been deleted.`
+                    })
                 this.props.history.push('/');
                 this.setState({
                     password: '' 
                 })
             })
+            .catch(err => console.log(err))
     };
 
     // TODO: Keeping this here to show that I had a delete
@@ -35,10 +53,7 @@ class Delete extends Component {
     //         })
     // };
 
-    cancelDelete = () => {
-        this.props.history.push('/dashboard');
-    };
-
+    
     handleChange = (event) => {
         this.setState({
             [event.target.name]: event.target.value
@@ -58,7 +73,7 @@ class Delete extends Component {
                         onChange={this.handleChange}/> 
                 <div className='delete-page-buttons'>
                     <button className='btn red-btn' onClick={this.deleteAccount}>Delete Account</button>
-                    <span className='span' onClick={this.cancelDelete}>Cancel</span>
+                    <Link to='/dashboard'><span className='span' onClick={this.cancelDelete}>Cancel</span></Link>
                 </div>
             </div>
         )

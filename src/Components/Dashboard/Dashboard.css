@@ -25,22 +25,31 @@
 }
 
 .mid-dashboard-container {
-    margin-top: 6em;
+    margin-top: 3em;
     width: 100vw;
     min-height: 25vh;
     justify-content: space-evenly;
     display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .delete-button {
-    margin-bottom: 3em;
+    margin-bottom: 3.3em;
     margin-right: 5em; 
     display: flex; 
+    align-items: center;
     justify-content: flex-end;
+}
+
+.click-container {
+    display: flex;
+    justify-content: center;
 }
 
 .click-balance {
     font-size: 2.5em;
+    text-align: center;
 }
 
 .eth-click {
@@ -65,4 +74,22 @@
     padding-bottom: 5.5em;
     padding-left: 8.8em;
     padding-right: 8.8em;
+}
+
+.mm-sentences {
+    height: 17vh;
+    display: flex; 
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 7em;
+    margin-bottom: 7.5em;
+    margin-left: 1em;
+    margin-right: 1em;
+    font-size: 1.5em;
+    text-align: center;
+}
+
+.mm-btn{
+    margin-top: 1.5em;
 }

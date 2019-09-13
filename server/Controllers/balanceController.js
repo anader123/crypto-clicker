@@ -21,7 +21,6 @@ const contract = new web3.eth.Contract(abi, CONTRACT_ADDRESS);
 const updateSessionBalance = (req, res) => {
     const { click_balance } = req.body; 
     req.session.click_balance = click_balance; 
-    console.log('updated')
     res.status(200).send('Clicks have been saved');
 };
 
@@ -42,20 +41,19 @@ const exchangeClicks = (req, res) => {
             from: MINTING_ADDRESS,
             to: CONTRACT_ADDRESS, 
             gas: web3.utils.toHex(800000),
-            gasPrice: web3.utils.toHex(web3.utils.toWei('13', 'gwei')), 
+            gasPrice: web3.utils.toHex(web3.utils.toWei('17', 'gwei')), 
             data: tokenMintData
         };
 
         web3.eth.sendTransaction(transactionObject)
             .then(web3Response => {
-                console.log(web3Response.transactionHash);
                 res.status(200).send(web3Response.transactionHash)
+                db.update_balance([0, user_id])
             })
             .catch(err => {
                 console.log(err)
             });
             // TODO: might have to handle the promise from this. 
-            db.update_balance([0, user_id])
     }
 };
 

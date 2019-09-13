@@ -43,6 +43,7 @@ app.post('/auth/login', authCtrl.login);
 app.post('/auth/register', authCtrl.register);
 app.post('/auth/logout', authCtrl.logout);
 app.post('/auth/delete/:user_id', authCtrl.deleteUser);
+app.get('/auth/check_session', authCtrl.checkSession);
 
 // TODO: Keeping this here to show that I had a delete
 // app.delete('/auth/delete/:user_id', authCtrl.deleteUser);

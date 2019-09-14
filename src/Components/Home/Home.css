@@ -41,9 +41,12 @@ flex-direction: column;
   font-size: 2.3em;
   font-weight: bold;
   padding: .1em;
-  border-bottom: solid .07em;
+  /* border-bottom: solid .07em; */
   margin: 1em;
   margin-bottom: 1.2em;
+  white-space: nowrap;
+  overflow: hidden;
+  transform: translateY(-50%); 
 }
 
 /* .eth-logo {
@@ -68,3 +71,4 @@ flex-direction: column;
   width: 28vw;
   margin-top: .9em;
 }
+

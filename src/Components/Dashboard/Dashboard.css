@@ -56,24 +56,24 @@
     width: 18vh;
     height: auto;
     margin-top: 3em;
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(184, 179, 179);
     padding-top: 5em;
     padding-bottom: 5em;
     padding-left: 8em;
     padding-right: 8em;
     border-radius: 50%;
-    transition: 400ms;
+    transition: 950ms;
 }
 
 .eth-click:hover {
-    background-color: rgb(212, 205, 205);
+    background-color: rgb(72, 163, 101);
     cursor: pointer;
-    width: 19vh;
+    /* width: 19vh;
     height: auto;
     padding-top: 5.5em;
     padding-bottom: 5.5em;
     padding-left: 8.8em;
-    padding-right: 8.8em;
+    padding-right: 8.8em; */
 }
 
 .mm-sentences {
@@ -92,4 +92,10 @@
 
 .mm-btn{
     margin-top: 1.5em;
+}
+
+.second-mm-sentence {
+    border-right: .13em solid #00ff00;
+    padding-right: .15em;
+    animation: blink-caret .97s step-end infinite;
 }

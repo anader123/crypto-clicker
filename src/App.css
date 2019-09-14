@@ -2,58 +2,97 @@
 @import url('https://fonts.googleapis.com/css?family=Source+Code+Pro&display=swap');
 
 .App {
-    min-height: 100vh;
-    font-family: 'Source Code Pro', monospace;
-    background-color: #0F1922;
-    /* color: white; */
-    color: #00ff00;
+  min-height: 100vh;
+  font-family: 'Source Code Pro', monospace;
+  background-color: #0F1922;
+  /* color: white; */
+  color: #00ff00;
 }
 
 .btn {
-    font-family: 'Source Code Pro', monospace;
-    background-color: rgb(148, 143, 143);
-    padding: 10px;
-    padding-left: 18px;
-    padding-right: 18px;
-    font-size: .9em;
-    border-radius: 4px;
-    font-weight: bold;
-    border: none;
-    outline: none;
-    transform: 400ms;
-    /* box-shadow: 0 .3em .9em 0 rgba(116, 114, 114, 0.4);  */
+  font-family: 'Source Code Pro', monospace;
+  text-decoration: none;
+  background-color: rgb(148, 143, 143);
+  padding: 10px;
+  padding-left: 18px;
+  padding-right: 18px;
+  font-size: .9em;
+  border-radius: 4px;
+  font-weight: bold;
+  border: none;
+  outline: none;
+  transform: 400ms;
+  /* box-shadow: 0 .3em .9em 0 rgba(116, 114, 114, 0.4);  */
 }
 
 .btn:hover {
-    cursor: pointer;
-    background-color: rgb(26, 77, 29);
+  cursor: pointer;
+  background-color: rgb(26, 77, 29);
 }
 
 .red-btn {
-    background-color: rgb(148, 143, 143);
+  background-color: rgb(148, 143, 143);
 }
 
 .red-btn:hover {
-    background-color: rgb(153, 59, 25);
+  background-color: rgb(153, 59, 25);
 }
 
 .input-box {
-    /* color: #00ff00; */
-    color: white;
-    width: 35vw;
-    background-color: transparent;
-    border: none;
-    outline: none;
-    border-bottom: 1px solid #445366;
-    font-size: 1em;
-    font-weight: 300;
-    padding-bottom: 10px;
-    margin-top: 10px;
+  /* color: #00ff00; */
+  color: white;
+  width: 35vw;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  border-bottom: 1px solid #445366;
+  font-size: 1em;
+  font-weight: 300;
+  padding-bottom: 10px;
+  margin-top: 10px;
 }
 
 .accent-line {
-    background-color: #ffffff;
-    height: .2vh;
-    width: 100vw;
-    margin-top: auto;
+  background-color: #ffffff;
+  height: .2vh;
+  width: 100vw;
+  margin-top: auto;
+}
+
+.typewriter-login {
+  overflow: hidden;
+  border-right: .13em solid #00ff00;
+  white-space: nowrap;
+  margin: 0 auto;
+  letter-spacing: .15em; 
+  animation: 
+    type .38s steps(7), 
+    blink-caret .85s step-end infinite;
+}
+
+
+/* The typing effect */
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+@keyframes type {
+0% {
+  width: 0ch; 
+}
+100% {
+  width: 5ch;
+}
+}
+
+@keyframes blink-caret {
+from, to { border-color: transparent }
+50% { border-color: #00ff00; }
+}
+
+.link-span {
+  text-decoration: none; 
+  color: #00ff00;
+  border-bottom: solid .07em;
 }

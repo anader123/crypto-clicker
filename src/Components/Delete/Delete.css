@@ -20,9 +20,13 @@
 }
 
 .delete-page-buttons {
-    margin-top: 1.7em;
+    margin-top: 1.4em;
     display: flex; 
-    width: 30vh;
+    height: 10vh;
     justify-content: space-around;
     align-items: center;
+    display: flex;
+    flex-direction: column;
 }
+
+  

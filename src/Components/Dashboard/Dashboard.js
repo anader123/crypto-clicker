@@ -14,22 +14,23 @@ class Dashboard extends Component {
         super(); 
 
         this.state = {
-            metaMaskConnected: false
+            metaMaskConnected: false,
+            ethBalance: 0
         }
     }
 
     componentDidMount() {
         axios.get('/auth/check_session')
             .then(() => {
-               
             })
             .catch(() => {
-                this.props.history.push('/')
+                this.props.history.push('/');
             })
     };
 
     // TODO: have a function that runs every so after that stores state to the session
     // componentDidUpdate() {
+        // Don't use SetInterval 
     //     window.setInterval(this.updateClicks(), 10000)
     // };
     // updateClicks = () => {
@@ -60,11 +61,29 @@ class Dashboard extends Component {
                         timer: 150000,
                         text: `Address: ${response[0]}`
                       })
+                    this.handleMMToggle();
+                    // this.checkAccount();
                 })
                 .catch(err => console.log(err))
         }
-        this.handleMMToggle();
     };
+
+    // const getBalance = async () => {
+    //     await window.web3.eth.getBalance(this.props.address)
+    //     this.setState({
+    //         ethBalance: getBalance
+    //     })
+    // }
+    
+    // FIXME: Need to fix this
+    // checkAccount = setInterval(() => {
+    //     console.log('checking address')
+    //     const { address } = this.props
+    //     if (window.web3.eth.accounts[0] !== address) {
+    //         this.props.setAddress(window.web3.eth.accounts[0])
+    //         this.componentDidUpdate(); 
+    //     }
+    // }, 100);
 
     exchangeClicks = () => {
         axios.post('/api/exchanage', {click_balance: this.props.click_balance, address: this.props.address})
@@ -117,16 +136,16 @@ class Dashboard extends Component {
                             {/* <img className='kitty-profile-pic' alt='kitty pic' src={`https://img.cryptokitties.co/0x06012c8cf97bead5deae237070f9587f8e7a266d/${user_id}.png`}></img> */}
                     </div>
                     <div className='dashboard-buttons'>
-                        <Link to='/about'><button className='btn'>About</button></Link>
-                        <button className='btn red-btn' onClick={this.logout}>Logout</button>
+                        <Link to='/about'><button className='btn'>{'<About/>'}</button></Link>
+                        <button className='btn red-btn' onClick={this.logout}>{'<Logout/>'}</button>
                 </div>
                 </div>
                 <div className='mm-sentences'>
-                    <p>Welcome to CryptoClicker, a website that allows you to tokenize your in game currency.</p> <p>Begin by connecting your MetaMask account 🦊.</p>
-                    <button className='btn mm-btn' onClick={this.connectMetaMask}>Connect MM</button>
+                    <p>Welcome to CryptoClicker, a website that allows you to tokenize your in game currency.</p> <p className='second-mm-sentence'>Begin by connecting your MetaMask account 🦊.</p>
+                    <button className='btn mm-btn' onClick={this.connectMetaMask}>{'<Connect MM/>'}</button>
                 </div>
                 <div className='delete-button'>
-                    <Link to='/delete'><button className='btn red-btn'>Delete Account</button></Link>
+                    <Link to='/delete'><button className='btn red-btn'>{'<Delete Account/>'}</button></Link>
                 </div>
             </div>)
             :
@@ -140,8 +159,8 @@ class Dashboard extends Component {
                         <h3>Address: {address}</h3>
                     </div>
                     <div className='dashboard-buttons'>
-                        <Link to='/about'><button className='btn'>About</button></Link>
-                        <button className='btn red-btn' onClick={this.logout}>Logout</button>
+                        <Link to='/about'><button className='btn'>{'<About/>'}</button></Link>
+                        <button className='btn red-btn' onClick={this.logout}>{'<Logout/>'}</button>
                 </div>
                 </div>
                 <div className='mid-dashboard-container'>
@@ -153,13 +172,13 @@ class Dashboard extends Component {
                         <h3>Clicker Token: </h3>
                         <h3>ETH: </h3>
                         {/* Add Token and ETH balance */}
-                        <button className='btn' onClick={this.exchangeClicks}>Exchange Clicks</button>
+                        <button className='btn' onClick={this.exchangeClicks}>{'<Exchange Clicks/>'}</button>
                     </div>
                 </div>
                 {/* min number of clicks should be 50 to exchange */}
                 {/* maybe make it it's own component to let them choose how much to exchange? */}
                 <div className='delete-button'>
-                    <Link to='/delete'><button className='btn red-btn'>Delete Account</button></Link>
+                    <Link to='/delete'><button className='btn red-btn'>{'<Delete Account/>'}</button></Link>
                 </div>
             </div>)
             }

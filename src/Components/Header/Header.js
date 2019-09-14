@@ -1,6 +1,6 @@
 import React from 'react';
 import './Header.css';
-import clickIcon from './../../img/click-icon.svg';
+import clickIcon from './../../img/green-click.svg';
 
 export default function Header() {
     return (

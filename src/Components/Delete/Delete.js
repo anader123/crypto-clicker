@@ -31,7 +31,7 @@ class Delete extends Component {
                 swal({
                     icon: "success",
                     title: "Account Deleted",
-                    timer: 10000,
+                    timer: 15000,
                     text: `Your account has been deleted.`
                     })
                 this.props.history.push('/');
@@ -39,7 +39,14 @@ class Delete extends Component {
                     password: '' 
                 })
             })
-            .catch(err => console.log(err))
+            .catch(() => {
+                swal({
+                    icon: "error",
+                    title: "Incorrect Password",
+                    timer: 15000,
+                    text: `Please make sure that you are entering the corret password.`
+                    })
+            })
     };
 
     // TODO: Keeping this here to show that I had a delete
@@ -72,8 +79,8 @@ class Delete extends Component {
                         value={this.state.password}
                         onChange={this.handleChange}/> 
                 <div className='delete-page-buttons'>
-                    <button className='btn red-btn' onClick={this.deleteAccount}>Delete Account</button>
-                    <Link to='/dashboard'><span className='span' onClick={this.cancelDelete}>Cancel</span></Link>
+                    <button className='btn red-btn' onClick={this.deleteAccount}>{'<Delete Account/>'}</button>
+                    <Link to='/dashboard'><span className='link-span' onClick={this.cancelDelete}>Cancel</span></Link>
                 </div>
             </div>
         )

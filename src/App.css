@@ -21,12 +21,13 @@
   font-weight: bold;
   border: none;
   outline: none;
-  transform: 400ms;
+  transform: 800ms;
   /* box-shadow: 0 .3em .9em 0 rgba(116, 114, 114, 0.4);  */
 }
 
 .btn:hover {
   cursor: pointer;
+  color: rgb(196, 192, 192);
   background-color: rgb(26, 77, 29);
 }
 
@@ -35,6 +36,7 @@
 }
 
 .red-btn:hover {
+  color: rgb(196, 192, 192);
   background-color: rgb(153, 59, 25);
 }
 
@@ -96,3 +98,4 @@ from, to { border-color: transparent }
   color: #00ff00;
   border-bottom: solid .07em;
 }
+

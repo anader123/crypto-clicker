@@ -19,9 +19,11 @@
 }
 
 .network-container {
+    margin-top: 2.8em;
     margin-left: 1.4em;
     font-weight: bold;
     font-size: 1.3em;
+    /* border: 3px, solid, gray; */
 }
 
 .mid-dashboard-container {
@@ -48,12 +50,14 @@
 }
 
 .click-balance {
+    margin-top: 3em;
     font-size: 2.5em;
     text-align: center;
 }
 
 .eth-click {
-    width: 18vh;
+    width: 12%;
+    border: solid 8px gray;
     height: auto;
     margin-top: 3em;
     background-color: rgb(184, 179, 179);
@@ -98,4 +102,32 @@
     border-right: .13em solid #00ff00;
     padding-right: .15em;
     animation: blink-caret .97s step-end infinite;
+} 
+
+.tokenize-button-container {
+    width: 90%;
+    font-size: 1em;
+    margin-top: 2.5em; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.tokenize-text {
+    margin-top: 1em;
+    text-align: center;
+    width: 110%;
+    font-size: .75em;
+    color: orange;
+}
+
+.network-warning-text {
+    margin-top: .9em;
+    margin-bottom: .8em;
+    font-size: .6em;
+    color: orange;
+}
+
+.ropsten-info-text {
+    color: orange;
 }

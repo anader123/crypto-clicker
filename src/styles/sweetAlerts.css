@@ -20,10 +20,12 @@
     padding-bottom: 200em;
 }
 
-.swal-text {
+.swal-text, .swal-content {
     font-family: 'Source Code Pro', monospace;
     /* color: white; */
-    color: #00ff00;
+    /* color: #00ff00; */
+    color: orange;
+    word-wrap: break-word;
     text-align: center;
 }
 

@@ -23,7 +23,11 @@ class Home extends Component {
     };
 
     componentDidMount() {
-
+        axios.get('/auth/check_session')
+            .then(() => {
+                this.props.history.push('/dashboard');
+            })
+            .catch(err => console.log(err))
     };
 
     handleChange = (event) => {

@@ -4,27 +4,49 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom'; 
 import './Dashboard.css';
 import ethLogo from '../../img/ethlogo.png';
-import swal from 'sweetalert';
+import swal from '@sweetalert/with-react';
 
 // Action Builder
-import {incrementClick, resetCount, setAddress} from '../../redux/reducer'; 
+import {incrementClick, resetCount, setAddress, setNetwork} from '../../redux/reducer'; 
 
 class Dashboard extends Component {
     constructor() {
         super(); 
 
         this.state = {
-            metaMaskConnected: false,
             ethBalance: 0
         }
     }
 
     componentDidMount() {
+        this.keepOffLogin();
+        this.checkNetwork(); 
+    };
+
+    keepOffLogin = () => {
         axios.get('/auth/check_session')
             .then(() => {
             })
             .catch(() => {
                 this.props.history.push('/');
+            })
+    };
+
+    checkNetwork = () => {
+        const { setNetwork } = this.props 
+        window.web3.version.getNetwork((err, netId) => {
+            switch (netId) {
+                case "1":
+                return setNetwork('Mainnet')
+                case "3":
+                return setNetwork('Ropsten')
+                case "4":
+                return setNetwork('Rinkeby')
+                case "42":
+                return setNetwork('Kovan')
+                default:
+                return setNetwork('Unknown Network')
+            }
             })
     };
 
@@ -61,7 +83,6 @@ class Dashboard extends Component {
                         timer: 150000,
                         text: `Address: ${response[0]}`
                       })
-                    this.handleMMToggle();
                     // this.checkAccount();
                 })
                 .catch(err => console.log(err))
@@ -91,15 +112,18 @@ class Dashboard extends Component {
                 swal({
                     icon: "success",
                     title: "Clicks Successfully Exchanged",
-                    timer: 20000,
-                    text: `Transaction Hash: ${res.data}`
+                    closeOnClickOutside: false,
+                    content: ( 
+                    <div>
+                        <p>Transaction Hash:<a target="_blank" rel="noopener noreferrer" href={`https://ropsten.etherscan.io/tx/${res.data}`}>{res.data}</a></p>
+                    </div>)
                   })
                 this.props.resetCount();
             })
             .catch(() => {
                 swal({
                     icon: "error",
-                    title: "Exchange Error",
+                    title: "Tokenization Error",
                     timer: 20000,
                     text: `You must have at least 50 clicks before being able to tokenzie.`
                   })
@@ -114,15 +138,8 @@ class Dashboard extends Component {
             .catch(err => console.log(err))
     };
 
-    handleMMToggle = () => {
-        this.setState({
-            metaMaskConnected: !this.state.metaMaskConnected 
-        })
-    }
-
     render() {
-        const { user_id, email, click_balance, incrementClick, address } = this.props; 
-        const { metaMaskConnected } = this.state; 
+        const { user_id, email, click_balance, incrementClick, address, network, metaMaskConnected } = this.props; 
         return (
             <div>
                 {!metaMaskConnected 
@@ -130,13 +147,13 @@ class Dashboard extends Component {
                 (<div className='main-dashboard-container'>
                 <div className='upper-dashboard-container'>
                     <div className='network-container'>
+                        <p className='network-warning-text'>*Please make sure that you are connected to the <Link to='/about' className='ropsten-info-text'>Ropsten Network</Link></p>
                         <h3>Email: $ {email}</h3>
-                        <h3>Network: $ ropsten</h3>
-                        {/* TODO: change link to opensea and have their logo */}
-                            {/* <img className='kitty-profile-pic' alt='kitty pic' src={`https://img.cryptokitties.co/0x06012c8cf97bead5deae237070f9587f8e7a266d/${user_id}.png`}></img> */}
+                        {/* <h3>Network: ropsten</h3> */}
+                        <h3>Contract: add contract Address Here</h3>
                     </div>
                     <div className='dashboard-buttons'>
-                        <Link to='/about'><button className='btn'>{'<About/>'}</button></Link>
+                        <Link to='/about'><button className='btn'>{'<Learn More/>'}</button></Link>
                         <button className='btn red-btn' onClick={this.logout}>{'<Logout/>'}</button>
                 </div>
                 </div>
@@ -152,14 +169,14 @@ class Dashboard extends Component {
             (<div className='main-dashboard-container'>
                 <div className='upper-dashboard-container'>
                     <div className='network-container'>
+                        <p className='network-warning-text'>*Please make sure that you are connected to the <Link to='/about' className='ropsten-info-text'>Ropsten Network</Link></p>
                         <h3>Email: $ {email}</h3>
-                        <h3>Network: ropsten</h3>
-                        {/* TODO: change link to opensea and have their logo */}
-                            {/* <img className='kitty-profile-pic' alt='kitty pic' src={`https://img.cryptokitties.co/0x06012c8cf97bead5deae237070f9587f8e7a266d/${user_id}.png`}></img> */}
+                        <h3>Network: {network}</h3>
+                        <h3>Contract: add contract Address Here</h3>
                         <h3>Address: {address}</h3>
                     </div>
                     <div className='dashboard-buttons'>
-                        <Link to='/about'><button className='btn'>{'<About/>'}</button></Link>
+                        <Link to='/about'><button className='btn'>{'<Learn More/>'}</button></Link>
                         <button className='btn red-btn' onClick={this.logout}>{'<Logout/>'}</button>
                 </div>
                 </div>
@@ -168,15 +185,11 @@ class Dashboard extends Component {
                         <h3 className='click-balance'>Click Balance: {click_balance}</h3>
                         <img className='eth-click' src={ethLogo} alt='eth logo' onClick={() => incrementClick(click_balance)}/>
                     </div>
-                    <div className='user-info-container'>
-                        <h3>Clicker Token: </h3>
-                        <h3>ETH: </h3>
-                        {/* Add Token and ETH balance */}
-                        <button className='btn' onClick={this.exchangeClicks}>{'<Exchange Clicks/>'}</button>
+                    <div className='tokenize-button-container'>
+                        <button className='btn' onClick={this.exchangeClicks}>{'<Tokenize Clicks/>'}</button>
+                        <p className='tokenize-text'>*A minimum of 50 clicks are required in order to tokenize.</p>
                     </div>
                 </div>
-                {/* min number of clicks should be 50 to exchange */}
-                {/* maybe make it it's own component to let them choose how much to exchange? */}
                 <div className='delete-button'>
                     <Link to='/delete'><button className='btn red-btn'>{'<Delete Account/>'}</button></Link>
                 </div>
@@ -191,4 +204,4 @@ function mapStateToProps(state) {
     return state; 
 };
 
-export default connect(mapStateToProps, {incrementClick, resetCount, setAddress})(Dashboard); 
+export default connect(mapStateToProps, {incrementClick, resetCount, setAddress, setNetwork})(Dashboard); 

@@ -19,15 +19,14 @@
 }
 
 .network-container {
-    margin-top: 2.8em;
-    margin-left: 1.4em;
+    margin-top: 2.3em;
+    margin-left: 1.9em;
     font-weight: bold;
-    font-size: 1.3em;
-    /* border: 3px, solid, gray; */
+    font-size: 1em;
 }
 
 .mid-dashboard-container {
-    margin-top: 3em;
+    margin-top: 4em;
     width: 100vw;
     min-height: 25vh;
     justify-content: space-evenly;
@@ -37,7 +36,7 @@
 }
 
 .delete-button {
-    margin-bottom: 3.3em;
+    margin-bottom: 2.5em;
     margin-right: 5em; 
     display: flex; 
     align-items: center;
@@ -50,7 +49,6 @@
 }
 
 .click-balance {
-    margin-top: 3em;
     font-size: 2.5em;
     text-align: center;
 }
@@ -61,8 +59,8 @@
     height: auto;
     margin-top: 3em;
     background-color: rgb(184, 179, 179);
-    padding-top: 5em;
-    padding-bottom: 5em;
+    padding-top: 4em;
+    padding-bottom: 4em;
     padding-left: 8em;
     padding-right: 8em;
     border-radius: 50%;
@@ -124,10 +122,36 @@
 .network-warning-text {
     margin-top: .9em;
     margin-bottom: .8em;
-    font-size: .6em;
+    font-size: .75em;
     color: orange;
 }
 
 .ropsten-info-text {
     color: orange;
+}
+
+.block-load-img {
+    height: 10em;
+    width: auto;
+    margin-bottom: 2.5em;
+    margin-top: 1.5em;
+    animation: spin 4.8s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg); 
+    }
+    50% {
+        transform: rotate(180deg); 
+    }
+    100% {
+        transform: rotate(360deg); 
+    }
+    50% {
+        transform: rotate(180deg); 
+    }
+    0% {
+        transform: rotate(0deg); 
+    }
 }

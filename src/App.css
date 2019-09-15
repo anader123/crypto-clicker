@@ -4,7 +4,7 @@
 .App {
   min-height: 100vh;
   font-family: 'Source Code Pro', monospace;
-  background-color: #0F1922;
+  background-color: rgb(23, 39, 53);
   /* color: white; */
   color: #00ff00;
 }

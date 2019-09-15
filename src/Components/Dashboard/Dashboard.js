@@ -3,8 +3,11 @@ import axios from 'axios';
 import { connect } from 'react-redux'; 
 import { Link } from 'react-router-dom'; 
 import './Dashboard.css';
-import ethLogo from '../../img/ethlogo.png';
 import swal from '@sweetalert/with-react';
+
+// Images
+import ethLogo from '../../img/ethlogo.png';
+import blockLoad from '../../img/green-blockchainLoading.png';
 
 // Action Builder
 import {incrementClick, resetCount, setAddress, setNetwork} from '../../redux/reducer'; 
@@ -107,6 +110,7 @@ class Dashboard extends Component {
     // }, 100);
 
     exchangeClicks = () => {
+        this.tokenizeLoading(); 
         axios.post('/api/exchanage', {click_balance: this.props.click_balance, address: this.props.address})
             .then((res) => {
                 swal({
@@ -129,6 +133,17 @@ class Dashboard extends Component {
                   })
             })
     };
+
+    tokenizeLoading = () => {
+        swal({
+            closeOnClickOutside: false,
+            button: false, 
+            content: (<div>
+                <img className='block-load-img' src={blockLoad} alt='block loading'/>
+                <p>Blockchain magic in progress...</p>
+            </div>)
+          })
+    }; 
 
     logout = () => {
         axios.post('/auth/logout', {click_balance: this.props.click_balance})
@@ -158,7 +173,7 @@ class Dashboard extends Component {
                 </div>
                 </div>
                 <div className='mm-sentences'>
-                    <p>Welcome to CryptoClicker, a website that allows you to tokenize your in game currency.</p> <p className='second-mm-sentence'>Begin by connecting your MetaMask account 🦊.</p>
+                    <p>Welcome to CryptoClicker, a website that allows you to tokenize your in game currency.</p> <p className='second-mm-sentence'>Begin by connecting your MetaMask account <span role="img" aria-label='fox-emoji' >🦊</span>.</p>
                     <button className='btn mm-btn' onClick={this.connectMetaMask}>{'<Connect MM/>'}</button>
                 </div>
                 <div className='delete-button'>
@@ -181,10 +196,8 @@ class Dashboard extends Component {
                 </div>
                 </div>
                 <div className='mid-dashboard-container'>
-                    <div className='clicker-container'>
                         <h3 className='click-balance'>Click Balance: {click_balance}</h3>
                         <img className='eth-click' src={ethLogo} alt='eth logo' onClick={() => incrementClick(click_balance)}/>
-                    </div>
                     <div className='tokenize-button-container'>
                         <button className='btn' onClick={this.exchangeClicks}>{'<Tokenize Clicks/>'}</button>
                         <p className='tokenize-text'>*A minimum of 50 clicks are required in order to tokenize.</p>

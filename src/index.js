@@ -6,7 +6,7 @@ import App from './App';
 import { HashRouter } from 'react-router-dom'; 
 
 // Redux
-import {Provider} from 'react-redux';
+import { Provider } from 'react-redux';
 import store from './redux/store';
 
 

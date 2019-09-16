@@ -5,7 +5,6 @@
   min-height: 100vh;
   font-family: 'Source Code Pro', monospace;
   background-color: rgb(23, 39, 53);
-  /* color: white; */
   color: #00ff00;
 }
 
@@ -13,16 +12,15 @@
   font-family: 'Source Code Pro', monospace;
   text-decoration: none;
   background-color: rgb(148, 143, 143);
-  padding: 10px;
-  padding-left: 18px;
-  padding-right: 18px;
+  padding: .9em;
+  padding-left: 1em;
+  padding-right: 1em;
   font-size: .9em;
-  border-radius: 4px;
+  border-radius: .3em;
   font-weight: bold;
   border: none;
   outline: none;
   transform: 800ms;
-  /* box-shadow: 0 .3em .9em 0 rgba(116, 114, 114, 0.4);  */
 }
 
 .btn:hover {
@@ -41,17 +39,15 @@
 }
 
 .input-box {
-  /* color: #00ff00; */
   color: white;
-  width: 35vw;
+  /* width: 35vw; */
   background-color: transparent;
   border: none;
   outline: none;
   border-bottom: 1px solid #445366;
   font-size: 1em;
   font-weight: 300;
-  padding-bottom: 10px;
-  margin-top: 10px;
+  padding-bottom: .5em;
 }
 
 .accent-line {

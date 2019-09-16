@@ -13,9 +13,9 @@
 }
 
 .login-span {
-  margin-left: .5em;
   padding: .06em;
   border-bottom: solid .07em;
+  margin-bottom: 1em;
 }
 
 .login-span:hover {
@@ -49,19 +49,6 @@ flex-direction: column;
   transform: translateY(-50%); 
 }
 
-/* .eth-logo {
-  height: 5em;
-  width: auto;
-  background-color: white;
-  border-radius: 50%; 
-  border: gray, solid, 3px;
-  padding-top: .15em;
-  padding-bottom: .3em;
-  padding-right: 1.2em;
-  padding-left: 1.2em;
-  margin-left: .8em;
-} */
-
 .login-btn {
   margin-top: 2.8em;
   margin-bottom: 1.5em;
@@ -72,3 +59,13 @@ flex-direction: column;
   margin-top: .9em;
 }
 
+/* Media Queries */
+
+@media (max-width: 450px) { 
+  .login-title {
+    font-size: 1.8em;
+  }
+  .input-box {
+    width: 100vw;
+  }
+}

@@ -2,28 +2,25 @@ import React, { Component } from 'react';
 import axios from 'axios'; 
 import { connect } from 'react-redux'; 
 import { Link } from 'react-router-dom'; 
+import EthClicker from '../EthClicker/EthClicker'; 
+
 import './Dashboard.css';
 import swal from '@sweetalert/with-react';
 
-// Images
-import ethLogo from '../../img/ethlogo.png';
-import blockLoad from '../../img/green-blockchainLoading.png';
-
 // Action Builder
-import {incrementClick, resetCount, setAddress, setNetwork} from '../../redux/reducer'; 
+import {setAddress, setNetwork, setMetaMask} from '../../redux/reducer'; 
 
 class Dashboard extends Component {
-    constructor() {
-        super(); 
+    // constructor() {
+    //     super(); 
 
-        this.state = {
-            ethBalance: 0
-        }
-    }
+    //     this.state = {
+    //         ethBalance: 0
+    //     }
+    // }
 
     componentDidMount() {
         this.keepOffLogin();
-        this.checkNetwork(); 
     };
 
     keepOffLogin = () => {
@@ -55,7 +52,6 @@ class Dashboard extends Component {
 
     // TODO: have a function that runs every so after that stores state to the session
     // componentDidUpdate() {
-        // Don't use SetInterval 
     //     window.setInterval(this.updateClicks(), 10000)
     // };
     // updateClicks = () => {
@@ -79,19 +75,24 @@ class Dashboard extends Component {
         else {
             window.ethereum.enable()
                 .then((response) => {
-                    this.props.setAddress(response[0])
+                    this.props.setAddress(response[0]);
+                    this.props.setMetaMask(true);
                     swal({
                         icon: "success",
                         title: "MetaMask Connected 🦊",
                         timer: 150000,
-                        text: `Address: ${response[0]}`
+                        content: (<div>
+                            <p>Address:</p><p>{`${response[0]}`}</p>
+                        </div>)
                       })
-                    // this.checkAccount();
+                    this.checkAccount();
+                    this.checkNetwork(); 
                 })
                 .catch(err => console.log(err))
         }
     };
 
+    // TODO: check eth balance if I have time. 
     // const getBalance = async () => {
     //     await window.web3.eth.getBalance(this.props.address)
     //     this.setState({
@@ -99,62 +100,25 @@ class Dashboard extends Component {
     //     })
     // }
     
-    // FIXME: Need to fix this
-    // checkAccount = setInterval(() => {
-    //     console.log('checking address')
-    //     const { address } = this.props
-    //     if (window.web3.eth.accounts[0] !== address) {
-    //         this.props.setAddress(window.web3.eth.accounts[0])
-    //         this.componentDidUpdate(); 
-    //     }
-    // }, 100);
+    checkAccount = () => {setInterval(() => {
+        const { address } = this.props
+        if (window.web3.eth.accounts[0] !== address) {
+            this.props.setAddress(window.web3.eth.accounts[0])
+        }
+    }, 1500)};
 
-    exchangeClicks = () => {
-        this.tokenizeLoading(); 
-        axios.post('/api/exchanage', {click_balance: this.props.click_balance, address: this.props.address})
-            .then((res) => {
-                swal({
-                    icon: "success",
-                    title: "Clicks Successfully Exchanged",
-                    closeOnClickOutside: false,
-                    content: ( 
-                    <div>
-                        <p>Transaction Hash:<a target="_blank" rel="noopener noreferrer" href={`https://ropsten.etherscan.io/tx/${res.data}`}>{res.data}</a></p>
-                    </div>)
-                  })
-                this.props.resetCount();
-            })
-            .catch(() => {
-                swal({
-                    icon: "error",
-                    title: "Tokenization Error",
-                    timer: 20000,
-                    text: `You must have at least 50 clicks before being able to tokenzie.`
-                  })
-            })
-    };
-
-    tokenizeLoading = () => {
-        swal({
-            closeOnClickOutside: false,
-            button: false, 
-            content: (<div>
-                <img className='block-load-img' src={blockLoad} alt='block loading'/>
-                <p>Blockchain magic in progress...</p>
-            </div>)
-          })
-    }; 
-
+ 
     logout = () => {
         axios.post('/auth/logout', {click_balance: this.props.click_balance})
             .then( () => {
                 this.props.history.push('/'); 
+                this.props.setMetaMask(false); 
             })
             .catch(err => console.log(err))
     };
 
     render() {
-        const { user_id, email, click_balance, incrementClick, address, network, metaMaskConnected } = this.props; 
+        const { user_id, email, address, network, metaMaskConnected } = this.props; 
         return (
             <div>
                 {!metaMaskConnected 
@@ -164,8 +128,6 @@ class Dashboard extends Component {
                     <div className='network-container'>
                         <p className='network-warning-text'>*Please make sure that you are connected to the <Link to='/about' className='ropsten-info-text'>Ropsten Network</Link></p>
                         <h3>Email: $ {email}</h3>
-                        {/* <h3>Network: ropsten</h3> */}
-                        <h3>Contract: add contract Address Here</h3>
                     </div>
                     <div className='dashboard-buttons'>
                         <Link to='/about'><button className='btn'>{'<Learn More/>'}</button></Link>
@@ -187,22 +149,16 @@ class Dashboard extends Component {
                         <p className='network-warning-text'>*Please make sure that you are connected to the <Link to='/about' className='ropsten-info-text'>Ropsten Network</Link></p>
                         <h3>Email: $ {email}</h3>
                         <h3>Network: {network}</h3>
-                        <h3>Contract: add contract Address Here</h3>
-                        <h3>Address: {address}</h3>
+                        <h3>Token Contract: 0x264A0131376cdD61EF0Ab11Cf0Ca3cC9F3f7548C</h3>
+                        <h3>User Address: {address}</h3>
                     </div>
                     <div className='dashboard-buttons'>
                         <Link to='/about'><button className='btn'>{'<Learn More/>'}</button></Link>
                         <button className='btn red-btn' onClick={this.logout}>{'<Logout/>'}</button>
                 </div>
                 </div>
-                <div className='mid-dashboard-container'>
-                        <h3 className='click-balance'>Click Balance: {click_balance}</h3>
-                        <img className='eth-click' src={ethLogo} alt='eth logo' onClick={() => incrementClick(click_balance)}/>
-                    <div className='tokenize-button-container'>
-                        <button className='btn' onClick={this.exchangeClicks}>{'<Tokenize Clicks/>'}</button>
-                        <p className='tokenize-text'>*A minimum of 50 clicks are required in order to tokenize.</p>
-                    </div>
-                </div>
+                {/* Players will click the eth image to increase their click_balance */}
+                <EthClicker/> 
                 <div className='delete-button'>
                     <Link to='/delete'><button className='btn red-btn'>{'<Delete Account/>'}</button></Link>
                 </div>
@@ -217,4 +173,4 @@ function mapStateToProps(state) {
     return state; 
 };
 
-export default connect(mapStateToProps, {incrementClick, resetCount, setAddress, setNetwork})(Dashboard); 
+export default connect(mapStateToProps, {setAddress, setNetwork, setMetaMask})(Dashboard); 

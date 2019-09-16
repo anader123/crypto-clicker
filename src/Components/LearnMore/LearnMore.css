@@ -1,0 +1,89 @@
+.about-page-container {
+    margin-top: 2em;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.home-button {
+    text-decoration: none;
+    width: 90%;
+    display: flex; 
+    justify-content: flex-end; 
+}
+
+.mm-title {
+    text-align: center;
+    font-size: 3em;
+    margin-top: 1em;
+    margin-bottom: .3em;
+    margin-right: .5em;
+    margin-left: .5em;
+}
+
+.mm-download-button {
+    text-decoration: none;
+    margin: 3em;
+    padding: 1em;
+    background-color: #F8921E;
+    color: white;
+    border-radius: 2px;
+}
+
+.mm-download-button:hover {
+    text-decoration: none;
+    background-color: rgb(223, 134, 33);
+}
+.mm-video {
+    height: 35vh;
+    width: 60vw; 
+    margin: 2em;
+}
+
+.mm-image {
+    height: 60vh;
+    width: auto;
+    margin-bottom: 2em;
+    margin-top: 1.5em;
+}
+
+.mm-text {
+    text-align: center;
+    width: 87%;
+    margin-top: 2.5em;
+    margin-bottom: 2.5em;
+    font-size: 1.25em;
+}
+
+.warning-text {
+    width: 75%;
+    text-align: center;
+    color: orange; 
+    margin: .9em;
+}
+
+@media (max-width: 450px) { 
+    .mm-title {
+        font-size: 1.5em;
+    }
+    .warning-text {
+        width: 87%;
+        font-size: .7em;
+    }
+    .mm-video {
+        width: 65%; 
+        height: 30%;
+    }
+    .mm-text {
+        font-size: .9em;
+        width: 90%;
+    }
+    .mm-download-button {
+        width: 40%;
+        text-decoration: none;
+        font-size: .6em;
+        text-align: center;
+    }
+  }

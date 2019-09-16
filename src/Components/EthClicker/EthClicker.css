@@ -1,0 +1,88 @@
+.mid-dashboard-container {
+    margin-top: 4em;
+    width: 100vw;
+    min-height: 25vh;
+    justify-content: space-evenly;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.click-container {
+    display: flex;
+    justify-content: center;
+}
+
+.click-balance {
+    font-size: 2.5em;
+    text-align: center;
+}
+
+.eth-click {
+    width: 12%;
+    border: solid 8px gray;
+    height: auto;
+    margin-top: 7%;
+    background-color: rgb(184, 179, 179);
+    padding-top: 10%;
+    padding-bottom: 10%;
+    padding-left: 14%;
+    padding-right: 14%;
+    border-radius: 50%;
+    transition: 950ms;
+}
+
+.eth-click:hover {
+    background-color: rgb(72, 163, 101);
+    cursor: pointer;
+}
+
+.tokenize-button-container {
+    width: 90%;
+    font-size: 1em;
+    margin-top: 2.5em; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.tokenize-text {
+    margin-top: 1em;
+    text-align: center;
+    width: 110%;
+    font-size: .75em;
+    color: orange;
+}
+
+.block-load-img {
+    height: 10em;
+    width: auto;
+    margin-bottom: 2.5em;
+    margin-top: 1.5em;
+    animation: spin 4.8s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg); 
+    }
+    50% {
+        transform: rotate(180deg); 
+    }
+    100% {
+        transform: rotate(360deg); 
+    }
+    50% {
+        transform: rotate(180deg); 
+    }
+    0% {
+        transform: rotate(0deg); 
+    }
+}
+
+@media (max-width: 450px) { 
+    .click-balance {
+        font-size: 1.7em;
+        text-align: center;
+    }
+}

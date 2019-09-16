@@ -124,7 +124,7 @@ class Home extends Component {
                                     onChange={this.handleChange}/>
                             <label className="login-label">Password</label>
                             <input  className='input-box'
-                                    placeholder='Enter your password'
+                                    placeholder='Enter your password (min of 5 characters)'
                                     type='password'
                                     name='password'
                                     value={this.state.password}

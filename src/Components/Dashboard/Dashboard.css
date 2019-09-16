@@ -1,6 +1,5 @@
-.kitty-profile-pic {
-    height: 20vh;
-    width: auto;
+.main-dashboard-container {
+    min-height: 75vh;
 }
 
 .upper-dashboard-container {
@@ -25,57 +24,12 @@
     font-size: 1em;
 }
 
-.mid-dashboard-container {
-    margin-top: 4em;
-    width: 100vw;
-    min-height: 25vh;
-    justify-content: space-evenly;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
 .delete-button {
     margin-bottom: 2.5em;
     margin-right: 5em; 
     display: flex; 
     align-items: center;
     justify-content: flex-end;
-}
-
-.click-container {
-    display: flex;
-    justify-content: center;
-}
-
-.click-balance {
-    font-size: 2.5em;
-    text-align: center;
-}
-
-.eth-click {
-    width: 12%;
-    border: solid 8px gray;
-    height: auto;
-    margin-top: 3em;
-    background-color: rgb(184, 179, 179);
-    padding-top: 4em;
-    padding-bottom: 4em;
-    padding-left: 8em;
-    padding-right: 8em;
-    border-radius: 50%;
-    transition: 950ms;
-}
-
-.eth-click:hover {
-    background-color: rgb(72, 163, 101);
-    cursor: pointer;
-    /* width: 19vh;
-    height: auto;
-    padding-top: 5.5em;
-    padding-bottom: 5.5em;
-    padding-left: 8.8em;
-    padding-right: 8.8em; */
 }
 
 .mm-sentences {
@@ -102,23 +56,6 @@
     animation: blink-caret .97s step-end infinite;
 } 
 
-.tokenize-button-container {
-    width: 90%;
-    font-size: 1em;
-    margin-top: 2.5em; 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.tokenize-text {
-    margin-top: 1em;
-    text-align: center;
-    width: 110%;
-    font-size: .75em;
-    color: orange;
-}
-
 .network-warning-text {
     margin-top: .9em;
     margin-bottom: .8em;
@@ -130,28 +67,17 @@
     color: orange;
 }
 
-.block-load-img {
-    height: 10em;
-    width: auto;
-    margin-bottom: 2.5em;
-    margin-top: 1.5em;
-    animation: spin 4.8s linear infinite;
-}
-
-@keyframes spin {
-    0% {
-        transform: rotate(0deg); 
+@media (max-width: 450px) { 
+    .mm-sentences {
+        font-size: .75em;
     }
-    50% {
-        transform: rotate(180deg); 
+    .network-warning-text {
+        font-size: .5em;
     }
-    100% {
-        transform: rotate(360deg); 
+    .delete-button {
+        display: none;
     }
-    50% {
-        transform: rotate(180deg); 
+    .dashboard-buttons {
+        display: none;
     }
-    0% {
-        transform: rotate(0deg); 
-    }
-}
+  }

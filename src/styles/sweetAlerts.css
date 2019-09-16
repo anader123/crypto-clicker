@@ -25,6 +25,8 @@
     color: orange;
     word-wrap: break-word;
     text-align: center;
+    display: block;
+    text-decoration: none;
 }
 
 .swal-button {
@@ -54,3 +56,13 @@
     background-color: rgb(57, 63, 68);
 }
 
+@media (max-width: 450px) { 
+  .swal-modal {
+    height: 75%;
+    width: 90%;
+  }
+  .network-container {
+    font-size: .73em;
+    margin-left: .3em;
+  }
+}

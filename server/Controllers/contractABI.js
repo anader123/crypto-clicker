@@ -355,8 +355,9 @@ const abi = [
 		"stateMutability": "view",
 		"type": "function"
 	}
-];
+]
 
 module.exports = {
     abi
 }
+

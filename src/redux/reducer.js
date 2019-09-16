@@ -13,6 +13,7 @@ const SET_INITIAL_STATE = 'SET_INITIAL_STATE';
 const RESET_COUNT = 'RESET_COUNT';
 const SET_ADDRESS = 'SET_ADDRESS'; 
 const SET_NETWORK = 'SET_NETWORK'; 
+const SET_METAMASK = 'SET_METAMASK';
 
 // TODO: 
 // change these to arrow functions 
@@ -38,6 +39,13 @@ export function setNetwork(network) {
         type: SET_NETWORK, 
         payload: network
     }
+};
+
+export function setMetaMask(bool) {
+    return {
+        type: SET_METAMASK, 
+        payload: bool
+    }
 }
 
 export function incrementClick(click_balance) {
@@ -61,7 +69,9 @@ export default function reducer(state = initialState, action) {
         case SET_INITIAL_STATE: 
             return {...state, click_balance: action.payload.click_balance, email: action.payload.email, user_id: action.payload.user_id}
         case SET_ADDRESS: 
-            return {...state, address: action.payload, metaMaskConnected: true}
+            return {...state, address: action.payload}
+        case SET_METAMASK: 
+            return {...state, metaMaskConnected: action.payload}
         case SET_NETWORK:
             return {...state, network: action.payload}   
         case INCREMENT_CLICK:

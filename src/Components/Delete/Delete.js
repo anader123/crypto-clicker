@@ -79,7 +79,7 @@ class Delete extends Component {
                         value={this.state.password}
                         onChange={this.handleChange}/> 
                 <div className='delete-page-buttons'>
-                    <button className='btn red-btn' onClick={this.deleteAccount}>{'<Delete Account/>'}</button>
+                    <button className='btn red-btn delete-btn' onClick={this.deleteAccount}>{'<Delete Account/>'}</button>
                     <Link to='/dashboard'><span className='link-span' onClick={this.cancelDelete}>Cancel</span></Link>
                 </div>
             </div>

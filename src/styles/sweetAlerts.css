@@ -58,7 +58,7 @@
 
 @media (max-width: 450px) { 
   .swal-modal {
-    height: 75%;
+    height: 73%;
     width: 90%;
   }
   .network-container {

@@ -14,20 +14,21 @@
 }
 
 .click-balance {
+    margin-top: 3%;
     font-size: 2.5em;
     text-align: center;
 }
 
 .eth-click {
-    width: 12%;
+    width: 10%;
     border: solid 8px gray;
     height: auto;
-    margin-top: 7%;
+    margin-top: 3%;
     background-color: rgb(184, 179, 179);
-    padding-top: 10%;
-    padding-bottom: 10%;
-    padding-left: 14%;
-    padding-right: 14%;
+    padding-top: 5%;
+    padding-bottom: 5%;
+    padding-left: 9%;
+    padding-right: 9%;
     border-radius: 50%;
     transition: 950ms;
 }

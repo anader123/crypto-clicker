@@ -24,27 +24,31 @@ const updateSessionBalance = (req, res) => {
     res.status(200).send('Clicks have been saved');
 };
 
-// Exchanges Clicks for Tokens and Sets DB Click Value to 0 in the DB 
+// Turns Clicks Into CryptoClicker Tokens and Sets DB Click Balance to 0
 const exchangeClicks = (req, res) => {
+
+    // Click Balance From State and User's Currently Selected ETH Address. 
     const { click_balance, address } = req.body; 
     const user_id = req.session.user_id; 
     const string_click_balance = click_balance.toString();
     const db = req.app.get('db'); 
 
     if(click_balance < 50) {
-        res.status(500).send('You need at least 50 clicks to exchanage')
+        res.status(500).send('You need at least 50 clicks to tokenize')
     }
     else {
+        // Data for Contract Call, Click Balance Must Be Formatted as a String. 
         const tokenMintData = contract.methods.mint(address , web3.utils.toWei(string_click_balance)).encodeABI();
 
         const transactionObject = {
             from: MINTING_ADDRESS,
             to: CONTRACT_ADDRESS, 
             gas: web3.utils.toHex(800000),
-            gasPrice: web3.utils.toHex(web3.utils.toWei('19', 'gwei')), 
+            gasPrice: web3.utils.toHex(web3.utils.toWei('25', 'gwei')), 
             data: tokenMintData
         };
 
+        // Sending Transaction and Setting Click Balance in DB to 0. 
         web3.eth.sendTransaction(transactionObject)
             .then(web3Response => {
                 res.status(200).send(web3Response.transactionHash)
@@ -53,7 +57,6 @@ const exchangeClicks = (req, res) => {
             .catch(err => {
                 console.log(err)
             });
-            // TODO: might have to handle the promise from this. 
     }
 };
 

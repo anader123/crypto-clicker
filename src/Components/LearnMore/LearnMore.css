@@ -8,10 +8,14 @@
 }
 
 .home-button {
-    text-decoration: none;
     width: 90%;
     display: flex; 
     justify-content: flex-end; 
+}
+
+.home-button a {
+    text-decoration: none;
+    color: black;
 }
 
 .mm-title {
@@ -33,9 +37,15 @@
 }
 
 .mm-download-button:hover {
-    text-decoration: none;
     background-color: rgb(223, 134, 33);
+    color: white;
 }
+
+.mm-download-button a {
+    text-decoration: none;
+    color: black;
+}
+
 .mm-video {
     height: 35vh;
     width: 60vw; 

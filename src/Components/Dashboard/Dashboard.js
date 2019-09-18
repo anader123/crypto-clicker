@@ -3,6 +3,7 @@ import axios from 'axios';
 import { connect } from 'react-redux'; 
 import { Link } from 'react-router-dom'; 
 import EthClicker from '../EthClicker/EthClicker'; 
+import ContractAbi from '../../utils/tokenContractAbi'; 
 
 import './Dashboard.css';
 import swal from '@sweetalert/with-react';
@@ -11,17 +12,34 @@ import swal from '@sweetalert/with-react';
 import {setAddress, setNetwork, setMetaMask} from '../../redux/reducer'; 
 
 class Dashboard extends Component {
-    // constructor() {
-    //     super(); 
+    constructor() {
+        super(); 
 
-    //     this.state = {
-    //         ethBalance: 0
-    //     }
-    // }
+        this.state = {
+            menuToggle: true,
+            ethBalance: 0
+        }
+    }
 
     componentDidMount() {
         this.keepOffLogin();
     };
+
+    // getBalance() {
+    //     const { address } = this.props; 
+    //     window.web3.eth.getBalance(address, (error, result) => {
+    //         if(!error)
+    //             this.setState({
+    //                 ethBalance: JSON.stringify(result)
+    //             })
+    //         else
+    //             console.error(error);
+    //      })
+    //     //  this.setState({
+    //     //      ethBalance: window.web3.fromWei(this.state.ethBalance)
+    //     //  })
+    //     //  console.log(this.state.ethBalance); 
+    // };
 
     keepOffLogin = () => {
         axios.get('/auth/check_session')
@@ -87,6 +105,7 @@ class Dashboard extends Component {
                       })
                     this.checkAccount();
                     this.checkNetwork(); 
+                    this.getBalance(); 
                 })
                 .catch(err => console.log(err))
         }
@@ -113,9 +132,17 @@ class Dashboard extends Component {
             .then( () => {
                 this.props.history.push('/'); 
                 this.props.setMetaMask(false); 
+                this.toggleMenu();
             })
             .catch(err => console.log(err))
     };
+
+    toggleMenu = () => {
+        console.log('hit')
+        this.setState({
+            menuToggle: !this.state.menuToggle 
+        })
+    }
 
     render() {
         const { user_id, email, address, network, metaMaskConnected } = this.props; 
@@ -132,7 +159,22 @@ class Dashboard extends Component {
                     <div className='dashboard-buttons'>
                         <Link to='/about'><button className='btn'>{'<Learn More/>'}</button></Link>
                         <button className='btn red-btn' onClick={this.logout}>{'<Logout/>'}</button>
-                </div>
+                    </div>
+                    <nav className='navbar-container'>
+                        <div className='navbar-icon' onClick={this.toggleMenu}>
+                            &#9776; 
+                            </div>
+                            <div className='menu-container'>
+                            <ul className={this.state.menuToggle? 
+                        'navbar-menu'
+                            :
+                        'navbar-menu slide'}>
+                                <li><Link to='/about'>LEARN MORE</Link></li>
+                                <li onClick={this.logout}>LOGOUT</li>
+                                <li onClick={this.toggleMenu}><Link to='/delete'>DELETE ACCOUNT</Link></li>
+                            </ul>
+                            </div>
+                    </nav>
                 </div>
                 <div className='mm-sentences'>
                     <p>Welcome to CryptoClicker, a website that allows you to tokenize your in game currency.</p> <p className='second-mm-sentence'>Begin by connecting your MetaMask account <span role="img" aria-label='fox-emoji' >🦊</span>.</p>
@@ -156,6 +198,21 @@ class Dashboard extends Component {
                         <Link to='/about'><button className='btn'>{'<Learn More/>'}</button></Link>
                         <button className='btn red-btn' onClick={this.logout}>{'<Logout/>'}</button>
                 </div>
+                <nav className='navbar-container'>
+                    <div className='navbar-icon' onClick={this.toggleMenu}>
+                        &#9776; 
+                        </div>
+                            <div className='menu-container'>
+                                <ul className={this.state.menuToggle? 
+                                'navbar-menu'
+                                    :
+                                'navbar-menu slide'}>
+                                    <li onClick={this.toggleMenu}><Link to='/about'>LEARN MORE</Link></li>
+                                    <li onClick={this.logout}>LOGOUT</li>
+                                    <li onClick={this.toggleMenu}><Link to='/delete'>DELETE ACCOUNT</Link></li>
+                                </ul>
+                            </div>
+                        </nav>
                 </div>
                 {/* Players will click the eth image to increase their click_balance */}
                 <EthClicker/> 

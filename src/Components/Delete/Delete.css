@@ -30,6 +30,10 @@
     flex-direction: column;
 }
 
+.delete-btn {
+    margin-bottom: 1em; 
+}
+
 @media (max-width: 450px) { 
     .delete-page-title {
         font-size: 1.25em;
@@ -42,8 +46,9 @@
     .delete-page-text {
         font-size: .7em;
     }
-    .link-span {
-        padding-top: 2.1em;
-    }
+   .delete-btn {
+       margin-bottom: 1.5em; 
+       margin-top: 1em; 
+   }
   }
   

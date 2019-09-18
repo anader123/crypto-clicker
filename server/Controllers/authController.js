@@ -16,13 +16,13 @@ const register = async (req, res) => {
     // Registering User
     const newUser = await db.register_user([email, passwordHash]); 
 
-    // Initializing a Balance for the User 
+    // Initializing a balance for the user 
     const newUserBalance = await db.create_new_balance([newUser[0].user_id])
 
     // Deleting Unhashed Password 
     delete newUser[0].password;
 
-    // Set Values to the Session 
+    // Set values to the session 
     req.session.user = newUser[0];
     req.session.click_balance = newUserBalance[0].click_balance;
 

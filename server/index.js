@@ -48,8 +48,9 @@ app.get('/auth/check_session', authCtrl.checkSession);
 // TODO: Keeping this here to show that I had a delete
 // app.delete('/auth/delete/:user_id', authCtrl.deleteUser);
 
-app.post('/api/session_balance', balCtrl.updateSessionBalance)
-app.post('/api/exchanage', balCtrl.exchangeClicks)
+app.post('/api/session_balance', balCtrl.updateSessionBalance);
+app.post('/api/exchanage', balCtrl.exchangeClicks);
+app.post('/api/tokens', balCtrl.checkTokenBalance);
 
 // Server Listening
 app.listen(SERVER_PORT, () => console.log(`Server is running on ${SERVER_PORT}`));

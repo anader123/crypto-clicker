@@ -25,6 +25,7 @@ class Delete extends Component {
             })
     };
 
+    // User's password is required for them to delete their account. 
     deleteAccount = () => {
         axios.post(`/auth/delete/${this.props.user_id}`, {password: this.state.password, email: this.props.email})
             .then(() => {

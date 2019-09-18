@@ -17,17 +17,15 @@ const web3 = new Web3(WEB3_PROVIDER);
 web3.eth.accounts.wallet.add(MINTING_KEY); 
 const contract = new web3.eth.Contract(abi, CONTRACT_ADDRESS);
 
-// Handles Updating the Session to the Click Balance on State
+// Handles updating the session from the click_balance in redux. 
 const updateSessionBalance = (req, res) => {
     const { click_balance } = req.body; 
     req.session.click_balance = click_balance; 
     res.status(200).send('Clicks have been saved');
 };
 
-// Turns Clicks Into CryptoClicker Tokens and Sets DB Click Balance to 0
+// Turns clicks into CryptoClicker Tokens and sets DB click_balance to 0
 const exchangeClicks = (req, res) => {
-
-    // Click Balance From State and User's Currently Selected ETH Address. 
     const { click_balance, address } = req.body; 
     const user_id = req.session.user_id; 
     const string_click_balance = click_balance.toString();
@@ -37,7 +35,7 @@ const exchangeClicks = (req, res) => {
         res.status(500).send('You need at least 50 clicks to tokenize')
     }
     else {
-        // Data for Contract Call, Click Balance Must Be Formatted as a String. 
+        // Data for Contract call, click_balance must be formatted as a string. 
         const tokenMintData = contract.methods.mint(address , web3.utils.toWei(string_click_balance)).encodeABI();
 
         const transactionObject = {
@@ -48,19 +46,28 @@ const exchangeClicks = (req, res) => {
             data: tokenMintData
         };
 
-        // Sending Transaction and Setting Click Balance in DB to 0. 
+        // Sends transaction and setting click_balance in DB to 0. 
         web3.eth.sendTransaction(transactionObject)
             .then(web3Response => {
                 res.status(200).send(web3Response.transactionHash)
                 db.update_balance([0, user_id])
             })
-            .catch(err => {
-                console.log(err)
-            });
+            .catch(err => console.log(err));
     }
 };
 
+// Checks to see how many tokens the selected MetaMask address has. 
+const checkTokenBalance = (req, res) => {
+    const { address } = req.body; 
+    contract.methods.balanceOf(address).call()
+        .then(web3Response => {
+            res.status(200).send(web3.utils.fromWei(web3Response)); 
+        })
+        .catch(err => console.log(err));
+}
+
 module.exports = {
     updateSessionBalance,
-    exchangeClicks
+    exchangeClicks,
+    checkTokenBalance
 };

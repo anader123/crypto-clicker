@@ -4,18 +4,16 @@ import { connect } from 'react-redux';
 import './EthClicker.css';
 import swal from '@sweetalert/with-react';
 
-// Action Builder
+// Action Builders
 import {incrementClick, resetCount} from '../../redux/reducer'; 
 
 // Images
 import ethLogo from '../../img/ethlogo.png';
 import blockLoad from '../../img/green-blockchainLoading.png';
 
-
-
-
 class EthClicker extends Component {
 
+    // Creates an axios call to the server that will mint tokens based on the user's click_balance and sets the state of click_balance to 0. Then an alert will tell the user if the transaction was successfull and display the transaction hash which links to Etherscan. 
     exchangeClicks = () => {
         this.tokenizeLoading(); 
         axios.post('/api/exchanage', {click_balance: this.props.click_balance, address: this.props.address})
@@ -28,10 +26,13 @@ class EthClicker extends Component {
                     <div>
                         <p>Transaction Hash:</p>
                         <br/>
+                        {/* res.data is the transaction hash */}
                         <p><a target="_blank" rel="noopener noreferrer" href={`https://ropsten.etherscan.io/tx/${res.data}`}>{res.data}</a></p>
                     </div>)
                   })
                 this.props.resetCount();
+                 //TODO: 
+                // Hit the endpoint that returns the token balance of the user. 
             })
             .catch(() => {
                 swal({
@@ -43,6 +44,19 @@ class EthClicker extends Component {
             })
     };
 
+    // TODO: have a function that runs every so after that stores state to the session
+    // componentDidUpdate() {
+    //     window.setInterval(this.updateClicks(), 10000)
+    // };
+    // updateClicks = () => {
+    //     axios.post('/api/session_balance', {click_balance: this.props.click_balance})
+    //         .then( res => {
+    //             console.log(res)
+    //         })
+    //         .catch(err => console.log(err))
+    // };
+
+    // Alerts the user that the transaction has been submitted and is waiting for the blockchain to return a transaction hash. 
     tokenizeLoading = () => {
         swal({
             closeOnClickOutside: false,

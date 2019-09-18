@@ -40,7 +40,6 @@
 
 .input-box {
   color: white;
-  /* width: 35vw; */
   background-color: transparent;
   border: none;
   outline: none;
@@ -68,12 +67,6 @@
     blink-caret .85s step-end infinite;
 }
 
-
-/* The typing effect */
-@keyframes typing {
-  from { width: 0 }
-  to { width: 100% }
-}
 
 @keyframes type {
 0% {

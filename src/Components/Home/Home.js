@@ -23,6 +23,7 @@ class Home extends Component {
     };
 
     componentDidMount() {
+        // Makes sure that the user can't acess the dashboard page if they aren't logged in. 
         axios.get('/auth/check_session')
             .then(() => {
                 this.props.history.push('/dashboard');
@@ -73,6 +74,7 @@ class Home extends Component {
             })
     };
 
+    // Toggles between the login and sign up fields. 
     changeDisplay = () => {
         this.setState({
             display: !this.state.display,
@@ -85,14 +87,15 @@ class Home extends Component {
         return (
             <div className='home-container'>
                 {
+                    // Login form 
                     this.state.display ?
                     (<div className='login-container'>
+                        {/* <div>
+                            <img className='eth-logo' src={ethLogo} alt='eth logo'/>
+                        </div> */}
                         <h3 className='login-title typewriter-login'>Login</h3>
-                        <div>
-                            {/* <img className='eth-logo' src={ethLogo} alt='eth logo'/> */}
                         <div className='input-container'>
                         <label className="login-label">E-Mail Address</label>
-                        </div>
                         <input  className='input-box'
                                 placeholder='Enter your email'
                                 type='email'
@@ -111,6 +114,7 @@ class Home extends Component {
                                 <span className='login-span' onClick={this.changeDisplay}>Create an account</span>
                     </div>)
                     :
+                    // Register form 
                     (<div className='login-container'>
                         <h3 className='login-title typewriter-login'>Sign Up</h3>
                             {/* <img className='eth-logo' src={ethLogo} alt='eth logo'/> */}

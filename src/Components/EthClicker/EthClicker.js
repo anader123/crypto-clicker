@@ -15,8 +15,9 @@ class EthClicker extends Component {
 
     // Creates an axios call to the server that will mint tokens based on the user's click_balance and sets the state of click_balance to 0. Then an alert will tell the user if the transaction was successfull and display the transaction hash which links to Etherscan. 
     exchangeClicks = () => {
-        this.tokenizeLoading(); 
-        axios.post('/api/exchanage', {click_balance: this.props.click_balance, address: this.props.address})
+        const { getTokenBalance, resetCount, click_balance, address, network } = this.props; 
+        this.tokenizeLoading();  
+        axios.put('/api/exchanage', {click_balance, address})
             .then((res) => {
                 swal({
                     icon: "success",
@@ -30,9 +31,11 @@ class EthClicker extends Component {
                         <p><a target="_blank" rel="noopener noreferrer" href={`https://ropsten.etherscan.io/tx/${res.data}`}>{res.data}</a></p>
                     </div>)
                   })
-                this.props.resetCount();
-                 //TODO: 
-                // Hit the endpoint that returns the token balance of the user. 
+                resetCount();
+                // Makes sure that the user is connected to Ropsten before checking their token balance. 
+                if(network === 'Ropsten') {
+                    setTimeout(getTokenBalance(address),10000)
+                }
             })
             .catch(() => {
                 swal({

@@ -49,7 +49,6 @@ class Dashboard extends Component {
         else {
             window.ethereum.enable()
                 .then((response) => {
-                    this.checkNetwork(); 
                     this.props.setAddress(response[0]);
                     this.props.setMetaMask(true);
                     swal({
@@ -57,11 +56,11 @@ class Dashboard extends Component {
                         title: "MetaMask Connected 🦊",
                         timer: 150000,
                         content: (<div>
-                            <p>Address:</p><p>{`${response[0]}`}</p>
+                            <p>Address:</p><br/><p>{`${response[0]}`}</p>
                         </div>)
                         })
                     this.checkAccount();
-                    this.getTokenBalance(response[0]);
+                    this.checkNetwork(); 
                 })
                 .catch(err => console.log(err))
         }
@@ -87,18 +86,23 @@ class Dashboard extends Component {
 
     // Checks to see which Ethereum network the user is using in their MetaMask extension. 
     checkNetwork = () => {
-        const { setNetwork } = this.props 
+        const { setNetwork, setTokenBalance, address } = this.props 
         window.web3.version.getNetwork((err, netId) => {
             switch (netId) {
                 case "1":
+                setTokenBalance(0);
                 return setNetwork('Mainnet')
                 case "3":
+                this.getTokenBalance(address)
                 return setNetwork('Ropsten')
                 case "4":
+                setTokenBalance(0);
                 return setNetwork('Rinkeby')
                 case "42":
+                setTokenBalance(0);
                 return setNetwork('Kovan')
                 default:
+                setTokenBalance(0);
                 return setNetwork('Unknown Network')
             }
             })
@@ -196,7 +200,7 @@ class Dashboard extends Component {
                         </nav>
                 </div>
                 {/* Players will click the eth image to increase their click_balance */}
-                <EthClicker/> 
+                <EthClicker getTokenBalance={this.getTokenBalance}/> 
                 <div className='delete-button'>
                     <Link to='/delete'><button className='btn red-btn'>{'<Delete Account/>'}</button></Link>
                 </div>

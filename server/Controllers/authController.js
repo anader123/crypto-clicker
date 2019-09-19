@@ -45,7 +45,7 @@ const login = async (req, res) => {
     }
 
     const authedPassword = bcrypt.compareSync(password, foundUser[0].password); 
-    const userBalance = await db.get_user_balance([foundUser[0].user_id]);
+    const userBalance = await db.get_user_balance([foundUser[0].email]);
 
     if(authedPassword) {
         delete foundUser[0].password; 

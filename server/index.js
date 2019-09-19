@@ -49,7 +49,7 @@ app.get('/auth/check_session', authCtrl.checkSession);
 // app.delete('/auth/delete/:user_id', authCtrl.deleteUser);
 
 app.post('/api/session_balance', balCtrl.updateSessionBalance);
-app.post('/api/exchanage', balCtrl.exchangeClicks);
+app.put('/api/exchanage', balCtrl.exchangeClicks);
 app.post('/api/tokens', balCtrl.checkTokenBalance);
 
 // Server Listening

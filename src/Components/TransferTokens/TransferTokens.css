@@ -1,0 +1,48 @@
+
+.transfer-page-container {
+    height: 73vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.transfer-title {
+    margin: 1em;
+    font-size: 2.5em;
+}
+
+.user-address-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: .7em;
+    margin: 1em;
+    font-size: 1.3em;
+    background-color: rgb(49, 49, 53);
+    border: solid 1px rgb(112, 109, 109);
+    border-radius: 3px;
+}
+
+.transfer-input-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-around;
+    height: 18vh;
+    margin: 3em;
+    width: 25vw;
+}
+
+.transfer-button-container {
+    display: flex;
+    flex-direction: column;
+    height: 10vh;
+    width: 10vw;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.send-btn {
+    width: 6.5em;
+    height: 3em;
+}

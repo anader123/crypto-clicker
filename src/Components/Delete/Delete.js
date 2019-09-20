@@ -16,6 +16,7 @@ class Delete extends Component {
     };
 
     componentDidMount() {
+    // Makes sure that the user can't access the delete page if they aren't logged in. 
         axios.get('/auth/check_session')
             .then({
 
@@ -81,7 +82,7 @@ class Delete extends Component {
                         onChange={this.handleChange}/> 
                 <div className='delete-page-buttons'>
                     <button className='btn red-btn delete-btn' onClick={this.deleteAccount}>{'<Delete Account/>'}</button>
-                    <Link to='/dashboard'><span className='link-span' onClick={this.cancelDelete}>Cancel</span></Link>
+                    <Link to='/dashboard'><span className='link-span'>Cancel</span></Link>
                 </div>
             </div>
         )

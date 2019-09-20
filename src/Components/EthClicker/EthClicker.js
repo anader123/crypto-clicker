@@ -34,7 +34,7 @@ class EthClicker extends Component {
                 resetCount();
                 // Makes sure that the user is connected to Ropsten before checking their token balance. 
                 if(network === 'Ropsten') {
-                    setTimeout(getTokenBalance(address),10000)
+                    setTimeout(() => {getTokenBalance(address)}, 15000)
                 }
             })
             .catch(() => {

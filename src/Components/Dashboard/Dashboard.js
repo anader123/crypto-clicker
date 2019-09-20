@@ -22,12 +22,12 @@ class Dashboard extends Component {
 
     componentDidMount() {
         this.keepOffLogin();
-        // PreventS the page from reloading when the user changes networks. 
+        // Prevents the page from reloading when the user changes networks. 
         window.ethereum.autoRefreshOnNetworkChange = false;
     };
 
 
-    // Makes sure that the user can't go back to the login page if they are logged in. 
+    // Makes sure that the user can't access the dashboard page if they aren't logged in. 
     keepOffLogin = () => {
         axios.get('/auth/check_session')
             .then(() => {
@@ -63,6 +63,8 @@ class Dashboard extends Component {
                         })
                     this.checkAccount();
                     this.checkNetwork(); 
+                    this.networkMM();
+                    this.addressMM();
                 })
                 .catch(err => console.log(err))
         }
@@ -70,9 +72,12 @@ class Dashboard extends Component {
 
     // Gets token balance for user's address. The method will return 0 if the user isn't on the Ropsten Network. 
     getTokenBalance = () => {
-        const { abi, contract_address, address, setTokenBalance } = this.props; 
+        console.log('hit')
+        const currentAddress = window.ethereum.selectedAddress; 
+        const { abi, contract_address, setTokenBalance } = this.props; 
         const contract = window.web3.eth.contract(abi).at(contract_address);
-        contract.balanceOf.call(address, (err, res) => {
+        contract.balanceOf.call(currentAddress, (err, res) => {
+            console.log(res)
             setTokenBalance(window.web3.fromWei(JSON.parse(res)))
         }) 
 
@@ -83,17 +88,18 @@ class Dashboard extends Component {
     };
 
     // Checks if the user has changed their MetaMask address and updates redux to the new address. 
-    checkAccount = () => {setInterval(() => {
+    checkAccount = () => {
+        console.log('checking address')
         const { address, setAddress } = this.props; 
         const currentAddress = window.web3.eth.accounts[0]; 
         if (currentAddress !== address) {
             setAddress(currentAddress)
             this.getTokenBalance()
         }
-    }, 1500)};
+    };
 
     // Checks to see which Ethereum network the user is using in their MetaMask extension. 
-    checkNetwork = () => { setInterval(() => {
+    checkNetwork = () => {
         const { setNetwork, setTokenBalance } = this.props 
         window.web3.version.getNetwork((err, netId) => {
             switch (netId) {
@@ -114,15 +120,29 @@ class Dashboard extends Component {
                 return setNetwork('Unknown Network')
             }
             })
-    }, 1500)};
+    };
+
+    // Function is only fired when the user changes the network. Using ethereum.on instead setInterval.
+    networkMM = () => {
+        window.ethereum.on('networkChanged', () => {
+            this.checkNetwork(); 
+        })
+    };
+
+    // Function is only fired when the user changes their MM address. 
+    addressMM = () => {
+        window.ethereum.on('accountsChanged', () => {
+            this.checkAccount(); 
+        })
+    };
 
     logout = () => {
         const { setMetaMask, history, click_balance } = this.props; 
         axios.post('/auth/logout', {click_balance})
             .then( () => {
-                history.push('/'); 
-                setMetaMask(false); 
                 this.toggleMenu();
+                setMetaMask(false); 
+                history.push('/'); 
             })
             .catch(err => console.log(err))
     };
@@ -188,6 +208,7 @@ class Dashboard extends Component {
                         </div>
                     </div>
                     <div className='dashboard-buttons'>
+                        <Link to='/transfer'><button className='btn'>{'<TRANSFER TOKENS/>'}</button></Link>
                         <Link to='/about'><button className='btn'>{'<Learn More/>'}</button></Link>
                         <button className='btn red-btn' onClick={this.logout}>{'<Logout/>'}</button>
                 </div>
@@ -200,6 +221,7 @@ class Dashboard extends Component {
                                 'navbar-menu'
                                     :
                                 'navbar-menu slide'}>
+                                    <li ><Link to='/transfer'>TRANSFER TOKENS</Link></li>
                                     <li onClick={this.toggleMenu}><Link to='/about'>LEARN MORE</Link></li>
                                     <li onClick={this.logout}>LOGOUT</li>
                                     <li onClick={this.toggleMenu}><Link to='/delete'>DELETE ACCOUNT</Link></li>

@@ -22,8 +22,8 @@ class Home extends Component {
         }
     };
 
+    // Makes sure that the user can't go back to the login page if they are logged in. 
     componentDidMount() {
-        // Makes sure that the user can't acess the dashboard page if they aren't logged in. 
         axios.get('/auth/check_session')
             .then(() => {
                 this.props.history.push('/dashboard');

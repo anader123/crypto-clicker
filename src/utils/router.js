@@ -5,6 +5,7 @@ import Home from '../Components/Home/Home';
 import Dashboard from '../Components/Dashboard/Dashboard';
 import LearnMore from '../Components/LearnMore/LearnMore'; 
 import Delete from '../Components/Delete/Delete'; 
+import TransferTokens from '../Components/TransferTokens/TransferTokens';
 
 export default (
     <Switch>
@@ -12,5 +13,6 @@ export default (
         <Route path='/dashboard' component={Dashboard}/>
         <Route path='/about' component={LearnMore}/>
         <Route path='/delete' component={Delete}/>
+        <Route path='/transfer' component={TransferTokens}/> 
     </Switch>
 );

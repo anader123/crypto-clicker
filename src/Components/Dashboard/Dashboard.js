@@ -22,6 +22,8 @@ class Dashboard extends Component {
 
     componentDidMount() {
         this.keepOffLogin();
+        // PreventS the page from reloading when the user changes networks. 
+        window.ethereum.autoRefreshOnNetworkChange = false;
     };
 
 
@@ -67,11 +69,17 @@ class Dashboard extends Component {
     };
 
     // Gets token balance for user's address. The method will return 0 if the user isn't on the Ropsten Network. 
-    getTokenBalance = (address) => {
-        const { setTokenBalance } = this.props;
-            axios.post('/api/tokens', {address})
-            .then(res => setTokenBalance(res.data))
-            .catch(err => console.log(err))
+    getTokenBalance = () => {
+        const { abi, contract_address, address, setTokenBalance } = this.props; 
+        const contract = window.web3.eth.contract(abi).at(contract_address);
+        contract.balanceOf.call(address, (err, res) => {
+            setTokenBalance(window.web3.fromWei(JSON.parse(res)))
+        }) 
+
+        // axios request needs to have an address passed in as an argument. 
+            // axios.post('/api/tokens', {address})
+            // .then(res => setTokenBalance(res.data))
+            // .catch(err => console.log(err))
     };
 
     // Checks if the user has changed their MetaMask address and updates redux to the new address. 
@@ -80,20 +88,20 @@ class Dashboard extends Component {
         const currentAddress = window.web3.eth.accounts[0]; 
         if (currentAddress !== address) {
             setAddress(currentAddress)
-            this.getTokenBalance(currentAddress)
+            this.getTokenBalance()
         }
     }, 1500)};
 
     // Checks to see which Ethereum network the user is using in their MetaMask extension. 
-    checkNetwork = () => {
-        const { setNetwork, setTokenBalance, address } = this.props 
+    checkNetwork = () => { setInterval(() => {
+        const { setNetwork, setTokenBalance } = this.props 
         window.web3.version.getNetwork((err, netId) => {
             switch (netId) {
                 case "1":
                 setTokenBalance(0);
                 return setNetwork('Mainnet')
                 case "3":
-                this.getTokenBalance(address)
+                this.getTokenBalance()
                 return setNetwork('Ropsten')
                 case "4":
                 setTokenBalance(0);
@@ -106,11 +114,11 @@ class Dashboard extends Component {
                 return setNetwork('Unknown Network')
             }
             })
-    };
+    }, 1500)};
 
     logout = () => {
-        const { setMetaMask, history } = this.props; 
-        axios.post('/auth/logout', {click_balance: this.props.click_balance})
+        const { setMetaMask, history, click_balance } = this.props; 
+        axios.post('/auth/logout', {click_balance})
             .then( () => {
                 history.push('/'); 
                 setMetaMask(false); 
@@ -127,7 +135,7 @@ class Dashboard extends Component {
     }
 
     render() {
-        const { user_id, email, address, network, metaMaskConnected, token_balance } = this.props; 
+        const { user_id, email, address, network, metaMaskConnected, token_balance, contract_address } = this.props; 
         return (
             <div>
                 {!metaMaskConnected 
@@ -174,7 +182,7 @@ class Dashboard extends Component {
                         <div className='user-eth-info'>
                         <h3>Email: $ {email}</h3>
                         <h3>Network: {network}</h3>
-                        <h3>Token Contract: 0x264A0131376cdD61EF0Ab11Cf0Ca3cC9F3f7548C</h3>
+                        <h3>Token Contract: {contract_address}</h3>
                         <h3>User Address: {address}</h3>
                         <h3>Token Balance: {token_balance}</h3>
                         </div>

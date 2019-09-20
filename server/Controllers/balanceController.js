@@ -56,18 +56,18 @@ const exchangeClicks = (req, res) => {
     }
 };
 
-// Checks to see how many tokens the selected MetaMask address has. 
-const checkTokenBalance = (req, res) => {
-    const { address } = req.body; 
-    contract.methods.balanceOf(address).call()
-        .then(web3Response => {
-            res.status(200).send(web3.utils.fromWei(web3Response)); 
-        })
-        .catch(err => console.log(err));
-}
+// Removing functionality from server, using the web3 injected provided by MetaMask allowed the front end to get the token balance directly.
+// Checks to see how many tokens the an address has. 
+// const checkTokenBalance = (req, res) => {
+//     const { address } = req.body; 
+//     contract.methods.balanceOf(address).call()
+//         .then(web3Response => {
+//             res.status(200).send(web3.utils.fromWei(web3Response)); 
+//         })
+//         .catch(err => console.log(err));
+// }
 
 module.exports = {
     updateSessionBalance,
-    exchangeClicks,
-    checkTokenBalance
+    exchangeClicks
 };

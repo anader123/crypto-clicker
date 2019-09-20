@@ -1,3 +1,4 @@
+import contractAbi from '../utils/contractAbi'; 
 const initialState = {
     click_balance: 0, 
     token_balance: null,
@@ -6,6 +7,8 @@ const initialState = {
     address: null,
     network: null, 
     metaMaskConnected: false,
+    contract_address: '0x264A0131376cdD61EF0Ab11Cf0Ca3cC9F3f7548C',
+    abi: contractAbi.abi
 }; 
 
 //Action Types 

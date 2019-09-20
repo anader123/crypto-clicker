@@ -74,6 +74,7 @@ class EthClicker extends Component {
           })
     }; 
 
+
     render() {
         const { click_balance, incrementClick } = this.props; 
         return (

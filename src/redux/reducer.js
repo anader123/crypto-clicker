@@ -8,7 +8,8 @@ const initialState = {
     network: null, 
     metaMaskConnected: false,
     contract_address: '0x264A0131376cdD61EF0Ab11Cf0Ca3cC9F3f7548C',
-    abi: contractAbi.abi
+    abi: contractAbi.abi, 
+    transfer_toggle: false
 }; 
 
 //Action Types 
@@ -18,7 +19,8 @@ const RESET_COUNT = 'RESET_COUNT';
 const SET_ADDRESS = 'SET_ADDRESS'; 
 const SET_NETWORK = 'SET_NETWORK'; 
 const SET_METAMASK = 'SET_METAMASK';
-const SET_TOKEN_BALANCE = 'SET_TOKEN_BALANCE'; 
+const SET_TOKEN_BALANCE = 'SET_TOKEN_BALANCE';
+const TOGGLE_TOKEN_TRANSFER = 'TOGGLE_TOKEN_TRANSFER'; 
 
 // Action Builders 
 
@@ -76,6 +78,13 @@ export function resetCount() {
     }
 };
 
+export function toggleTokenTransfer(bool) {
+    return {
+        type: TOGGLE_TOKEN_TRANSFER, 
+        payload: bool
+    }
+}
+
 
 // Reducer Function 
 
@@ -95,7 +104,9 @@ export default function reducer(state = initialState, action) {
             return {...state, click_balance: action.payload}
         case RESET_COUNT: 
             return {...state, click_balance: 0}
-        default: 
+        case TOGGLE_TOKEN_TRANSFER: 
+            return {...state, transfer_toggle: action.payload}
+        default:
             return state; 
     }
 };

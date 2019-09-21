@@ -3,7 +3,6 @@ import axios from 'axios';
 import { connect } from 'react-redux'; 
 import './Home.css';
 import swal from 'sweetalert';
-import ethLogo from '../../img/ethlogo.png';
 
 // Action Builder
 import {setInitialState} from '../../redux/reducer'; 
@@ -90,9 +89,6 @@ class Home extends Component {
                     // Login form 
                     this.state.display ?
                     (<div className='login-container'>
-                        {/* <div>
-                            <img className='eth-logo' src={ethLogo} alt='eth logo'/>
-                        </div> */}
                         <h3 className='login-title typewriter-login'>Login</h3>
                         <div className='input-container'>
                         <label className="login-label">E-Mail Address</label>
@@ -117,7 +113,6 @@ class Home extends Component {
                     // Register form 
                     (<div className='login-container'>
                         <h3 className='login-title typewriter-login'>Sign Up</h3>
-                            {/* <img className='eth-logo' src={ethLogo} alt='eth logo'/> */}
                         <div className='input-container'>
                             <label className="login-label">E-Mail Address</label>
                             <input  className='input-box'

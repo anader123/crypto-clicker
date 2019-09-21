@@ -1,6 +1,8 @@
 
 .transfer-page-container {
-    height: 73vh;
+    /* position: absolute; */
+    margin-top: 3.5em;
+    height: 48vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -45,4 +47,28 @@
 .send-btn {
     width: 6.5em;
     height: 3em;
+}
+
+/* Media Queries */
+
+@media (max-width: 1150px) {
+    .user-address-info {
+        font-size: 1em;
+    }
+}
+
+@media (max-width: 450px) {
+    .transfer-title {
+        font-size: 1.5em;
+    }
+    .user-address-info {
+        font-size: .73em; 
+    }
+    .transfer-input-container {
+        width: 60vw;
+        margin: 1.7em;
+    }
+    .transfer-button-container {
+        height: 18vh;
+    }
 }

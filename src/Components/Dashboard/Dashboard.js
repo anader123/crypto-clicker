@@ -9,7 +9,7 @@ import swal from '@sweetalert/with-react';
 import EthClicker from '../EthClicker/EthClicker'; 
 
 // Action Builders
-import {setAddress, setNetwork, setMetaMask, setTokenBalance} from '../../redux/reducer'; 
+import {setAddress, setNetwork, setMetaMask, setTokenBalance, toggleTokenTransfer} from '../../redux/reducer'; 
 
 class Dashboard extends Component {
     constructor() {
@@ -72,26 +72,18 @@ class Dashboard extends Component {
 
     // Gets token balance for user's address. The method will return 0 if the user isn't on the Ropsten Network. 
     getTokenBalance = () => {
-        console.log('hit')
         const currentAddress = window.ethereum.selectedAddress; 
         const { abi, contract_address, setTokenBalance } = this.props; 
         const contract = window.web3.eth.contract(abi).at(contract_address);
         contract.balanceOf.call(currentAddress, (err, res) => {
-            console.log(res)
             setTokenBalance(window.web3.fromWei(JSON.parse(res)))
         }) 
-
-        // axios request needs to have an address passed in as an argument. 
-            // axios.post('/api/tokens', {address})
-            // .then(res => setTokenBalance(res.data))
-            // .catch(err => console.log(err))
     };
 
     // Checks if the user has changed their MetaMask address and updates redux to the new address. 
     checkAccount = () => {
-        console.log('checking address')
         const { address, setAddress } = this.props; 
-        const currentAddress = window.web3.eth.accounts[0]; 
+        const currentAddress = window.ethereum.selectedAddress; 
         if (currentAddress !== address) {
             setAddress(currentAddress)
             this.getTokenBalance()
@@ -133,6 +125,7 @@ class Dashboard extends Component {
     addressMM = () => {
         window.ethereum.on('accountsChanged', () => {
             this.checkAccount(); 
+            console.log(this.props.address);
         })
     };
 
@@ -155,7 +148,7 @@ class Dashboard extends Component {
     }
 
     render() {
-        const { user_id, email, address, network, metaMaskConnected, token_balance, contract_address } = this.props; 
+        const { email, address, network, metaMaskConnected, token_balance, contract_address, toggleTokenTransfer } = this.props; 
         return (
             <div>
                 {!metaMaskConnected 
@@ -208,7 +201,7 @@ class Dashboard extends Component {
                         </div>
                     </div>
                     <div className='dashboard-buttons'>
-                        <Link to='/transfer'><button className='btn'>{'<TRANSFER TOKENS/>'}</button></Link>
+                        <button className='btn' onClick={() => toggleTokenTransfer(true)}>{'<TRANSFER TOKENS/>'}</button>
                         <Link to='/about'><button className='btn'>{'<Learn More/>'}</button></Link>
                         <button className='btn red-btn' onClick={this.logout}>{'<Logout/>'}</button>
                 </div>
@@ -221,7 +214,7 @@ class Dashboard extends Component {
                                 'navbar-menu'
                                     :
                                 'navbar-menu slide'}>
-                                    <li ><Link to='/transfer'>TRANSFER TOKENS</Link></li>
+                                    <li onClick={() => toggleTokenTransfer(true)}>TRANSFER TOKENS</li>
                                     <li onClick={this.toggleMenu}><Link to='/about'>LEARN MORE</Link></li>
                                     <li onClick={this.logout}>LOGOUT</li>
                                     <li onClick={this.toggleMenu}><Link to='/delete'>DELETE ACCOUNT</Link></li>
@@ -245,4 +238,4 @@ function mapStateToProps(state) {
     return state; 
 };
 
-export default connect(mapStateToProps, {setAddress, setNetwork, setMetaMask, setTokenBalance})(Dashboard); 
+export default connect(mapStateToProps, {setAddress, setNetwork, setMetaMask, setTokenBalance, toggleTokenTransfer})(Dashboard); 

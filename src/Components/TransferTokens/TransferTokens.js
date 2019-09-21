@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'; 
-import { Link } from 'react-router-dom'; 
 import axios from 'axios'; 
 import swal from '@sweetalert/with-react';
 import './TransferTokens.css'; 
 
 // Action Builders
-import {setTokenBalance} from '../../redux/reducer'; 
+import {setTokenBalance, toggleTokenTransfer} from '../../redux/reducer'; 
 
 class TransferTokens extends Component {
     constructor() {
@@ -29,7 +28,7 @@ class TransferTokens extends Component {
     };
 
     transferTokens = () => {
-        const { token_balance, abi, contract_address } = this.props; 
+        const { token_balance, abi, contract_address, getTokenBalance } = this.props; 
         const contract = window.web3.eth.contract(abi).at(contract_address);
         const { sendingAmount, recipientAddress } = this.state; 
         const weiSendingAmount = window.web3.toWei(sendingAmount);
@@ -47,19 +46,16 @@ class TransferTokens extends Component {
                     icon: "success",
                     title: "Tokens Successfully Sent",
                     closeOnClickOutside: false,
-                    content: ( 
-                    <div>
-                        <p>Transaction Hash:</p>
-                        <br/>
-                        {/* res.data is the transaction hash */}
-                        <p><a target="_blank" rel="noopener noreferrer" href={`https://ropsten.etherscan.io/tx/${res.data}`}>{res.data}</a></p>
-                    </div>)
                   })
             })
             this.setState({
                 recipientAddress: '', 
                 sendingAmount: null
             })
+            // Updates the token balance in redux after tokens are sent. 
+            setTimeout(() => {getTokenBalance()}, 12000)
+            getTokenBalance();
+            //TODO: Hitting reject in MetaMask still prompts the success and the user can enter in an amount greater than their token balance
         }
         else if(!recipientAddress.includes('0x') || recipientAddress.length !== 42) {
             swal({
@@ -87,14 +83,10 @@ class TransferTokens extends Component {
 
     render() {
         const { sendingAmount, recipientAddress } = this.state; 
-        const { token_balance, address } = this.props; 
+        const { toggleTokenTransfer } = this.props;
         return (
             <div className='transfer-page-container'>
                 <h1 className='transfer-title'>Transfer Tokens</h1>
-                <div className='user-address-info'>
-                    <p>Address: {address}</p>
-                    <p>CryptoClicker Token Balance: {token_balance}</p>
-                </div>
                 <div className='transfer-input-container'>
                     <label>To:</label>
                     <input className='input-box'
@@ -113,7 +105,7 @@ class TransferTokens extends Component {
                 </div>
                 <div className='transfer-button-container'>
                     <button className='btn send-btn' onClick={this.transferTokens}>{'<Send/>'}</button>
-                    <Link to='/dashboard'><span className='link-span'>Cancel</span></Link>
+                    <span className='link-span' onClick={() => toggleTokenTransfer(false)}>Cancel</span>
                 </div>
                 
             </div>
@@ -125,4 +117,4 @@ function mapStateToProps(state) {
     return state; 
 };
 
-export default connect(mapStateToProps, {setTokenBalance})(TransferTokens); 
+export default connect(mapStateToProps, {setTokenBalance, toggleTokenTransfer})(TransferTokens); 

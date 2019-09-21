@@ -88,6 +88,10 @@ from, to { border-color: transparent }
   border-bottom: solid .07em;
 }
 
+.link-span:hover{
+  cursor: pointer;
+}
+
 .link-span a {
   text-decoration: none;
 }

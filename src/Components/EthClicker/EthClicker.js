@@ -3,6 +3,7 @@ import axios from 'axios';
 import { connect } from 'react-redux'; 
 import './EthClicker.css';
 import swal from '@sweetalert/with-react';
+import TransferTokens from '../TransferTokens/TransferTokens'; 
 
 // Action Builders
 import {incrementClick, resetCount} from '../../redux/reducer'; 
@@ -12,6 +13,21 @@ import ethLogo from '../../img/ethlogo.png';
 import blockLoad from '../../img/green-blockchainLoading.png';
 
 class EthClicker extends Component {
+    constructor() {
+        super(); 
+
+        this.state = {
+            ethAnimation: false, 
+        }
+    };
+
+    // Animates the clicking and increments the click_balance. 
+    ethLogoClick = () => {
+        this.props.incrementClick(this.props.click_balance); 
+        this.setState({
+          ethAnimation: !this.state.ethAnimation
+        })
+      };
 
     // Creates an axios call to the server that will mint tokens based on the user's click_balance and sets the state of click_balance to 0. Then an alert will tell the user if the transaction was successfull and display the transaction hash which links to Etherscan. 
     exchangeClicks = () => {
@@ -34,7 +50,7 @@ class EthClicker extends Component {
                 resetCount();
                 // Makes sure that the user is connected to Ropsten before checking their token balance. 
                 if(network === 'Ropsten') {
-                    setTimeout(() => {getTokenBalance(address)}, 15000)
+                    setTimeout(() => {getTokenBalance()}, 12000)
                 }
             })
             .catch(() => {
@@ -76,15 +92,32 @@ class EthClicker extends Component {
 
 
     render() {
-        const { click_balance, incrementClick } = this.props; 
+        const { click_balance, transfer_toggle, getTokenBalance } = this.props; 
         return (
-            <div className='mid-dashboard-container'>
+            <div>
+                {!transfer_toggle
+                ?
+                (<div className='mid-dashboard-container'>
                     <h3 className='click-balance'>Click Balance: {click_balance}</h3>
-                    <img className='eth-click' src={ethLogo} alt='eth logo' onClick={() => incrementClick(click_balance)}/>
-                <div className='tokenize-button-container'>
-                    <button className='btn' onClick={this.exchangeClicks}>{'<Tokenize Clicks/>'}</button>
-                    <p className='tokenize-text'>*A minimum of 50 clicks are required in order to tokenize.</p>
+                    <img className={this.state.ethAnimation ? 'eth-click':'eth-click eth-animation'} src={ethLogo} alt='eth logo' onClick={this.ethLogoClick}/>
+                    <div className='tokenize-button-container'>
+                        <button className='btn' onClick={this.exchangeClicks}>{'<Tokenize Clicks/>'}</button>
+                        <p className='tokenize-text'>*A minimum of 50 clicks are required in order to tokenize.</p>
+                    </div>
+                </div>)
+                :
+                (<div>
+                <TransferTokens getTokenBalance={getTokenBalance}/> 
+                <div className='mid-dashboard-container'>
+                    <h3 className='click-balance'>Click Balance: {click_balance}</h3>
+                    <img className={this.state.ethAnimation ? 'eth-click':'eth-click eth-animation'} src={ethLogo} alt='eth logo' onClick={this.ethLogoClick}/>
+                    <div className='tokenize-button-container'>
+                        <button className='btn' onClick={this.exchangeClicks}>{'<Tokenize Clicks/>'}</button>
+                        <p className='tokenize-text'>*A minimum of 50 clicks are required in order to tokenize.</p>
+                    </div>
                 </div>
+                </div>)
+                }
             </div>
         )
     }

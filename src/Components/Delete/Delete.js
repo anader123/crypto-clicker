@@ -27,7 +27,8 @@ class Delete extends Component {
     };
 
     // User's password is required for them to delete their account. 
-    deleteAccount = () => {
+    deleteAccount = (event) => {
+        event.preventDefault();
         axios.post(`/auth/delete/${this.props.user_id}`, {password: this.state.password, email: this.props.email})
             .then(() => {
                 swal({
@@ -37,9 +38,6 @@ class Delete extends Component {
                     text: `Your account has been deleted.`
                     })
                 this.props.history.push('/');
-                this.setState({
-                    password: '' 
-                })
             })
             .catch(() => {
                 swal({
@@ -74,16 +72,19 @@ class Delete extends Component {
             <div className='delete-page-container'>
                 <h3 className='delete-page-title'>Are you sure that you want to delete your account?</h3>
                 <p className='delete-page-text'>Please enter in your password below to confirm that you would like to delete your account.</p>
-                <input className='input-box'
-                        placeholder='Enter your password'
-                        type='password'
-                        name='password'
-                        value={this.state.password}
-                        onChange={this.handleChange}/> 
+                <form>
+                    <input className='input-box'
+                            placeholder='Enter your password'
+                            type='password'
+                            name='password'
+                            value={this.state.password}
+                            onChange={this.handleChange}/> 
+                </form>
                 <div className='delete-page-buttons'>
                     <button className='btn red-btn delete-btn' onClick={this.deleteAccount}>{'<Delete Account/>'}</button>
                     <Link to='/dashboard'><span className='link-span'>Cancel</span></Link>
                 </div>
+                
             </div>
         )
     }

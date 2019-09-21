@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom'; 
 import './Dashboard.css';
 import swal from '@sweetalert/with-react';
+import TransferTokens from '../TransferTokens/TransferTokens'; 
 
 // Component for keeping track of user's clicks
 import EthClicker from '../EthClicker/EthClicker'; 
@@ -72,11 +73,12 @@ class Dashboard extends Component {
 
     // Gets token balance for user's address. The method will return 0 if the user isn't on the Ropsten Network. 
     getTokenBalance = () => {
-        const currentAddress = window.ethereum.selectedAddress; 
+        const { web3, ethereum } = window 
+        const currentAddress = ethereum.selectedAddress; 
         const { abi, contract_address, setTokenBalance } = this.props; 
-        const contract = window.web3.eth.contract(abi).at(contract_address);
+        const contract = web3.eth.contract(abi).at(contract_address);
         contract.balanceOf.call(currentAddress, (err, res) => {
-            setTokenBalance(window.web3.fromWei(JSON.parse(res)))
+            setTokenBalance(web3.fromWei(JSON.parse(res)))
         }) 
     };
 
@@ -92,8 +94,9 @@ class Dashboard extends Component {
 
     // Checks to see which Ethereum network the user is using in their MetaMask extension. 
     checkNetwork = () => {
+        const { web3 } = window; 
         const { setNetwork, setTokenBalance } = this.props 
-        window.web3.version.getNetwork((err, netId) => {
+       web3.version.getNetwork((err, netId) => {
             switch (netId) {
                 case "1":
                 setTokenBalance(0);
@@ -114,33 +117,33 @@ class Dashboard extends Component {
             })
     };
 
-    // Function is only fired when the user changes the network. Using ethereum.on instead setInterval.
+    // Function is only fired when the user changes the network in MetaMask. Using ethereum.on instead of setInterval.
     networkMM = () => {
         window.ethereum.on('networkChanged', () => {
             this.checkNetwork(); 
         })
     };
 
-    // Function is only fired when the user changes their MM address. 
+    // Function is only fired when the user changes their MetaMask address. 
     addressMM = () => {
         window.ethereum.on('accountsChanged', () => {
             this.checkAccount(); 
-            console.log(this.props.address);
         })
     };
 
     logout = () => {
-        const { setMetaMask, history, click_balance } = this.props; 
+        const { setMetaMask, history, click_balance, toggleTokenTransfer } = this.props; 
         axios.post('/auth/logout', {click_balance})
             .then( () => {
                 this.toggleMenu();
                 setMetaMask(false); 
+                toggleTokenTransfer(false); 
                 history.push('/'); 
             })
             .catch(err => console.log(err))
     };
 
-    // Slides out the menu for user's that are on mobile. 
+    // Slides out the menu for mobile user's.
     toggleMenu = () => {
         this.setState({
             menuToggle: !this.state.menuToggle 
@@ -148,7 +151,7 @@ class Dashboard extends Component {
     }
 
     render() {
-        const { email, address, network, metaMaskConnected, token_balance, contract_address, toggleTokenTransfer } = this.props; 
+        const { email, address, network, metaMaskConnected, token_balance, contract_address, toggleTokenTransfer, transfer_toggle } = this.props; 
         return (
             <div>
                 {!metaMaskConnected 
@@ -195,13 +198,13 @@ class Dashboard extends Component {
                         <div className='user-eth-info'>
                         <h3>Email: $ {email}</h3>
                         <h3>Network: {network}</h3>
-                        <h3>Token Contract: {contract_address}</h3>
-                        <h3>User Address: {address}</h3>
+                        <h3>Token Contract: <a target="_blank" rel="noopener noreferrer" href={`https://ropsten.etherscan.io/token/${contract_address}`}>{contract_address}</a></h3>
+                        <h3>User Address: <a target="_blank" rel="noopener noreferrer" href={`https://ropsten.etherscan.io/address/${address}`}>{address}</a></h3>
                         <h3>Token Balance: {token_balance}</h3>
                         </div>
                     </div>
                     <div className='dashboard-buttons'>
-                        <button className='btn' onClick={() => toggleTokenTransfer(true)}>{'<TRANSFER TOKENS/>'}</button>
+                        <button className='btn' onClick={() => toggleTokenTransfer(!transfer_toggle)}>{'<TRANSFER TOKENS/>'}</button>
                         <Link to='/about'><button className='btn'>{'<Learn More/>'}</button></Link>
                         <button className='btn red-btn' onClick={this.logout}>{'<Logout/>'}</button>
                 </div>
@@ -222,8 +225,18 @@ class Dashboard extends Component {
                             </div>
                         </nav>
                 </div>
-                {/* Players will click the eth image to increase their click_balance */}
-                <EthClicker getTokenBalance={this.getTokenBalance}/> 
+                {!transfer_toggle 
+                ?
+                (<div>
+                    {/* User will click the eth image to increase their click_balance */}
+                    <EthClicker getTokenBalance={this.getTokenBalance}/> 
+                </div>)
+                :
+                (<div>
+                    {/* User can toggle to view and transfer CCLT tokens out of their MetaMask addres. */}
+                    <TransferTokens getTokenBalance={this.getTokenBalance}/> 
+                </div>)
+                }
                 <div className='delete-button'>
                     <Link to='/delete'><button className='btn red-btn'>{'<Delete Account/>'}</button></Link>
                 </div>

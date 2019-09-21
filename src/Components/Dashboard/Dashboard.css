@@ -74,6 +74,10 @@
     border-radius: 2px;
 }
 
+.user-eth-info a {
+    color: #00ff00;
+}
+
 .navbar-container {
     display: none; 
     z-index: 10;
@@ -84,8 +88,6 @@
     display: none;
     color: rgb(32, 32, 32);
     justify-content: center;
-    /* width: 32%;
-    height: 10%; */
     font-size: 1.8em;
     background: rgb(153, 151, 151);
     padding: .3em;
@@ -194,8 +196,8 @@
     }
     .navbar-menu {
         height: 60%;
-        width: 20%;
-        margin-left: 60px;
+        width: 30%;
+        /* margin-left: 60px; */
     }
     .user-eth-info {
         background: none;

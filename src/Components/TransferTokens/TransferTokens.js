@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'; 
-import axios from 'axios'; 
 import swal from '@sweetalert/with-react';
 import './TransferTokens.css'; 
 
@@ -17,50 +16,53 @@ class TransferTokens extends Component {
         }
     };
 
-    componentDidMount() {
-        axios.get('/auth/check_session')
-            .then({
-
-            })
-            .catch(() => {
-                this.props.history.push('/')
-            })
-    };
-
-    transferTokens = () => {
+    transferTokens = (event) => {
+        // Prevents the form from submitting 
+        event.preventDefault(); 
+        const { web3 } = window
         const { token_balance, abi, contract_address, getTokenBalance } = this.props; 
-        const contract = window.web3.eth.contract(abi).at(contract_address);
         const { sendingAmount, recipientAddress } = this.state; 
-        const weiSendingAmount = window.web3.toWei(sendingAmount);
+        console.log('sending amount:', sendingAmount)
+        console.log('token balance:', token_balance)
 
-        // const transactionParameters = {
-        //     to: {contract_address},
-        //     from: window.web3.eth.accounts[0],
-        //     data: contract.transfer.call(recipientAddress, weiSendingAmount, (err, res) => console.log(res)).encodeABI(), 
-        //   }
+        const contract = web3.eth.contract(abi).at(contract_address);
+        const weiSendingAmount = web3.toWei(sendingAmount);
 
-        if(recipientAddress.includes('0x') && recipientAddress.length === 42 && 0 < sendingAmount < token_balance) {
-
+        if(recipientAddress.includes('0x') && recipientAddress.length === 42 && 0 < sendingAmount && sendingAmount <= token_balance) {
             contract.transfer.sendTransaction(recipientAddress, weiSendingAmount, (err, res) => {
-                swal({
-                    icon: "success",
-                    title: "Tokens Successfully Sent",
-                    closeOnClickOutside: false,
-                  })
+                if(!err) {
+                    swal({
+                        icon: "success",
+                        title: "Tokens Successfully Sent",
+                        closeOnClickOutside: false,
+                        content: ( 
+                            <div>
+                                <p>Transaction Hash:</p>
+                                <br/>
+                                {/* res is the transaction hash */}
+                                <p><a target="_blank" rel="noopener noreferrer" href={`https://ropsten.etherscan.io/tx/${res}`}>{res}</a></p>
+                            </div>)
+                      })
+                    this.setState({
+                        recipientAddress: '', 
+                        sendingAmount: 0
+                    })
+                    // Updates the token balance in redux after tokens are sent. 
+                    setTimeout(() => {getTokenBalance()}, 25000)
+                }
+                else {
+                    swal({
+                        icon: "error",
+                        title: "Error Transferring Tokens",
+                        closeOnClickOutside: false,
+                      })
+                }
             })
-            this.setState({
-                recipientAddress: '', 
-                sendingAmount: null
-            })
-            // Updates the token balance in redux after tokens are sent. 
-            setTimeout(() => {getTokenBalance()}, 12000)
-            getTokenBalance();
-            //TODO: Hitting reject in MetaMask still prompts the success and the user can enter in an amount greater than their token balance
         }
         else if(!recipientAddress.includes('0x') || recipientAddress.length !== 42) {
             swal({
                 icon: "error",
-                title: "Transfer Error",
+                title: "Address Error",
                 timer: 20000,
                 text: `Please make sure that you are entering in a valid Ethereum address.`
               })
@@ -68,7 +70,7 @@ class TransferTokens extends Component {
         else if(0 > sendingAmount || sendingAmount > token_balance) {
             swal({
                 icon: "error",
-                title: "Transfer Error",
+                title: "Amount Error",
                 timer: 20000,
                 text: `Please make sure that you are entering in a valid token amount.`
               })
@@ -87,7 +89,7 @@ class TransferTokens extends Component {
         return (
             <div className='transfer-page-container'>
                 <h1 className='transfer-title'>Transfer Tokens</h1>
-                <div className='transfer-input-container'>
+                <form className='transfer-input-container'>
                     <label>To:</label>
                     <input className='input-box'
                             type='text'
@@ -102,7 +104,7 @@ class TransferTokens extends Component {
                             name='sendingAmount'
                             value={sendingAmount}
                             onChange={this.handleChange}/>
-                </div>
+                </form>
                 <div className='transfer-button-container'>
                     <button className='btn send-btn' onClick={this.transferTokens}>{'<Send/>'}</button>
                     <span className='link-span' onClick={() => toggleTokenTransfer(false)}>Cancel</span>

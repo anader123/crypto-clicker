@@ -36,7 +36,9 @@ class Home extends Component {
         })
     };
 
-    register = () => {
+    register = (event) => {
+        // Prevents the form from submitting 
+        event.preventDefault(); 
         const { email, password } = this.state;
         if(email.length < 6 || !email.includes('@') || password.length < 5) {
             swal({
@@ -56,7 +58,9 @@ class Home extends Component {
         }
     };
 
-    login = () => {
+    login = (event) => {
+        // Prevents the form from submitting 
+        event.preventDefault(); 
         const { email, password } = this.state; 
         axios.post('/auth/login', {email, password})
             .then(res => {
@@ -90,7 +94,7 @@ class Home extends Component {
                     this.state.display ?
                     (<div className='login-container'>
                         <h3 className='login-title typewriter-login'>Login</h3>
-                        <div className='input-container'>
+                        <form className='input-container'>
                         <label className="login-label">E-Mail Address</label>
                         <input  className='input-box'
                                 placeholder='Enter your email'
@@ -105,7 +109,7 @@ class Home extends Component {
                                 name='password'
                                 value={this.state.password}
                                 onChange={this.handleChange}/>
-                        </div>
+                        </form>
                                 <button className='btn login-btn' onClick={this.login}>{'<Login/>'}</button>
                                 <span className='login-span' onClick={this.changeDisplay}>Create an account</span>
                     </div>)
@@ -113,7 +117,7 @@ class Home extends Component {
                     // Register form 
                     (<div className='login-container'>
                         <h3 className='login-title typewriter-login'>Sign Up</h3>
-                        <div className='input-container'>
+                        <form className='input-container'>
                             <label className="login-label">E-Mail Address</label>
                             <input  className='input-box'
                                     placeholder='Enter your email'
@@ -128,7 +132,7 @@ class Home extends Component {
                                     name='password'
                                     value={this.state.password}
                                     onChange={this.handleChange}/>
-                        </div>
+                        </form>
                                 <button className='btn login-btn' onClick={this.register}>{'<Register/>'}</button>
                                 <span className='login-span' onClick={this.changeDisplay}>Cancel</span>
                     </div>)

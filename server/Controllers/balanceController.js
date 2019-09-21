@@ -42,7 +42,7 @@ const exchangeClicks = (req, res) => {
             from: MINTING_ADDRESS,
             to: CONTRACT_ADDRESS, 
             gas: web3.utils.toHex(800000),
-            gasPrice: web3.utils.toHex(web3.utils.toWei('25', 'gwei')), 
+            gasPrice: web3.utils.toHex(web3.utils.toWei('19', 'gwei')), 
             data: tokenMintData
         };
 

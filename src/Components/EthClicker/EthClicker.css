@@ -20,22 +20,22 @@
 }
 
 .eth-click {
-    width: 10%;
+    width: 8%;
     border: solid 6px gray;
     height: auto;
     margin-top: 3%;
     background-color: rgb(184, 179, 179);
-    padding-top: 5%;
-    padding-bottom: 5%;
-    padding-left: 8.5%;
-    padding-right: 8.5%;
+    padding-top: 3.25%;
+    padding-bottom: 3.25%;
+    padding-left: 6%;
+    padding-right: 6%;
     border-radius: 50%;
     transition: 350ms;
 }
 
 .eth-click:hover {
     cursor: pointer;
-    border: solid 14px gray;
+    border: solid 7px gray;
 }
 
 .eth-animation {
@@ -87,7 +87,11 @@
 
 @media (max-width: 450px) { 
     .click-balance {
-        font-size: 1.7em;
+        margin-top: 1.3em;
+        font-size: 1.5em;
         text-align: center;
+    }
+    .eth-click {
+        margin-top: 1.2em;
     }
 }

@@ -39,6 +39,7 @@ class Home extends Component {
     register = (event) => {
         // Prevents the form from submitting 
         event.preventDefault(); 
+        
         const { email, password } = this.state;
         if(email.length < 6 || !email.includes('@') || password.length < 5) {
             swal({
@@ -61,6 +62,7 @@ class Home extends Component {
     login = (event) => {
         // Prevents the form from submitting 
         event.preventDefault(); 
+
         const { email, password } = this.state; 
         axios.post('/auth/login', {email, password})
             .then(res => {

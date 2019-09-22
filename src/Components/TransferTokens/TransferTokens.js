@@ -28,7 +28,7 @@ class TransferTokens extends Component {
         const contract = web3.eth.contract(abi).at(contract_address);
         const weiSendingAmount = web3.toWei(sendingAmount);
 
-        if(recipientAddress.includes('0x') && recipientAddress.length === 42 && 0 < sendingAmount && sendingAmount <= token_balance) {
+        if(recipientAddress.includes('0x') && recipientAddress.length === 42 && sendingAmount > 0 && sendingAmount <= token_balance) {
             contract.transfer.sendTransaction(recipientAddress, weiSendingAmount, (err, res) => {
                 if(!err) {
                     swal({

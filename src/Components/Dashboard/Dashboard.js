@@ -23,8 +23,6 @@ class Dashboard extends Component {
 
     componentDidMount() {
         this.keepOffLogin();
-        // Prevents the page from reloading when the user changes networks. 
-        window.ethereum.autoRefreshOnNetworkChange = false;
     };
 
 
@@ -124,11 +122,9 @@ class Dashboard extends Component {
         })
     };
 
-    // Function is only fired when the user changes their MetaMask address. 
+    // Checks to see if the user has changed their MetaMask address. 
     addressMM = () => {
-        window.ethereum.on('accountsChanged', () => {
-            this.checkAccount(); 
-        })
+        setInterval(this.checkAccount, 1000)
     };
 
     logout = () => {

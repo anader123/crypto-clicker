@@ -20,6 +20,11 @@ class EthClicker extends Component {
         }
     };
 
+    componentDidMount() {
+        // Prevents the page from reloading when the user changes networks. 
+        window.ethereum.autoRefreshOnNetworkChange = false;
+    }
+
     // Animates the clicking and increments the click_balance. 
     ethLogoClick = () => {
         this.props.incrementClick(this.props.click_balance); 

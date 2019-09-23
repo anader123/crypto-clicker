@@ -1,4 +1,5 @@
 require('dotenv').config();
+const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const massive = require('massive');
@@ -19,6 +20,7 @@ const {
 const app = express();
 
 // Top Level Middleware
+app.use( express.static( `${__dirname}/../build` ) );
 app.use(express.json());
 app.use(cors());
 app.use(session({

@@ -17,6 +17,7 @@ class EthClicker extends Component {
 
         this.state = {
             ethAnimation: false, 
+            clicked: false
         }
     };
 
@@ -24,9 +25,25 @@ class EthClicker extends Component {
     ethLogoClick = () => {
         this.props.incrementClick(this.props.click_balance); 
         this.setState({
-          ethAnimation: !this.state.ethAnimation
+            clicked: true, 
+            ethAnimation: !this.state.ethAnimation
         })
+
+        // Prevents user from spamming clicks
+        setTimeout(() => {
+            this.setState({clicked: false})
+        },120)
       };
+
+    // Warning that pops up if the user is clicking too fast. 
+    clickSpeedWarning = () => {
+        swal({
+            icon: "warning",
+            title: "Slow Clicking Speed",
+            closeOnClickOutside: false,
+            text: "It appears that you are clicking too fast."
+          })
+    }
 
     // Creates an axios call to the server that will mint tokens based on the user's click_balance and sets the state of click_balance to 0. Then an alert will tell the user if the transaction was successfull and display the transaction hash which links to Etherscan. 
     exchangeClicks = () => {
@@ -94,7 +111,7 @@ class EthClicker extends Component {
         const { click_balance } = this.props; 
         return (<div className='mid-dashboard-container'>
                     <h3 className='click-balance'>Click Balance: {click_balance}</h3>
-                    <img className={this.state.ethAnimation ? 'eth-click':'eth-click eth-animation'} src={ethLogo} alt='eth logo' onClick={this.ethLogoClick}/>
+                    <img className={this.state.ethAnimation ? 'eth-click':'eth-click eth-animation'} src={ethLogo} alt='eth logo' onClick={!this.state.clicked ? this.ethLogoClick : this.clickSpeedWarning}/>
                     <div className='tokenize-button-container'>
                         <button className='btn' onClick={this.exchangeClicks}>{'<Tokenize Clicks/>'}</button>
                         <p className='tokenize-text'>*A minimum of 50 clicks are required in order to tokenize.</p>

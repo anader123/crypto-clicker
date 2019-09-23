@@ -95,21 +95,10 @@ const deleteUser = async (req, res) => {
         }
 };
 
-// TODO: Keeping this here to show that I had a delete
-// const deleteUser = async (req, res) => {
-//     const user_id = +req.params.user_id; 
-//     const db = req.app.get('db'); 
-
-// db.delete_user([user_id, user_id])
-// .then(() => {
-//     req.session.destroy();
-//     res.status(200).send('Account has been deleted')
-//     })
-// };
-
+// Checks to see if the users is logged in. 
 const checkSession = (req, res) => {
     if(req.session.user === undefined) {
-        res.status(500).send('user is not signed in')
+        res.status(403).send('user is not signed in')
     }
     else {
         res.status(200).send('user is signed in')

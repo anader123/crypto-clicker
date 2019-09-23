@@ -35,7 +35,7 @@ export default class LearnMore extends Component {
                 <h1 className='mm-title'>Installing and Setting Up MetaMask</h1>
                 <p className='warning-text'>*If you were redirected to this page after clicking "Connect MetaMask", it means that you need to install the MetaMask Chrome extension.</p>
                 <span className='mm-download-button'><a target="_blank" rel="noopener noreferrer" href='https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn'>{'<Download MetaMask/>'}</a></span> 
-                <iframe className='mm-video' src="https://www.youtube-nocookie.com/embed/6Gf_kRE4MJU" frameBorder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" title='MetaMaskVid' allowFullScreen></iframe>
+                {/* <iframe className='mm-video' src="https://www.youtube-nocookie.com/embed/6Gf_kRE4MJU" frameBorder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" title='MetaMaskVid' allowFullScreen></iframe> */}
                 <p className='mm-text'>CryptoClicker runs on the Ropsten Test Network. As a result, you will first need to make sure that you are connected to Ropsten.</p>
                 <img className='mm-image' src={changeNetwork} alt='mm img'/>
                 <p className='mm-text'>MetaMask defaults to the Mainnetwork. However, you can change to the Ropsten Network by clicking the network bar at the top and then selecting Ropsten. </p>

@@ -32,7 +32,7 @@ const exchangeClicks = (req, res) => {
     const db = req.app.get('db'); 
 
     if(click_balance < 50) {
-        res.status(500).send('You need at least 50 clicks to tokenize')
+        res.status(400).send('You need at least 50 clicks to tokenize')
     }
     else {
         // Data for Contract call, click_balance must be formatted as a string. 
@@ -55,17 +55,6 @@ const exchangeClicks = (req, res) => {
             .catch(err => console.log(err));
     }
 };
-
-// Removing functionality from server, using the web3 injected provided by MetaMask allowed the front end to get the token balance directly.
-// Checks to see how many tokens the an address has. 
-// const checkTokenBalance = (req, res) => {
-//     const { address } = req.body; 
-//     contract.methods.balanceOf(address).call()
-//         .then(web3Response => {
-//             res.status(200).send(web3.utils.fromWei(web3Response)); 
-//         })
-//         .catch(err => console.log(err));
-// }
 
 module.exports = {
     updateSessionBalance,

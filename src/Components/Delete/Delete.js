@@ -8,8 +8,7 @@ import swal from 'sweetalert';
 class Delete extends Component {
     constructor() {
         super(); 
-        //TODO: 
-        // Do I need to clear state of password in the .then? 
+        
         this.state = {
             password: '',
         }
@@ -49,18 +48,6 @@ class Delete extends Component {
             })
     };
 
-    // TODO: Keeping this here to show that I had a delete
-    // deleteAccount = () => {
-    //     axios.delete(`/auth/delete/${this.props.user_id}`)
-    //         .then(() => {
-    //             this.props.history.push('/');
-    //             this.setState({
-    //                 password: '' 
-    //             })
-    //         })
-    // };
-
-    
     handleChange = (event) => {
         this.setState({
             [event.target.name]: event.target.value

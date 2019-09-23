@@ -30,7 +30,7 @@
     padding-left: 6%;
     padding-right: 6%;
     border-radius: 50%;
-    transition: 350ms;
+    transition: 600ms;
 }
 
 .eth-click:hover {

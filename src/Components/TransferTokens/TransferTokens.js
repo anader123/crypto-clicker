@@ -27,7 +27,7 @@ class TransferTokens extends Component {
         const weiSendingAmount = web3.toWei(sendingAmount);
 
         // sendingAmount and token_balance are both stored as strings. Adding a + at the beginning turns it into a num for the comparison logic. 
-        if(recipientAddress.includes('0x') && recipientAddress.length === 42 && +sendingAmount <= +token_balance) {
+        if(recipientAddress.includes('0x') && recipientAddress.length === 42 && sendingAmount > 0 && sendingAmount <= +token_balance) {
             contract.transfer.sendTransaction(recipientAddress, weiSendingAmount, (err, res) => {
                 if(!err) {
                     swal({
@@ -46,8 +46,9 @@ class TransferTokens extends Component {
                         recipientAddress: '', 
                         sendingAmount: 0
                     })
+
                     // Updates the token balance in redux after tokens are sent. 
-                    setTimeout(() => {getTokenBalance()}, 40000)
+                    setTimeout(() => {getTokenBalance()}, 45000)
                 }
                 else {
                     swal({
@@ -68,7 +69,7 @@ class TransferTokens extends Component {
                 text: `Please make sure that you are entering in a valid Ethereum address.`
               })
         }
-        else if(0 > +sendingAmount || +sendingAmount > +token_balance) {
+        else if(0 > sendingAmount || sendingAmount > +token_balance) {
             swal({
                 icon: "error",
                 title: "Amount Error",
@@ -100,7 +101,7 @@ class TransferTokens extends Component {
                             onChange={this.handleChange}/>
                     <label>Amount:</label>
                     <input className='input-box'
-                            type='text'
+                            type='number'
                             placeholder='Amount of Tokens'
                             name='sendingAmount'
                             value={sendingAmount}

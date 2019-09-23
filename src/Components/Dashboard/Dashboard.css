@@ -59,7 +59,7 @@
 .network-warning-text {
     margin-top: 2em;
     margin-bottom: .8em;
-    font-size: .75em;
+    font-size: .8em;
     color: orange;
 }
 
@@ -86,10 +86,10 @@
 
 .navbar-icon {
     display: none;
-    color: rgb(32, 32, 32);
+    color: #00ff00; 
+    border: #00ff00, solid, 2px;
     justify-content: center;
     font-size: 1.8em;
-    background: rgb(153, 151, 151);
     padding: .3em;
     border-radius: .1em;
     margin-right: .7em;
@@ -98,7 +98,6 @@
 
 .navbar-icon:hover {
     cursor: pointer;
-    background-color: rgb(109, 105, 105);
 }
 .slide{
     right: 0px;

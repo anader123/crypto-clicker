@@ -48,13 +48,19 @@ flex-direction: column;
   transform: translateY(-50%); 
 }
 
+.pasword-warn-text {
+  color: orange; 
+  margin-top: .7em;
+  font-size: .9em;
+}
+
 .login-btn {
   margin-top: 2.8em;
   margin-bottom: 1.5em;
 }
 
 .input-box {
-  width: 28vw;
+  width: 24vw;
   margin-top: .9em;
 }
 
@@ -65,7 +71,15 @@ flex-direction: column;
     font-size: 1.8em;
     margin: .3em;
   }
+  .input-container {
+    width: 65vw;
+  }
   .input-box {
     width: 100vw;
+  }
+  .pasword-warn-text {
+    text-align: center;
+    font-size: .75em; 
+    font-weight: bold;
   }
 }

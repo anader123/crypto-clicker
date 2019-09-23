@@ -42,8 +42,12 @@ class Dashboard extends Component {
             swal({
                 icon: "warning",
                 title: "MetaMask Required",
-                timer: 18000,
-                text: `Please download the MetaMask Chrome extension.`
+                timer: 23000,
+                content: (<div>
+                    <p>Please download the MetaMask Chrome extension.</p>
+                    <br/> 
+                    <p>If you just now downloaded the extension, please refresh the page.</p>
+                </div>)
                 })
             this.props.history.push('/about'); 
         }
@@ -64,6 +68,8 @@ class Dashboard extends Component {
                     this.checkNetwork(); 
                     this.networkMM();
                     this.addressMM();
+                    // Prevents the page from reloading when the user changes networks. 
+                    window.ethereum.autoRefreshOnNetworkChange = false;
                 })
                 .catch(err => console.log(err))
         }

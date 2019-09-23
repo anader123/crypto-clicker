@@ -118,7 +118,7 @@ class Home extends Component {
                     :
                     // Register form 
                     (<div className='login-container'>
-                        <h3 className='login-title typewriter-login'>Sign Up</h3>
+                        <h3 className='login-title typewriter-login'>Register</h3>
                         <form className='input-container'>
                             <label className="login-label">E-Mail Address</label>
                             <input  className='input-box'
@@ -129,11 +129,14 @@ class Home extends Component {
                                     onChange={this.handleChange}/>
                             <label className="login-label">Password</label>
                             <input  className='input-box'
-                                    placeholder='Enter your password (min of 5 characters)'
+                                    placeholder='Enter your password'
                                     type='password'
                                     name='password'
                                     value={this.state.password}
                                     onChange={this.handleChange}/>
+                                    <div>
+                                    <p className='pasword-warn-text'>*Password requires a min of 5 characters</p>
+                                    </div>
                         </form>
                                 <button className='btn login-btn' onClick={this.register}>{'<Register/>'}</button>
                                 <span className='login-span' onClick={this.changeDisplay}>Cancel</span>

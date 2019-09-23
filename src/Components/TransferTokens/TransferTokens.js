@@ -22,20 +22,19 @@ class TransferTokens extends Component {
         const { web3 } = window
         const { token_balance, abi, contract_address, getTokenBalance } = this.props; 
         const { sendingAmount, recipientAddress } = this.state; 
-        console.log('sending amount:', sendingAmount)
-        console.log('token balance:', token_balance)
 
         const contract = web3.eth.contract(abi).at(contract_address);
         const weiSendingAmount = web3.toWei(sendingAmount);
 
-        if(recipientAddress.includes('0x') && recipientAddress.length === 42 && sendingAmount > 0 && sendingAmount <= token_balance) {
+        // sendingAmount and token_balance are both stored as strings. Adding a + at the beginning turns it into a num for the comparison logic. 
+        if(recipientAddress.includes('0x') && recipientAddress.length === 42 && +sendingAmount <= +token_balance) {
             contract.transfer.sendTransaction(recipientAddress, weiSendingAmount, (err, res) => {
                 if(!err) {
                     swal({
                         icon: "success",
                         title: "Tokens Successfully Sent",
                         closeOnClickOutside: false,
-                        content: ( 
+                        content: (
                             <div>
                                 <p>Transaction Hash:</p>
                                 <br/>
@@ -48,7 +47,7 @@ class TransferTokens extends Component {
                         sendingAmount: 0
                     })
                     // Updates the token balance in redux after tokens are sent. 
-                    setTimeout(() => {getTokenBalance()}, 25000)
+                    setTimeout(() => {getTokenBalance()}, 40000)
                 }
                 else {
                     swal({
@@ -60,6 +59,8 @@ class TransferTokens extends Component {
             })
         }
         else if(!recipientAddress.includes('0x') || recipientAddress.length !== 42) {
+            console.log('sending amount:', sendingAmount)
+            console.log('token balance:', token_balance)
             swal({
                 icon: "error",
                 title: "Address Error",
@@ -67,7 +68,7 @@ class TransferTokens extends Component {
                 text: `Please make sure that you are entering in a valid Ethereum address.`
               })
         }
-        else if(0 > sendingAmount || sendingAmount > token_balance) {
+        else if(0 > +sendingAmount || +sendingAmount > +token_balance) {
             swal({
                 icon: "error",
                 title: "Amount Error",

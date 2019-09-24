@@ -49,7 +49,8 @@ const login = async (req, res) => {
 
     if(authedPassword) {
         delete foundUser[0].password; 
-        req.session.user = foundUser[0]; 
+        req.session.user_id = foundUser[0].user_id; 
+        req.session.email = foundUser[0].email; 
         req.session.click_balance = userBalance[0].click_balance; 
 
         const accountInfo = {
@@ -68,7 +69,7 @@ const logout = async (req, res) => {
     const click_balance = req.body.click_balance; 
     // TODO: 
     // Might need to have the balance update from the session
-    const user_id = req.session.user.user_id; 
+    const user_id = req.session.user_id; 
     const db = req.app.get('db'); 
     db.update_balance([click_balance, user_id])
         .then(() => {
@@ -97,7 +98,7 @@ const deleteUser = async (req, res) => {
 
 // Checks to see if the users is logged in. 
 const checkSession = (req, res) => {
-    if(req.session.user === undefined) {
+    if(req.session.email === undefined) {
         res.status(403).send('user is not signed in')
     }
     else {
@@ -105,10 +106,20 @@ const checkSession = (req, res) => {
     }
 };
 
+const getSessionInfo = (req, res) => {
+    const userInfo = {
+        user_id: req.session.user_id, 
+        click_balance: req.session.click_balance, 
+        email: req.session.email
+    }
+    res.status(200).send(userInfo)
+}
+
 module.exports = {
     register, 
     login, 
     logout, 
     deleteUser,
-    checkSession 
+    checkSession,
+    getSessionInfo
 }

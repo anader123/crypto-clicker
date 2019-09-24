@@ -17,13 +17,6 @@ const web3 = new Web3(WEB3_PROVIDER);
 web3.eth.accounts.wallet.add(MINTING_KEY); 
 const contract = new web3.eth.Contract(abi, CONTRACT_ADDRESS);
 
-// Handles updating the session from the click_balance in redux. 
-const updateSessionBalance = (req, res) => {
-    const { click_balance } = req.body; 
-    req.session.click_balance = click_balance; 
-    res.status(200).send('Clicks have been saved');
-};
-
 // Turns clicks into CryptoClicker Tokens and sets DB click_balance to 0
 const exchangeClicks = (req, res) => {
     const { click_balance, address } = req.body; 
@@ -51,12 +44,20 @@ const exchangeClicks = (req, res) => {
             .then(web3Response => {
                 res.status(200).send(web3Response.transactionHash)
                 db.update_balance([0, user_id])
+                req.session.click_balance = 0;
             })
             .catch(err => console.log(err));
     }
 };
 
+// Handles updating the session from the click_balance in redux. 
+const updateSessionBalance = (req, res) => {
+    const { click_balance } = req.body; 
+    req.session.click_balance = click_balance; 
+    res.status(200).send('Clicks have been saved');
+};
+
 module.exports = {
-    updateSessionBalance,
-    exchangeClicks
+    exchangeClicks,
+    updateSessionBalance
 };

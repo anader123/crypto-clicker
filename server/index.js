@@ -28,7 +28,7 @@ app.use(session({
     saveUninitialized: true,
     secret: SESSION_SECRET,
     cookie: {
-        maxAge: 600000
+        maxAge: 60000000
     }
 }));
 
@@ -46,6 +46,7 @@ app.post('/auth/register', authCtrl.register);
 app.post('/auth/logout', authCtrl.logout);
 app.post('/auth/delete/:user_id', authCtrl.deleteUser);
 app.get('/auth/check_session', authCtrl.checkSession);
+app.get('/auth/session_info', authCtrl.getSessionInfo)
 
 app.post('/api/session_balance', balCtrl.updateSessionBalance);
 app.put('/api/exchanage', balCtrl.exchangeClicks);

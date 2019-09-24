@@ -10,7 +10,7 @@ import TransferTokens from '../TransferTokens/TransferTokens';
 import EthClicker from '../EthClicker/EthClicker'; 
 
 // Action Builders
-import {setAddress, setNetwork, setMetaMask, setTokenBalance, toggleTokenTransfer} from '../../redux/reducer'; 
+import {setAddress, setNetwork, setMetaMask, setTokenBalance, toggleTokenTransfer, setInitialState} from '../../redux/reducer'; 
 
 class Dashboard extends Component {
     constructor() {
@@ -25,15 +25,26 @@ class Dashboard extends Component {
         this.keepOffLogin();
     };
 
-
     // Makes sure that the user can't access the dashboard page if they aren't logged in. 
     keepOffLogin = () => {
         axios.get('/auth/check_session')
             .then(() => {
+                this.checkSessionRefresh(); 
             })
             .catch(() => {
                 this.props.history.push('/');
             })
+    };
+
+    // If the user has refreshed the page and there still is a session then it grabs the email and click_balance from the session and sets it to state in redux. 
+    checkSessionRefresh = () => {
+        const { email, setInitialState } = this.props; 
+        if(email === '') {
+            axios.get('/auth/session_info')
+                .then((res) => {
+                    setInitialState(res.data)
+                })
+        }
     };
 
     // Enables the website to view the user's MetaMask's adddresses. If the person doesn't have MM installed, it pushes them to the learn more page where they can download it. 
@@ -253,4 +264,4 @@ function mapStateToProps(state) {
     return state; 
 };
 
-export default connect(mapStateToProps, {setAddress, setNetwork, setMetaMask, setTokenBalance, toggleTokenTransfer})(Dashboard); 
+export default connect(mapStateToProps, {setAddress, setNetwork, setMetaMask, setTokenBalance, toggleTokenTransfer, setInitialState})(Dashboard); 

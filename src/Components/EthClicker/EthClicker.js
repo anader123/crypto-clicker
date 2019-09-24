@@ -21,6 +21,18 @@ class EthClicker extends Component {
         }
     };
 
+    componentDidMount() {
+       setInterval(this.updateClicks, 20000)
+    };
+
+    // Updates the click balance from redux to the click_balance property in the session. 
+    updateClicks = () => {
+        axios.post('/api/session_balance', {click_balance: this.props.click_balance})
+            .then( () => {
+            })
+            .catch(err => console.log(err))
+    };
+
     // Animates the clicking and increments the click_balance. 
     ethLogoClick = () => {
         this.props.incrementClick(this.props.click_balance); 
@@ -78,18 +90,6 @@ class EthClicker extends Component {
                   })
             })
     };
-
-    // TODO: have a function that runs every so after that stores state to the session
-    // componentDidUpdate() {
-    //     window.setInterval(this.updateClicks(), 10000)
-    // };
-    // updateClicks = () => {
-    //     axios.post('/api/session_balance', {click_balance: this.props.click_balance})
-    //         .then( res => {
-    //             console.log(res)
-    //         })
-    //         .catch(err => console.log(err))
-    // };
 
     // Alerts the user that the transaction has been submitted and is waiting a transaction hash to be returned. 
     tokenizeLoading = () => {

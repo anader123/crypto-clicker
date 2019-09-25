@@ -4,10 +4,11 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom'; 
 import './Dashboard.css';
 import swal from '@sweetalert/with-react';
-import TransferTokens from '../TransferTokens/TransferTokens'; 
 
-// Component for keeping track of user's clicks
+// Components
 import EthClicker from '../EthClicker/EthClicker'; 
+import ConnectMetaMask from '../ConnectMetaMask/ConnectMetaMask'; 
+import TransferTokens from '../TransferTokens/TransferTokens'; 
 
 // Action Builders
 import {setAddress, setNetwork, setMetaMask, setTokenBalance, toggleTokenTransfer, setInitialState} from '../../redux/reducer'; 
@@ -195,10 +196,7 @@ class Dashboard extends Component {
                             </div>
                     </nav>
                 </div>
-                <div className='mm-sentences'>
-                    <p>Welcome to CryptoClicker, a website that allows you to tokenize your in game currency.</p> <p className='second-mm-sentence'>Begin by connecting your MetaMask account <span role="img" aria-label='fox-emoji' >🦊</span>.</p>
-                    <button className='btn mm-btn' onClick={this.connectMetaMask}>{'<Connect MM/>'}</button>
-                </div>
+                <ConnectMetaMask connectMetaMask={this.connectMetaMask}/> 
                 <div className='delete-button'>
                     <Link to='/delete'><button className='btn red-btn'>{'<Delete Account/>'}</button></Link>
                 </div>

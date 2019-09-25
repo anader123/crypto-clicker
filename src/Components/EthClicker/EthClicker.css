@@ -19,6 +19,12 @@
     text-align: center;
 }
 
+.click-balance-text {
+    text-align: center;
+    font-size: 1em;
+    margin-top: 1.4em;
+}
+
 .eth-click {
     width: 8%;
     border: solid 6px gray;
@@ -86,6 +92,10 @@
 }
 
 @media (max-width: 450px) { 
+    .click-balance-text {
+        font-size: .6em;
+        margin-top: 1em;
+    }
     .click-balance {
         margin-top: 1.3em;
         font-size: 1.5em;

@@ -3,7 +3,7 @@ import axios from 'axios';
 import './LearnMore.css'; 
 import { Link } from 'react-router-dom'; 
 
-// MetaMask screenshots  
+// Images 
 import selectMenu from '../../img/selectMenu.png';
 import changeNetwork from '../../img/changeNetwork.png';
 import customToken from '../../img/addCustomToken.png';

@@ -111,6 +111,7 @@ class EthClicker extends Component {
         const { click_balance } = this.props; 
         return (<div className='mid-dashboard-container'>
                     <h3 className='click-balance'>Click Balance: {click_balance}</h3>
+                    <p className='click-balance-text'>Click the Ethereum logo below to increment your click balance.</p>
                     <img className={this.state.ethAnimation ? 'eth-click':'eth-click eth-animation'} src={ethLogo} alt='eth logo' onClick={!this.state.clicked ? this.ethLogoClick : this.clickSpeedWarning}/>
                     <div className='tokenize-button-container'>
                         <button className='btn' onClick={this.exchangeClicks}>{'<Tokenize Clicks/>'}</button>

@@ -39,7 +39,7 @@
     align-items: center;
     flex-direction: column;
     margin-top: 7em;
-    margin-bottom: 7.5em;
+    /* margin-bottom: 7.5em; */
     margin-left: 1em;
     margin-right: 1em;
     font-size: 1.5em;
@@ -74,6 +74,31 @@
     border-radius: 2px;
 }
 
+.learn-cc-info {
+    display: flex; 
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 2em;
+    /* width: 90vw; */
+}
+
+.click-info-text {
+    color: orange; 
+    text-align: center;
+    width: 80%;
+    margin-top: 2.5em;
+    margin-bottom: 2.5em;
+    font-size: .95em;
+}
+
+.click-info-image {
+    border: gray solid 5px;
+    padding-top: 1.5em;
+    padding-bottom: 1.5em;
+    height: 40vh;
+    width: auto;
+}
+
 .user-eth-info a {
     color: #00ff00;
 }
@@ -99,6 +124,7 @@
 .navbar-icon:hover {
     cursor: pointer;
 }
+
 .slide{
     right: 0px;
 }

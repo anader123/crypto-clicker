@@ -23,7 +23,8 @@ const register = async (req, res) => {
     delete newUser[0].password;
 
     // Set values to the session 
-    req.session.user = newUser[0];
+    req.session.user_id = newUser[0].user_id;
+    req.session.email = newUser[0].email;
     req.session.click_balance = newUserBalance[0].click_balance;
 
     const accountInfo = {

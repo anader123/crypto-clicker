@@ -59,6 +59,7 @@ class Delete extends Component {
             <div className='delete-page-container'>
                 <h3 className='delete-page-title'>Are you sure that you want to delete your account?</h3>
                 <p className='delete-page-text'>Please enter in your password below to confirm that you would like to delete your account.</p>
+                <p className='delete-page-text'>Email: {this.props.email}</p>
                 <form>
                     <input className='input-box'
                             placeholder='Enter your password'

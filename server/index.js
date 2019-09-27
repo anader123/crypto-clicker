@@ -41,15 +41,15 @@ massive(CONNECTION_STRING)
     .catch(err => console.log(err));
 
 // Auth Endpoints
-app.post('/auth/login', authCtrl.login);
-app.post('/auth/register', authCtrl.register);
-app.post('/auth/logout', authCtrl.logout);
-app.post('/auth/delete/:user_id', authCtrl.deleteUser);
-app.get('/auth/check_session', authCtrl.checkSession);
-app.get('/auth/session_info', authCtrl.getSessionInfo)
+app.post('/api/login', authCtrl.login);
+app.post('/api/register', authCtrl.register);
+app.post('/api/logout', authCtrl.logout);
+app.post('/api/delete/:user_id', authCtrl.verifySession, authCtrl.deleteUser);
+app.get('/api/check_session', authCtrl.checkSession);
+app.get('/api/session_info', authCtrl.getSessionInfo)
 
 app.post('/api/session_balance', balCtrl.updateSessionBalance);
-app.put('/api/exchanage', balCtrl.exchangeClicks);
+app.put('/api/exchanage', authCtrl.verifySession, balCtrl.exchangeClicks);
 
 // Server Listening
 app.listen(SERVER_PORT, () => console.log(`Server is running on ${SERVER_PORT}`));

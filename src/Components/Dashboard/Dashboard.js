@@ -28,7 +28,7 @@ class Dashboard extends Component {
 
     // Makes sure that the user can't access the dashboard page if they aren't logged in. 
     keepOffLogin = () => {
-        axios.get('/auth/check_session')
+        axios.get('/api/check_session')
             .then(() => {
                 this.checkSessionRefresh(); 
             })
@@ -41,7 +41,7 @@ class Dashboard extends Component {
     checkSessionRefresh = () => {
         const { email, setInitialState } = this.props; 
         if(email === '') {
-            axios.get('/auth/session_info')
+            axios.get('/api/session_info')
                 .then((res) => {
                     setInitialState(res.data)
                 })
@@ -116,7 +116,7 @@ class Dashboard extends Component {
             switch (netId) {
                 case "1":
                 setTokenBalance(0);
-                return setNetwork('Mainnet')
+                return setNetwork('Main Network')
                 case "3":
                 this.getTokenBalance()
                 return setNetwork('Ropsten')
@@ -147,7 +147,7 @@ class Dashboard extends Component {
 
     logout = () => {
         const { setMetaMask, history, click_balance, toggleTokenTransfer } = this.props; 
-        axios.post('/auth/logout', {click_balance})
+        axios.post('/api/logout', {click_balance})
             .then( () => {
                 this.toggleMenu();
                 setMetaMask(false); 

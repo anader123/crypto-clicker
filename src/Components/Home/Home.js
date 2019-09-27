@@ -22,7 +22,7 @@ class Home extends Component {
 
     // Makes sure that the user can't go back to the login page if they are logged in. 
     componentDidMount() {
-        axios.get('/auth/check_session')
+        axios.get('/api/check_session')
             .then(() => {
                 this.props.history.push('/dashboard');
             })
@@ -49,7 +49,7 @@ class Home extends Component {
             })
         }
         else {
-            axios.post('/auth/register', {email, password})
+            axios.post('/api/register', {email, password})
             .then(res => {
                 this.props.setInitialState(res.data);
                 this.props.history.push('/dashboard'); 
@@ -63,7 +63,7 @@ class Home extends Component {
         event.preventDefault(); 
 
         const { email, password } = this.state; 
-        axios.post('/auth/login', {email, password})
+        axios.post('/api/login', {email, password})
             .then(res => {
                 this.props.setInitialState(res.data);
                 this.props.history.push('/dashboard');

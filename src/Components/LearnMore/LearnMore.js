@@ -15,7 +15,7 @@ export default class LearnMore extends Component {
 
     componentDidMount() {
     // Makes sure that the user can't access the learnmore page if they aren't logged in. 
-        axios.get('/auth/check_session')
+        axios.get('/api/check_session')
             .then({
 
             })

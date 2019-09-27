@@ -26,7 +26,7 @@ class TransferTokens extends Component {
         const contract = web3.eth.contract(abi).at(contract_address);
         const weiSendingAmount = web3.toWei(sendingAmount);
 
-        // sendingAmount and token_balance are both stored as strings. Adding a + at the beginning turns it into a num for the comparison logic. 
+        // token_balance is returned from MetaMask as a string. Adding a + to token_balance changes it to a num for the comparison logic. 
         if(recipientAddress.includes('0x') && recipientAddress.length === 42 && sendingAmount > 0 && sendingAmount <= +token_balance) {
             contract.transfer.sendTransaction(recipientAddress, weiSendingAmount, (err, res) => {
                 if(!err) {

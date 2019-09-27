@@ -114,7 +114,16 @@ const getSessionInfo = (req, res) => {
         email: req.session.email
     }
     res.status(200).send(userInfo)
-}
+};
+
+const verifySession = (req, res, next) => {
+    if(req.session.email !== undefined) {
+        next(); 
+    }
+    else {
+        res.status(403).send('not authorized')
+    }
+};
 
 module.exports = {
     register, 
@@ -122,5 +131,6 @@ module.exports = {
     logout, 
     deleteUser,
     checkSession,
-    getSessionInfo
+    getSessionInfo,
+    verifySession
 }

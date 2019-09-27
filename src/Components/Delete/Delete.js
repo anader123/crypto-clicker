@@ -16,7 +16,7 @@ class Delete extends Component {
 
     componentDidMount() {
     // Makes sure that the user can't access the delete page if they aren't logged in. 
-        axios.get('/auth/check_session')
+        axios.get('/api/check_session')
             .then({
 
             })
@@ -28,7 +28,7 @@ class Delete extends Component {
     // User's password is required for them to delete their account. 
     deleteAccount = (event) => {
         event.preventDefault();
-        axios.post(`/auth/delete/${this.props.user_id}`, {password: this.state.password, email: this.props.email})
+        axios.post(`/api/delete/${this.props.user_id}`, {password: this.state.password, email: this.props.email})
             .then(() => {
                 swal({
                     icon: "success",

@@ -1,5 +1,6 @@
 .main-dashboard-container {
     min-height: 75vh;
+    width: 100%;
 }
 
 .upper-dashboard-container {
@@ -39,7 +40,6 @@
     align-items: center;
     flex-direction: column;
     margin-top: 7em;
-    /* margin-bottom: 7.5em; */
     margin-left: 1em;
     margin-right: 1em;
     font-size: 1.5em;

@@ -68,8 +68,6 @@ const login = async (req, res) => {
 
 const logout = async (req, res) => {
     const click_balance = req.body.click_balance; 
-    // TODO: 
-    // Might need to have the balance update from the session
     const user_id = req.session.user_id; 
     const db = req.app.get('db'); 
     db.update_balance([click_balance, user_id])

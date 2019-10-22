@@ -60,8 +60,6 @@ class TransferTokens extends Component {
             })
         }
         else if(!recipientAddress.includes('0x') || recipientAddress.length !== 42) {
-            console.log('sending amount:', sendingAmount)
-            console.log('token balance:', token_balance)
             swal({
                 icon: "error",
                 title: "Address Error",

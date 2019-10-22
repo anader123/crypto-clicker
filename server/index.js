@@ -1,11 +1,10 @@
 require('dotenv').config();
-const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const massive = require('massive');
 const session = require('express-session');
 
-// Controller Functions
+// Controller Files
 const authCtrl = require('./Controllers/authController'); 
 const balCtrl = require('./Controllers/balanceController'); 
 
@@ -20,7 +19,7 @@ const {
 const app = express();
 
 // Top Level Middleware
-app.use( express.static( `${__dirname}/../build` ) );
+app.use(express.static( `${__dirname}/../build` ) );
 app.use(express.json());
 app.use(cors());
 app.use(session({
@@ -48,6 +47,7 @@ app.post('/api/delete/:user_id', authCtrl.verifySession, authCtrl.deleteUser);
 app.get('/api/check_session', authCtrl.checkSession);
 app.get('/api/session_info', authCtrl.getSessionInfo)
 
+// Balance Endpoints
 app.post('/api/session_balance', balCtrl.updateSessionBalance);
 app.put('/api/exchanage', authCtrl.verifySession, balCtrl.exchangeClicks);
 

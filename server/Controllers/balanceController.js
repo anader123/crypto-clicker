@@ -39,7 +39,7 @@ const exchangeClicks = (req, res) => {
             data: tokenMintData
         };
 
-        // Sends transaction and setting click_balance in DB to 0. 
+        // Sends transaction to the blockchain and setting click_balance in DB and session to 0. 
         web3.eth.sendTransaction(transactionObject)
             .then(web3Response => {
                 res.status(200).send(web3Response.transactionHash)

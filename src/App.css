@@ -3,6 +3,8 @@
 
 .App {
   min-height: 100vh;
+  max-width: 100%;
+  width: 100%;
   font-family: 'Source Code Pro', monospace;
   background-color: rgb(26, 38, 48);
   color: #00ff00;

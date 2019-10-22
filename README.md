@@ -1,4 +1,5 @@
 # CryptoClicker 
+Similar to Cookie Clicker, CryptoClicker is an incremental game where users can score points by clicking. However, CryptoClicker allows users to turn their in-game currency into Ethereum ERC20 tokens. As a result, cryptoclicker is a proof of concept of how a game could reduce friction for players trying to sell their in-game currency on secondary markets e.g. selling Runescape or WoW gold. 
 
 # What I learned 
 * Deployed a smart contract using the [Remix IDE](https://remix.ethereum.org). 

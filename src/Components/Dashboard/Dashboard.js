@@ -79,7 +79,7 @@ class Dashboard extends Component {
                     this.checkAccount();
                     this.checkNetwork(); 
                     this.networkMM();
-                    this.addressMM();
+                    // this.addressMM();
                     // Prevents the page from reloading when the user changes networks. 
                     window.ethereum.autoRefreshOnNetworkChange = false;
                 })
@@ -90,23 +90,36 @@ class Dashboard extends Component {
     // Gets token balance for user's address. The method will return 0 if the user isn't on the Ropsten Network. 
     getTokenBalance = () => {
         const { web3, ethereum } = window 
-        const currentAddress = ethereum.selectedAddress; 
-        const { abi, contract_address, setTokenBalance } = this.props; 
-        const contract = web3.eth.contract(abi).at(contract_address);
-        contract.balanceOf.call(currentAddress, (err, res) => {
-            setTokenBalance(web3.fromWei(JSON.parse(res)))
-        }) 
+        const { abi, contract_address, setTokenBalance, setMetaMask } = this.props; 
+        if(ethereum.selectedAddress !== null ) {
+            const currentAddress = ethereum.selectedAddress; 
+            const contract = web3.eth.contract(abi).at(contract_address);
+            contract.balanceOf.call(currentAddress, (err, res) => {
+                setTokenBalance(web3.fromWei(JSON.parse(res)))
+            }) 
+        }
+    // Returns the user to the connect MetaMask page if they logout. 
+        else {
+            setMetaMask(false);
+        }
     };
 
     // Checks if the user has changed their MetaMask address and updates redux to the new address. 
+    // checkAccount = () => {
+    //     const { address, setAddress } = this.props; 
+    //     const currentAddress = window.ethereum.selectedAddress; 
+    //     if (currentAddress !== address) {
+    //         setAddress(currentAddress)
+    //         this.getTokenBalance()
+    //     }
+    // };
+
     checkAccount = () => {
-        const { address, setAddress } = this.props; 
-        const currentAddress = window.ethereum.selectedAddress; 
-        if (currentAddress !== address) {
-            setAddress(currentAddress)
-            this.getTokenBalance()
-        }
-    };
+        window.ethereum.on('accountsChanged', (accounts) => {
+            this.props.setAddress(accounts)
+            this.getTokenBalance(); 
+        })
+    }
 
     // Checks to see which Ethereum network the user is using in their MetaMask extension. 
     checkNetwork = () => {
@@ -141,9 +154,9 @@ class Dashboard extends Component {
     };
 
     // Checks to see if the user has changed their MetaMask address. 
-    addressMM = () => {
-        setInterval(this.checkAccount, 1000)
-    };
+    // addressMM = () => {
+    //     setInterval(this.checkAccount, 1000)
+    // };
 
     logout = () => {
         const { setMetaMask, history, click_balance, toggleTokenTransfer } = this.props; 
@@ -244,7 +257,7 @@ class Dashboard extends Component {
                 </div>)
                 :
                 (<div>
-                    {/* User can toggle to view and transfer CCLT tokens out of their MetaMask addres. */}
+                    {/* User can toggle to view and transfer CCLT tokens out of their MetaMask account. */}
                     <TransferTokens getTokenBalance={this.getTokenBalance}/> 
                 </div>)
                 }

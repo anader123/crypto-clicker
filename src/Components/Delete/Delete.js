@@ -1,34 +1,28 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react'; 
+import { useSelector } from 'react-redux';
 import axios from 'axios';
-import { connect } from 'react-redux'; 
 import { Link } from 'react-router-dom'; 
 import './Delete.css';
 import swal from 'sweetalert';
 
-class Delete extends Component {
-    constructor() {
-        super(); 
-        
-        this.state = {
-            password: '',
-        }
-    };
+export default function Delete(props) {
+    const [password, setPassword] = useState('');
+    const email = useSelector(state => state.email);
+    const user_id = useSelector(state => state.user_id);
 
-    componentDidMount() {
     // Makes sure that the user can't access the delete page if they aren't logged in. 
+    useEffect((props) => {
         axios.get('/api/check_session')
-            .then({
-
-            })
+            .then({})
             .catch(() => {
-                this.props.history.push('/')
+                props.history.push('/')
             })
-    };
+    }, []);
 
     // User's password is required for them to delete their account. 
-    deleteAccount = (event) => {
+    const deleteAccount = (event) => {
         event.preventDefault();
-        axios.post(`/api/delete/${this.props.user_id}`, {password: this.state.password, email: this.props.email})
+        axios.post(`/api/delete/${user_id}`, {password, email})
             .then(() => {
                 swal({
                     icon: "success",
@@ -36,7 +30,7 @@ class Delete extends Component {
                     timer: 15000,
                     text: `Your account has been deleted.`
                     })
-                this.props.history.push('/');
+                props.history.push('/');
             })
             .catch(() => {
                 swal({
@@ -48,38 +42,24 @@ class Delete extends Component {
             })
     };
 
-    handleChange = (event) => {
-        this.setState({
-            [event.target.name]: event.target.value
-        })
-    };
-
-    render() {
-        return (
-            <div className='delete-page-container'>
-                <h3 className='delete-page-title'>Are you sure that you want to delete your account?</h3>
-                <p className='delete-page-text'>Please enter in your password below to confirm that you would like to delete your account.</p>
-                <p className='delete-page-text'>Email: {this.props.email}</p>
-                <form>
-                    <input className='input-box'
-                            placeholder='Enter your password'
-                            type='password'
-                            name='password'
-                            value={this.state.password}
-                            onChange={this.handleChange}/> 
-                </form>
-                <div className='delete-page-buttons'>
-                    <button className='btn red-btn delete-btn' onClick={this.deleteAccount}>{'<Delete Account/>'}</button>
-                    <Link to='/dashboard'><span className='link-span'>Cancel</span></Link>
-                </div>
-                
+    return (
+        <div className='delete-page-container'>
+            <h3 className='delete-page-title'>Are you sure that you want to delete your account?</h3>
+            <p className='delete-page-text'>Please enter in your password below to confirm that you would like to delete your account.</p>
+            <p className='delete-page-text'>Email: {email}</p>
+            <form>
+                <input className='input-box'
+                        placeholder='Enter your password'
+                        type='password'
+                        name='password'
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}/> 
+            </form>
+            <div className='delete-page-buttons'>
+                <button className='btn red-btn delete-btn' onClick={deleteAccount}>{'<Delete Account/>'}</button>
+                <Link to='/dashboard'><span className='link-span'>Cancel</span></Link>
             </div>
-        )
-    }
-};
-
-function mapStateToProps(state) {
-    return state
-};
-
-export default connect(mapStateToProps)(Delete); 
+            
+        </div>
+    )
+}

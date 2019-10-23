@@ -1,27 +1,23 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux'; 
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux'; 
 import swal from '@sweetalert/with-react';
 import './TransferTokens.css'; 
 
-// Action Builders
-import {setTokenBalance, toggleTokenTransfer} from '../../redux/reducer'; 
+export default function TransferTokens(props) {
+    const [recipientAddress, setRecipientAddress] = useState(''); 
+    const [sendingAmount, setSendingAmount] = useState(0); 
 
-class TransferTokens extends Component {
-    constructor() {
-        super();
+    //Redux
+    const token_balance = useSelector(state => state.token_balance);
+    const contract_address = useSelector(state => state.contract_address);
+    const abi = useSelector(state => state.abi);
+    const dispatch = useDispatch(); 
 
-        this.state = {
-            recipientAddress: '', 
-            sendingAmount: 0 
-        }
-    };
-
-    transferTokens = (event) => {
+    const transferTokens = (event) => {
         // Prevents the form from submitting 
         event.preventDefault(); 
         const { web3 } = window
-        const { token_balance, abi, contract_address, getTokenBalance } = this.props; 
-        const { sendingAmount, recipientAddress } = this.state; 
+        const { getTokenBalance } = props; 
 
         const contract = web3.eth.contract(abi).at(contract_address);
         const weiSendingAmount = web3.toWei(sendingAmount);
@@ -42,13 +38,11 @@ class TransferTokens extends Component {
                                 <p><a target="_blank" rel="noopener noreferrer" href={`https://ropsten.etherscan.io/tx/${res}`}>{res}</a></p>
                             </div>)
                       })
-                    this.setState({
-                        recipientAddress: '', 
-                        sendingAmount: 0
-                    })
+                    setRecipientAddress(''); 
+                    setSendingAmount(0);
 
                     // Updates the token balance in redux after tokens are sent. 
-                    setTimeout(() => {getTokenBalance()}, 45000)
+                    setTimeout(() => {getTokenBalance()}, 40000)
                 }
                 else {
                     swal({
@@ -77,46 +71,30 @@ class TransferTokens extends Component {
         }
     };
 
-    handleChange = (event) => {
-        this.setState({
-            [event.target.name]: event.target.value
-        })
-    }
-
-    render() {
-        const { sendingAmount, recipientAddress } = this.state; 
-        const { toggleTokenTransfer } = this.props;
-        return (
-            <div className='transfer-page-container'>
-                <h1 className='transfer-title'>Transfer Tokens</h1>
-                <form className='transfer-input-container'>
-                    <label>To:</label>
-                    <input className='input-box'
-                            type='text'
-                            placeholder='Recipient Address'
-                            name='recipientAddress'
-                            value={recipientAddress}
-                            onChange={this.handleChange}/>
-                    <label>Amount:</label>
-                    <input className='input-box'
-                            type='number'
-                            placeholder='Amount of Tokens'
-                            name='sendingAmount'
-                            value={sendingAmount}
-                            onChange={this.handleChange}/>
-                </form>
-                <div className='transfer-button-container'>
-                    <button className='btn send-btn' onClick={this.transferTokens}>{'<Send/>'}</button>
-                    <span className='link-span' onClick={() => toggleTokenTransfer(false)}>Cancel</span>
-                </div>
-                
+    return (
+        <div className='transfer-page-container'>
+            <h1 className='transfer-title'>Transfer Tokens</h1>
+            <form className='transfer-input-container'>
+                <label>To:</label>
+                <input className='input-box'
+                        type='text'
+                        placeholder='Recipient Address'
+                        name='recipientAddress'
+                        value={recipientAddress}
+                        onChange={(e) => setRecipientAddress(e.target.value)}/>
+                <label>Amount:</label>
+                <input className='input-box'
+                        type='number'
+                        placeholder='Amount of Tokens'
+                        name='sendingAmount'
+                        value={sendingAmount}
+                        onChange={(e) => setSendingAmount(e.target.value)}/>
+            </form>
+            <div className='transfer-button-container'>
+                <button className='btn send-btn' onClick={transferTokens}>{'<Send/>'}</button>
+                <span className='link-span' onClick={() => dispatch({type: 'TOGGLE_TOKEN_TRANSFER', payload:false})}>Cancel</span>
             </div>
-        )
-    }
+        </div>
+    )
 };
 
-function mapStateToProps(state) {
-    return state; 
-};
-
-export default connect(mapStateToProps, {setTokenBalance, toggleTokenTransfer})(TransferTokens); 

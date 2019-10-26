@@ -98,8 +98,7 @@ export default function Dashboard(props) {
             const currentAddress = ethereum.selectedAddress; 
             const contract = web3.eth.contract(abi).at(contract_address);
             contract.balanceOf.call(currentAddress, (err, res) => {
-                dispatch({type: 'SET_TOKEN_BALANCE', payload: web3.fromWei(JSON.parse(res))});
-                // setTokenBalance(web3.fromWei(JSON.parse(res)));
+                setTokenBalance(web3.fromWei(JSON.parse(res)));
             }) 
         }
     // Returns the user to the connect MetaMask page if they logout. 
@@ -125,7 +124,6 @@ export default function Dashboard(props) {
 
     // Checks to see which Ethereum network the user is using in their MetaMask extension. 
     const checkNetwork = () => {
-        // const { setNetwork, setTokenBalance } = this.props 
         web3.version.getNetwork((err, netId) => {
             switch (netId) {
                 case "1":
@@ -148,7 +146,6 @@ export default function Dashboard(props) {
     };
 
     const logout = () => {
-        // const { setMetaMask, click_balance, toggleTokenTransfer } = this.props; 
         axios.post('/api/logout', {click_balance})
             .then( () => {
                 toggleMenu();

@@ -18,23 +18,26 @@ export default function EthClicker(props) {
     const address = useSelector(state => state.address); 
     const network = useSelector(state => state.network); 
     const dispatch = useDispatch(); 
+    const incrementClick = (click_balance) => dispatch({type: 'INCREMENT_CLICK', payload: ++click_balance}); 
 
-    useEffect(() => {
-        setInterval(updateClicks, 20000);
-    }, [])
- 
-    // Updates the click balance from redux to the click_balance property in the session. 
-    const updateClicks = () => {
-        axios.post('/api/session_balance', {click_balance})
-            .then( () => {
-            })
-            .catch(err => console.log(err))
-    };
+    // useEffect(() => {
+    //     // Updates the click balance in redux to the click_balance property in the session. 
+    //     const updateClicks = () => {
+    //         console.log('hit');
     
+    //         axios.post('/api/session_balance', {click_balance})
+    //             .then( () => {
+    //                 console.log(click_balance)
+    //             })
+    //             .catch(err => console.log(err))
+    //     };
+        
+    //     setInterval(updateClicks, 20000);
+    // }, [click_balance])
+ 
     // Animates the clicking and increments the click_balance. 
     const ethLogoClick = () => {
-        dispatch({type: 'INCREMENT_CLICK', payload: ++click_balance})
-        // props.incrementClick(this.props.click_balance); 
+        incrementClick(click_balance); 
         setClicked(true); 
         setEthAnimation(!ethAnimation)
         

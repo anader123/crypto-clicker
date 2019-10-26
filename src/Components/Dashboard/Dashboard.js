@@ -111,8 +111,7 @@ export default function Dashboard(props) {
 
     const checkAccount = () => {
         ethereum.on('accountsChanged', (accounts) => {
-            dispatch({type: 'SET_ADDRESS', payload: accounts})
-            // props.setAddress(accounts)
+            setAddress(accounts[0])
             getTokenBalance(); 
         })
     };
@@ -130,19 +129,19 @@ export default function Dashboard(props) {
         web3.version.getNetwork((err, netId) => {
             switch (netId) {
                 case "1":
-                setTokenBalance(0);
+                setTokenBalance('0');
                 return setNetwork('Main Network')
                 case "3":
                 getTokenBalance()
                 return setNetwork('Ropsten')
                 case "4":
-                setTokenBalance(0);                
+                setTokenBalance('0');                
                 return setNetwork('Rinkeby')
                 case "42":
-                setTokenBalance(0);                
+                setTokenBalance('0');                
                 return setNetwork('Kovan')
                 default:
-                setTokenBalance(0);                
+                setTokenBalance('0');                
                 return setNetwork('Unknown Network')
             }
             })

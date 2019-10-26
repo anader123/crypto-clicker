@@ -75,6 +75,7 @@ export default function EthClicker(props) {
     // Creates an axios call to the server that will mint tokens based on the user's click_balance and sets the state of click_balance to 0. Then an alert will tell the user if the transaction was successfull and display the transaction hash which links to Etherscan. 
     const exchangeClicks = () => {
         const { getTokenBalance } = props; 
+        console.log(click_balance, address)
         tokenizeLoading();  
         axios.put('/api/exchanage', {click_balance, address})
             .then((res) => {

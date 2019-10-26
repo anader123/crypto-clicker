@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios'; 
-import { connect } from 'react-redux'; 
+// import { connect } from 'react-redux'; 
+import { useSelector, useDispatch } from 'react-redux'; 
 import { Link } from 'react-router-dom'; 
 import './Dashboard.css';
 import swal from '@sweetalert/with-react';
@@ -9,48 +10,52 @@ import swal from '@sweetalert/with-react';
 import EthClicker from '../EthClicker/EthClicker'; 
 import ConnectMetaMask from '../ConnectMetaMask/ConnectMetaMask'; 
 import TransferTokens from '../TransferTokens/TransferTokens'; 
+import AccountInfo from '../AccountInfo/AccountInfo'; 
 
-// Action Builders
-import {setAddress, setNetwork, setMetaMask, setTokenBalance, toggleTokenTransfer, setInitialState} from '../../redux/reducer'; 
+export default function Dashboard(props) {
+    const { ethereum, web3 } = window; 
+    const [menuToggle, setMenuToggle] = useState(true); 
 
-class Dashboard extends Component {
-    constructor() {
-        super(); 
+    // Redux
+    const dispatch = useDispatch(); 
+    const email = useSelector(state => state.email);
+    const abi = useSelector(state => state.abi); 
+    const contract_address = useSelector(state => state.contract_address); 
+    const click_balance = useSelector(state => state.click_balance); 
+    const metaMaskConnected = useSelector(state => state.metaMaskConnected);
+    const transfer_toggle = useSelector(state => state.transfer_toggle); 
+    
+    const setNetwork = (network) => dispatch({type: 'SET_NETWORK', payload: network}); 
+    const setTokenBalance = (amount) => dispatch({type: 'SET_TOKEN_BALANCE', payload: amount}); 
+    const toggleTokenTransfer = (toggle) => dispatch({type: 'TOGGLE_TOKEN_TRANSFER', payload: toggle});
+    const setAddress = (address) => dispatch({type: 'SET_ADDRESS', payload: address});
+    const setMetaMask = (bool) => dispatch({type: 'SET_METAMASK', payload: bool});
+    const setInitialState = (initalState) => dispatch({type: 'SET_INITIAL_STATE', payload: initalState});
 
-        this.state = {
-            menuToggle: true
-        }
-    }
-
-    componentDidMount() {
-        this.keepOffLogin();
-    };
-
+    useEffect(() => {
     // Makes sure that the user can't access the dashboard page if they aren't logged in. 
-    keepOffLogin = () => {
         axios.get('/api/check_session')
             .then(() => {
-                this.checkSessionRefresh(); 
+                checkSessionRefresh(); 
             })
             .catch(() => {
-                this.props.history.push('/');
+                props.history.push('/');
             })
-    };
-
+    }, []);
+ 
     // If the user has refreshed the page and there still is a session then it grabs the email and click_balance from the session and sets it to state in redux. 
-    checkSessionRefresh = () => {
-        const { email, setInitialState } = this.props; 
+    const checkSessionRefresh = () => {
         if(email === '') {
             axios.get('/api/session_info')
                 .then((res) => {
-                    setInitialState(res.data)
+                    setInitialState(res.data);
                 })
         }
     };
 
     // Enables the website to view the user's MetaMask's adddresses. If the person doesn't have MM installed, it pushes them to the learn more page where they can download it. 
-    connectMetaMask = () => {
-        if(window.ethereum === undefined) {
+    const connectMetaMask = () => {
+        if(ethereum === undefined) {
             swal({
                 icon: "warning",
                 title: "MetaMask Required",
@@ -61,13 +66,13 @@ class Dashboard extends Component {
                     <p>If you just now downloaded the extension, please refresh the page.</p>
                 </div>)
                 })
-            this.props.history.push('/about'); 
+            props.history.push('/about'); 
         }
         else {
-            window.ethereum.enable()
+            ethereum.enable()
                 .then((response) => {
-                    this.props.setAddress(response[0]);
-                    this.props.setMetaMask(true);
+                    setAddress(response[0]);
+                    setMetaMask(true);
                     swal({
                         icon: "success",
                         title: "MetaMask Connected 🦊",
@@ -76,26 +81,25 @@ class Dashboard extends Component {
                             <p>Address:</p><br/><p>{`${response[0]}`}</p>
                         </div>)
                         })
-                    this.checkAccount();
-                    this.checkNetwork(); 
-                    this.networkMM();
-                    // this.addressMM();
+                    checkAccount();
+                    checkNetwork(); 
+                    networkMM();
+                    // addressMM();
                     // Prevents the page from reloading when the user changes networks. 
-                    window.ethereum.autoRefreshOnNetworkChange = false;
+                    ethereum.autoRefreshOnNetworkChange = false;
                 })
                 .catch(err => console.log(err))
         }
     };
 
     // Gets token balance for user's address. The method will return 0 if the user isn't on the Ropsten Network. 
-    getTokenBalance = () => {
-        const { web3, ethereum } = window 
-        const { abi, contract_address, setTokenBalance, setMetaMask } = this.props; 
+    const getTokenBalance = () => {
         if(ethereum.selectedAddress !== null ) {
             const currentAddress = ethereum.selectedAddress; 
             const contract = web3.eth.contract(abi).at(contract_address);
             contract.balanceOf.call(currentAddress, (err, res) => {
-                setTokenBalance(web3.fromWei(JSON.parse(res)))
+                dispatch({type: 'SET_TOKEN_BALANCE', payload: web3.fromWei(JSON.parse(res))});
+                // setTokenBalance(web3.fromWei(JSON.parse(res)));
             }) 
         }
     // Returns the user to the connect MetaMask page if they logout. 
@@ -103,176 +107,139 @@ class Dashboard extends Component {
             setMetaMask(false);
         }
     };
+    
 
-    // Checks if the user has changed their MetaMask address and updates redux to the new address. 
-    // checkAccount = () => {
-    //     const { address, setAddress } = this.props; 
-    //     const currentAddress = window.ethereum.selectedAddress; 
-    //     if (currentAddress !== address) {
-    //         setAddress(currentAddress)
-    //         this.getTokenBalance()
-    //     }
-    // };
-
-    checkAccount = () => {
-        window.ethereum.on('accountsChanged', (accounts) => {
-            this.props.setAddress(accounts)
-            this.getTokenBalance(); 
+    const checkAccount = () => {
+        ethereum.on('accountsChanged', (accounts) => {
+            dispatch({type: 'SET_ADDRESS', payload: accounts})
+            // props.setAddress(accounts)
+            getTokenBalance(); 
         })
-    }
+    };
+
+    // Function is only fired when the user changes the network in MetaMask. Using ethereum.on instead of setInterval.
+    const networkMM = () => {
+        ethereum.on('networkChanged', () => {
+            checkNetwork(); 
+        })
+    };
 
     // Checks to see which Ethereum network the user is using in their MetaMask extension. 
-    checkNetwork = () => {
-        const { web3 } = window; 
-        const { setNetwork, setTokenBalance } = this.props 
-       web3.version.getNetwork((err, netId) => {
+    const checkNetwork = () => {
+        // const { setNetwork, setTokenBalance } = this.props 
+        web3.version.getNetwork((err, netId) => {
             switch (netId) {
                 case "1":
                 setTokenBalance(0);
                 return setNetwork('Main Network')
                 case "3":
-                this.getTokenBalance()
+                getTokenBalance()
                 return setNetwork('Ropsten')
                 case "4":
-                setTokenBalance(0);
+                setTokenBalance(0);                
                 return setNetwork('Rinkeby')
                 case "42":
-                setTokenBalance(0);
+                setTokenBalance(0);                
                 return setNetwork('Kovan')
                 default:
-                setTokenBalance(0);
+                setTokenBalance(0);                
                 return setNetwork('Unknown Network')
             }
             })
     };
 
-    // Function is only fired when the user changes the network in MetaMask. Using ethereum.on instead of setInterval.
-    networkMM = () => {
-        window.ethereum.on('networkChanged', () => {
-            this.checkNetwork(); 
-        })
-    };
-
-    // Checks to see if the user has changed their MetaMask address. 
-    // addressMM = () => {
-    //     setInterval(this.checkAccount, 1000)
-    // };
-
-    logout = () => {
-        const { setMetaMask, history, click_balance, toggleTokenTransfer } = this.props; 
+    const logout = () => {
+        // const { setMetaMask, click_balance, toggleTokenTransfer } = this.props; 
         axios.post('/api/logout', {click_balance})
             .then( () => {
-                this.toggleMenu();
+                toggleMenu();
                 setMetaMask(false); 
                 toggleTokenTransfer(false); 
-                history.push('/'); 
+                props.history.push('/'); 
             })
             .catch(err => console.log(err))
     };
 
     // Slides out the menu for mobile user's.
-    toggleMenu = () => {
-        this.setState({
-            menuToggle: !this.state.menuToggle 
-        })
-    }
+    const toggleMenu = () => {
+        setMenuToggle(!menuToggle);
+    };
 
-    render() {
-        const { email, address, network, metaMaskConnected, token_balance, contract_address, toggleTokenTransfer, transfer_toggle } = this.props; 
-        return (
-            <div>
-                {!metaMaskConnected 
-                ?
-                (<div className='main-dashboard-container'>
-                <div className='upper-dashboard-container'>
-                    <div className='network-container'>
-                        <p className='network-warning-text'>*Please make sure that you are connected to the <Link to='/about' className='ropsten-info-text'>Ropsten Network</Link></p>
-                        <h3>Email: $ {email}</h3>
-                    </div>
-                    <div className='dashboard-buttons'>
-                        <Link to='/about'><button className='btn'>{'<Learn More/>'}</button></Link>
-                        <button className='btn red-btn' onClick={this.logout}>{'<Logout/>'}</button>
-                    </div>
-                    <nav className='navbar-container'>
-                        <div className='navbar-icon' onClick={this.toggleMenu}>
-                            &#9776; 
-                            </div>
-                            <div className='menu-container'>
-                            <ul className={this.state.menuToggle? 
-                        'navbar-menu'
-                            :
-                        'navbar-menu slide'}>
-                                <li><Link to='/about'>LEARN MORE</Link></li>
-                                <li onClick={this.logout}>LOGOUT</li>
-                                <li onClick={this.toggleMenu}><Link to='/delete'>DELETE ACCOUNT</Link></li>
-                            </ul>
-                            </div>
-                    </nav>
-                </div>
-                <ConnectMetaMask connectMetaMask={this.connectMetaMask}/> 
-                <div className='delete-button'>
-                    <Link to='/delete'><button className='btn red-btn'>{'<Delete Account/>'}</button></Link>
-                </div>
-            </div>)
-            :
+    return (
+        <div>
+            {!metaMaskConnected 
+            ?
             (<div className='main-dashboard-container'>
-                <div className='upper-dashboard-container'>
-                    <div className='network-container'>
-                        <p className='network-warning-text'>*Please make sure that you are connected to the <Link to='/about' className='ropsten-info-text'>Ropsten Network</Link></p>
-                        <div className='user-eth-info'>
-                        <h3>Email: $ {email}</h3>
-                        <h3>Network: {network}</h3>
-                        <h3>Token Contract: <a target="_blank" rel="noopener noreferrer" href={`https://ropsten.etherscan.io/token/${contract_address}`}>{contract_address}</a></h3>
-                        <h3>User Address: <a target="_blank" rel="noopener noreferrer" href={`https://ropsten.etherscan.io/address/${address}`}>{address}</a></h3>
-                        <h3>Token Balance: {token_balance}</h3>
-                        </div>
-                    </div>
-                    <div className='dashboard-buttons'>
-                        <button className='btn' onClick={() => toggleTokenTransfer(!transfer_toggle)}>{'<TRANSFER TOKENS/>'}</button>
-                        <Link to='/about'><button className='btn'>{'<Learn More/>'}</button></Link>
-                        <button className='btn red-btn' onClick={this.logout}>{'<Logout/>'}</button>
+            <div className='upper-dashboard-container'>
+                <AccountInfo metaMaskConnected={metaMaskConnected} /> 
+                <div className='dashboard-buttons'>
+                    <Link to='/about'><button className='btn'>{'<Learn More/>'}</button></Link>
+                    <button className='btn red-btn' onClick={logout}>{'<Logout/>'}</button>
                 </div>
                 <nav className='navbar-container'>
-                    <div className='navbar-icon' onClick={this.toggleMenu}>
+                    <div className='navbar-icon' onClick={toggleMenu}>
                         &#9776; 
                         </div>
-                            <div className='menu-container'>
-                                <ul className={this.state.menuToggle? 
-                                'navbar-menu'
-                                    :
-                                'navbar-menu slide'}>
-                                    <li onClick={() => toggleTokenTransfer(true)}>TRANSFER TOKENS</li>
-                                    <li onClick={this.toggleMenu}><Link to='/about'>LEARN MORE</Link></li>
-                                    <li onClick={this.logout}>LOGOUT</li>
-                                    <li onClick={this.toggleMenu}><Link to='/delete'>DELETE ACCOUNT</Link></li>
-                                </ul>
-                            </div>
-                        </nav>
-                </div>
-                {!transfer_toggle 
-                ?
-                (<div>
-                    {/* User will click the eth image to increase their click_balance */}
-                    <EthClicker getTokenBalance={this.getTokenBalance}/> 
-                </div>)
-                :
-                (<div>
-                    {/* User can toggle to view and transfer CCLT tokens out of their MetaMask account. */}
-                    <TransferTokens getTokenBalance={this.getTokenBalance}/> 
-                </div>)
-                }
-                <div className='delete-button'>
-                    <Link to='/delete'><button className='btn red-btn'>{'<Delete Account/>'}</button></Link>
-                </div>
+                        <div className='menu-container'>
+                        <ul className={menuToggle? 
+                    'navbar-menu'
+                        :
+                    'navbar-menu slide'}>
+                            <li><Link to='/about'>LEARN MORE</Link></li>
+                            <li onClick={logout}>LOGOUT</li>
+                            <li onClick={toggleMenu}><Link to='/delete'>DELETE ACCOUNT</Link></li>
+                        </ul>
+                        </div>
+                </nav>
+            </div>
+            <ConnectMetaMask connectMetaMask={connectMetaMask}/> 
+            <div className='delete-button'>
+                <Link to='/delete'><button className='btn red-btn'>{'<Delete Account/>'}</button></Link>
+            </div>
+        </div>)
+        :
+        (<div className='main-dashboard-container'>
+            <div className='upper-dashboard-container'>
+                <AccountInfo metaMaskConnected={metaMaskConnected} /> 
+                <div className='dashboard-buttons'>
+                    <button className='btn' onClick={() => toggleTokenTransfer(!transfer_toggle)}>{'<TRANSFER TOKENS/>'}</button>
+                    <Link to='/about'><button className='btn'>{'<Learn More/>'}</button></Link>
+                    <button className='btn red-btn' onClick={logout}>{'<Logout/>'}</button>
+            </div>
+            <nav className='navbar-container'>
+                <div className='navbar-icon' onClick={toggleMenu}>
+                    &#9776; 
+                    </div>
+                        <div className='menu-container'>
+                            <ul className={menuToggle? 
+                            'navbar-menu'
+                                :
+                            'navbar-menu slide'}>
+                                <li onClick={() => toggleTokenTransfer(true)}>TRANSFER TOKENS</li>
+                                <li onClick={toggleMenu}><Link to='/about'>LEARN MORE</Link></li>
+                                <li onClick={logout}>LOGOUT</li>
+                                <li onClick={toggleMenu}><Link to='/delete'>DELETE ACCOUNT</Link></li>
+                            </ul>
+                        </div>
+                    </nav>
+            </div>
+            {!transfer_toggle 
+            ?
+            (<div>
+                {/* User will click the eth image to increase their click_balance */}
+                <EthClicker getTokenBalance={getTokenBalance}/> 
+            </div>)
+            :
+            (<div>
+                {/* User can toggle to view and transfer CCLT tokens out of their MetaMask account. */}
+                <TransferTokens getTokenBalance={getTokenBalance}/> 
             </div>)
             }
+            <div className='delete-button'>
+                <Link to='/delete'><button className='btn red-btn'>{'<Delete Account/>'}</button></Link>
             </div>
-        )
-    }
+        </div>)
+        }
+        </div>
+    )
 };
-
-function mapStateToProps(state) {
-    return state; 
-};
-
-export default connect(mapStateToProps, {setAddress, setNetwork, setMetaMask, setTokenBalance, toggleTokenTransfer, setInitialState})(Dashboard); 

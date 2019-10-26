@@ -1,45 +1,32 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios'; 
-import { connect } from 'react-redux'; 
+import { useDispatch } from 'react-redux'; 
 import './Home.css';
 import swal from 'sweetalert';
 
-// Action Builder
-import {setInitialState} from '../../redux/reducer'; 
+export default function Home(props) {
+    // React Hooks 
+    const [email, setEmail] = useState(''); 
+    const [password, setPassword]  = useState(''); 
+    const [display, setDisplay] = useState(true);  
 
-class Home extends Component {
-    constructor() {
-        super(); 
+    // Redux
+    const dispatch = useDispatch(); 
+    const setInitialState = (initalState) => dispatch({type: 'SET_INITIAL_STATE', payload: initalState});
 
-        this.state = {
-            email: '', 
-            password: '',
-            display: true,
-            clickTokens: null,
-            ethBalance: null 
-        }
-    };
-
-    // Makes sure that the user can't go back to the login page if they are logged in. 
-    componentDidMount() {
+    useEffect(() => {
+        // Makes sure that the user can't go back to the login page if they are logged in. 
         axios.get('/api/check_session')
             .then(() => {
-                this.props.history.push('/dashboard');
+                props.history.push('/dashboard');
             })
             .catch(err => console.log(err))
-    };
+    }, [])
 
-    handleChange = (event) => {
-        this.setState({
-            [event.target.name]: event.target.value
-        })
-    };
-
-    register = (event) => {
+    const register = (event) => {
         // Prevents the form from submitting 
         event.preventDefault(); 
         
-        const { email, password } = this.state;
         if(email.length < 6 || !email.includes('@') || password.length < 5) {
             swal({
                 icon: "error",
@@ -51,22 +38,21 @@ class Home extends Component {
         else {
             axios.post('/api/register', {email, password})
             .then(res => {
-                this.props.setInitialState(res.data);
-                this.props.history.push('/dashboard'); 
+                setInitialState(res.data);
+                props.history.push('/dashboard'); 
             })
             .catch(err => console.log(err))
         }
     };
 
-    login = (event) => {
+    const login = (event) => {
         // Prevents the form from submitting 
         event.preventDefault(); 
 
-        const { email, password } = this.state; 
         axios.post('/api/login', {email, password})
             .then(res => {
-                this.props.setInitialState(res.data);
-                this.props.history.push('/dashboard');
+                setInitialState(res.data);
+                props.history.push('/dashboard');
             })
             .catch(() => {
                 swal({
@@ -78,76 +64,66 @@ class Home extends Component {
             })
     };
 
-    // Toggles between the login and sign up fields. 
-    changeDisplay = () => {
-        this.setState({
-            display: !this.state.display,
-            email: '',
-            password: ''
-        })
+    // Toggles between the login and register forms. 
+    const changeDisplay = () => {
+        setEmail('');
+        setPassword(''); 
+        setDisplay(!display)
     };
 
-    render() {
-        return (
-            <div className='home-container'>
-                {
-                    // Login form 
-                    this.state.display ?
-                    (<div className='login-container'>
-                        <h3 className='login-title typewriter-login'>Login</h3>
-                        <form className='input-container'>
+    return (
+        <div className='home-container'>
+            {
+                // Login form 
+                display ?
+                (<div className='login-container'>
+                    <h3 className='login-title typewriter-login'>Login</h3>
+                    <form className='input-container'>
+                    <label className="login-label">E-Mail Address</label>
+                    <input  className='input-box'
+                            placeholder='Enter your email'
+                            type='email'
+                            name='email'
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}/>
+                    <label className="login-label">Password</label>
+                    <input  className='input-box'
+                            placeholder='Enter your password'
+                            type='password'
+                            name='password'
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}/>
+                    </form>
+                            <button className='btn login-btn' onClick={login}>{'<Login/>'}</button>
+                            <span className='login-span' onClick={changeDisplay}>Create an account</span>
+                </div>)
+                :
+                // Register form 
+                (<div className='login-container'>
+                    <h3 className='login-title typewriter-login'>Register</h3>
+                    <form className='input-container'>
                         <label className="login-label">E-Mail Address</label>
                         <input  className='input-box'
                                 placeholder='Enter your email'
                                 type='email'
                                 name='email'
-                                value={this.state.email}
-                                onChange={this.handleChange}/>
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}/>
                         <label className="login-label">Password</label>
                         <input  className='input-box'
                                 placeholder='Enter your password'
                                 type='password'
                                 name='password'
-                                value={this.state.password}
-                                onChange={this.handleChange}/>
-                        </form>
-                                <button className='btn login-btn' onClick={this.login}>{'<Login/>'}</button>
-                                <span className='login-span' onClick={this.changeDisplay}>Create an account</span>
-                    </div>)
-                    :
-                    // Register form 
-                    (<div className='login-container'>
-                        <h3 className='login-title typewriter-login'>Register</h3>
-                        <form className='input-container'>
-                            <label className="login-label">E-Mail Address</label>
-                            <input  className='input-box'
-                                    placeholder='Enter your email'
-                                    type='email'
-                                    name='email'
-                                    value={this.state.email}
-                                    onChange={this.handleChange}/>
-                            <label className="login-label">Password</label>
-                            <input  className='input-box'
-                                    placeholder='Enter your password'
-                                    type='password'
-                                    name='password'
-                                    value={this.state.password}
-                                    onChange={this.handleChange}/>
-                                    <div>
-                                    <p className='pasword-warn-text'>*Password requires a min of 5 characters</p>
-                                    </div>
-                        </form>
-                                <button className='btn login-btn' onClick={this.register}>{'<Register/>'}</button>
-                                <span className='login-span' onClick={this.changeDisplay}>Cancel</span>
-                    </div>)
-                }
-            </div>
-        )
-    }
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}/>
+                                <div>
+                                <p className='pasword-warn-text'>*Password requires a min of 5 characters</p>
+                                </div>
+                    </form>
+                            <button className='btn login-btn' onClick={register}>{'<Register/>'}</button>
+                            <span className='login-span' onClick={changeDisplay}>Cancel</span>
+                </div>)
+            }
+        </div>
+    )
 };
-
-function mapStateToProps(state) {
-    return state; 
-};
-
-export default connect(mapStateToProps, {setInitialState})(Home); 

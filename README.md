@@ -4,6 +4,7 @@ Similar to Cookie Clicker, CryptoClicker is an incremental game where users can 
 # What I learned 
 * Deployed a smart contract using the [Remix IDE](https://remix.ethereum.org). 
 * Created an interface that allowed users to transfer [ERC20 tokens](https://eips.ethereum.org/EIPS/eip-20). 
+* Initially wrote the project using Class components, but went back and rewrote everything using [React Hooks](https://reactjs.org/docs/hooks-overview.html).
 * Worked with the [MetaMask API](https://metamask.github.io/metamask-docs/) to automatically update the display if the user changes addresses or networks. 
 * Integrated Redux to keep track of user's information as they navigate the website. 
 * Tested Contract using [Gancache](https://www.trufflesuite.com/docs/ganache/overview).

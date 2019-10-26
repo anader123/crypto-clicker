@@ -42,7 +42,7 @@ export default function TransferTokens(props) {
                     setSendingAmount(0);
 
                     // Updates the token balance in redux after tokens are sent. 
-                    setTimeout(() => {getTokenBalance()}, 40000)
+                    setTimeout(() => {getTokenBalance()}, 35000)
                 }
                 else {
                     swal({

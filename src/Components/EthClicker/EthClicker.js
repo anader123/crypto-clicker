@@ -90,7 +90,7 @@ export default function EthClicker(props) {
                 dispatch({type: 'RESET_COUNT'});
                 // Makes sure that the user is connected to Ropsten before checking their token balance. 
                 if(network === 'Ropsten') {
-                    setTimeout(() => {getTokenBalance()}, 12000)
+                    setTimeout(() => {getTokenBalance()}, 30000)
                 }
             })
             .catch(() => {

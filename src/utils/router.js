@@ -2,7 +2,7 @@ import React from 'react';
 import { Switch, Route } from 'react-router-dom'; 
 
 import Home from '../Components/Home/Home';
-import Dashboard from '../Components/Dashboard/Dashboard';
+import Dashboard from '../Components/Dashboard/DashboardHooks';
 import LearnMore from '../Components/LearnMore/LearnMore'; 
 import Delete from '../Components/Delete/Delete'; 
 import TransferTokens from '../Components/TransferTokens/TransferTokens';

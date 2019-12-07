@@ -4,7 +4,12 @@ import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux'; 
 import { Link } from 'react-router-dom'; 
 import './Dashboard.css';
-import swal from '@sweetalert/with-react';
+
+import Web3 from 'web3';
+
+// Alerts
+import { metaMaskRequiredAlert, metaMaskConnectedAlert } from '../../utils/alerts';
+
 
 // Components
 import EthClicker from '../EthClicker/EthClicker'; 
@@ -13,8 +18,8 @@ import TransferTokens from '../TransferTokens/TransferTokens';
 import AccountInfo from '../AccountInfo/AccountInfo'; 
 
 export default function Dashboard(props) {
-    const { ethereum, web3 } = window; 
-    const [menuToggle, setMenuToggle] = useState(true); 
+    const [menuToggle, setMenuToggle] = useState(true);
+    const [web3, setWeb3] = useState(null); 
 
     // Redux
     const dispatch = useDispatch(); 
@@ -55,38 +60,24 @@ export default function Dashboard(props) {
 
     // Enables the website to view the user's MetaMask's adddresses. If the person doesn't have MM installed, it pushes them to the learn more page where they can download it. 
     const connectMetaMask = () => {
-        if(ethereum === undefined) {
-            swal({
-                icon: "warning",
-                title: "MetaMask Required",
-                timer: 23000,
-                content: (<div>
-                    <p>Please download the MetaMask Chrome extension.</p>
-                    <br/> 
-                    <p>If you just now downloaded the extension, please refresh the page.</p>
-                </div>)
-                })
+        if(window.ethereum === undefined) {
+            metaMaskRequiredAlert();
             props.history.push('/about'); 
         }
         else {
-            ethereum.enable()
+            window.ethereum.enable()
                 .then((response) => {
                     setAddress(response[0]);
                     setMetaMask(true);
-                    swal({
-                        icon: "success",
-                        title: "MetaMask Connected 🦊",
-                        timer: 150000,
-                        content: (<div>
-                            <p>Address:</p><br/><p>{`${response[0]}`}</p>
-                        </div>)
-                        })
+                    metaMaskConnectedAlert(response);
                     checkAccount();
                     checkNetwork(); 
                     networkMM();
+                    const web3 = new Web3(Web3.givenProvider);
+                    setWeb3(web3);
                     // addressMM();
                     // Prevents the page from reloading when the user changes networks. 
-                    ethereum.autoRefreshOnNetworkChange = false;
+                    window.ethereum.autoRefreshOnNetworkChange = false;
                 })
                 .catch(err => console.log(err))
         }
@@ -94,8 +85,8 @@ export default function Dashboard(props) {
 
     // Gets token balance for user's address. The method will return 0 if the user isn't on the Ropsten Network. 
     const getTokenBalance = () => {
-        if(ethereum.selectedAddress !== null ) {
-            const currentAddress = ethereum.selectedAddress; 
+        if(window.ethereum.selectedAddress !== null ) {
+            const currentAddress = window.ethereum.selectedAddress; 
             const contract = web3.eth.contract(abi).at(contract_address);
             contract.balanceOf.call(currentAddress, (err, res) => {
                 setTokenBalance(web3.fromWei(JSON.parse(res)));
@@ -109,15 +100,15 @@ export default function Dashboard(props) {
     
 
     const checkAccount = () => {
-        ethereum.on('accountsChanged', (accounts) => {
+        window.ethereum.on('accountsChanged', (accounts) => {
             setAddress(accounts[0])
             getTokenBalance(); 
         })
     };
 
-    // Function is only fired when the user changes the network in MetaMask. Using ethereum.on instead of setInterval.
+    // Function is only fired when the user changes the network in MetaMask. Using window.ethereum.on instead of setInterval.
     const networkMM = () => {
-        ethereum.on('networkChanged', () => {
+        window.ethereum.on('networkChanged', () => {
             checkNetwork(); 
         })
     };
@@ -196,28 +187,33 @@ export default function Dashboard(props) {
         :
         (<div className='main-dashboard-container'>
             <div className='upper-dashboard-container'>
+
                 <AccountInfo metaMaskConnected={metaMaskConnected} /> 
+
                 <div className='dashboard-buttons'>
                     <button className='btn' onClick={() => toggleTokenTransfer(!transfer_toggle)}>{'<TRANSFER TOKENS/>'}</button>
                     <Link to='/about'><button className='btn'>{'<Learn More/>'}</button></Link>
                     <button className='btn red-btn' onClick={logout}>{'<Logout/>'}</button>
-            </div>
-            <nav className='navbar-container'>
-                <div className='navbar-icon' onClick={toggleMenu}>
-                    &#9776; 
+                </div>
+
+                <nav className='navbar-container'>
+                    <div className='navbar-icon' onClick={toggleMenu}>
+                        &#9776; 
                     </div>
-                        <div className='menu-container'>
-                            <ul className={menuToggle? 
-                            'navbar-menu'
-                                :
-                            'navbar-menu slide'}>
-                                <li onClick={() => toggleTokenTransfer(true)}>TRANSFER TOKENS</li>
-                                <li onClick={toggleMenu}><Link to='/about'>LEARN MORE</Link></li>
-                                <li onClick={logout}>LOGOUT</li>
-                                <li onClick={toggleMenu}><Link to='/delete'>DELETE ACCOUNT</Link></li>
-                            </ul>
-                        </div>
-                    </nav>
+
+                    <div className='menu-container'>
+                        <ul className={menuToggle? 
+                        'navbar-menu'
+                            :
+                        'navbar-menu slide'}>
+                            <li onClick={() => toggleTokenTransfer(true)}>TRANSFER TOKENS</li>
+                            <li onClick={toggleMenu}><Link to='/about'>LEARN MORE</Link></li>
+                            <li onClick={logout}>LOGOUT</li>
+                            <li onClick={toggleMenu}><Link to='/delete'>DELETE ACCOUNT</Link></li>
+                        </ul>
+                    </div>
+                </nav>
+                
             </div>
             {!transfer_toggle 
             ?
@@ -231,9 +227,11 @@ export default function Dashboard(props) {
                 <TransferTokens getTokenBalance={getTokenBalance}/> 
             </div>)
             }
+
             <div className='delete-button'>
                 <Link to='/delete'><button className='btn red-btn'>{'<Delete Account/>'}</button></Link>
             </div>
+
         </div>)
         }
         </div>

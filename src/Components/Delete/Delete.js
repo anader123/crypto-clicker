@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'; 
 import { useSelector } from 'react-redux';
-import axios from 'axios';
 import { Link } from 'react-router-dom'; 
+import axios from 'axios';
 import './Delete.css';
-import swal from 'sweetalert';
+
+// Alerts
+import { accountDeletedSuccessAlert, incorrectPasswordAlert } from '../../utils/alerts';
 
 export default function Delete(props) {
     const [password, setPassword] = useState('');
@@ -24,29 +26,20 @@ export default function Delete(props) {
         event.preventDefault();
         axios.post(`/api/delete/${user_id}`, {password, email})
             .then(() => {
-                swal({
-                    icon: "success",
-                    title: "Account Deleted",
-                    timer: 15000,
-                    text: `Your account has been deleted.`
-                    })
+                accountDeletedSuccessAlert();
                 props.history.push('/');
             })
             .catch(() => {
-                swal({
-                    icon: "error",
-                    title: "Incorrect Password",
-                    timer: 15000,
-                    text: `Please make sure that you are entering the corret password.`
-                    })
-            })
-    };
+                incorrectPasswordAlert();
+            });
+    }
 
     return (
         <div className='delete-page-container'>
             <h3 className='delete-page-title'>Are you sure that you want to delete your account?</h3>
             <p className='delete-page-text'>Please enter in your password below to confirm that you would like to delete your account.</p>
             <p className='delete-page-text'>Email: {email}</p>
+
             <form>
                 <input className='input-box'
                         placeholder='Enter your password'
@@ -55,6 +48,7 @@ export default function Delete(props) {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}/> 
             </form>
+
             <div className='delete-page-buttons'>
                 <button className='btn red-btn delete-btn' onClick={deleteAccount}>{'<Delete Account/>'}</button>
                 <Link to='/dashboard'><span className='link-span'>Cancel</span></Link>

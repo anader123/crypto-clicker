@@ -1,7 +1,14 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'; 
-import swal from '@sweetalert/with-react';
 import './TransferTokens.css'; 
+
+// Alerts
+import { 
+    tokenTransferSuccessAlert, 
+    tokenTransferErorrAlert, 
+    tokenAddressErorrAlert,
+    tokenAmountErrorAlert 
+} from '../../utils/alerts';
 
 export default function TransferTokens(props) {
     const [recipientAddress, setRecipientAddress] = useState(''); 
@@ -26,18 +33,7 @@ export default function TransferTokens(props) {
         if(recipientAddress.includes('0x') && recipientAddress.length === 42 && sendingAmount > 0 && sendingAmount <= +token_balance) {
             contract.transfer.sendTransaction(recipientAddress, weiSendingAmount, (err, res) => {
                 if(!err) {
-                    swal({
-                        icon: "success",
-                        title: "Tokens Successfully Sent",
-                        closeOnClickOutside: false,
-                        content: (
-                            <div>
-                                <p>Transaction Hash:</p>
-                                <br/>
-                                {/* res is the transaction hash */}
-                                <p><a target="_blank" rel="noopener noreferrer" href={`https://ropsten.etherscan.io/tx/${res}`}>{res}</a></p>
-                            </div>)
-                      })
+                    tokenTransferSuccessAlert(res);
                     setRecipientAddress(''); 
                     setSendingAmount(0);
 
@@ -45,35 +41,22 @@ export default function TransferTokens(props) {
                     setTimeout(() => {getTokenBalance()}, 35000)
                 }
                 else {
-                    swal({
-                        icon: "error",
-                        title: "Error Transferring Tokens",
-                        closeOnClickOutside: false,
-                      })
+                    tokenTransferErorrAlert();
                 }
             })
         }
         else if(!recipientAddress.includes('0x') || recipientAddress.length !== 42) {
-            swal({
-                icon: "error",
-                title: "Address Error",
-                timer: 20000,
-                text: `Please make sure that you are entering in a valid Ethereum address.`
-              })
+            tokenAddressErorrAlert();
         }
         else if(0 > sendingAmount || sendingAmount > +token_balance) {
-            swal({
-                icon: "error",
-                title: "Amount Error",
-                timer: 20000,
-                text: `Please make sure that you are entering in a valid token amount.`
-              })
+            tokenAmountErrorAlert();
         }
     };
 
     return (
         <div className='transfer-page-container'>
             <h1 className='transfer-title'>Transfer Tokens</h1>
+
             <form className='transfer-input-container'>
                 <label>To:</label>
                 <input className='input-box'
@@ -90,6 +73,7 @@ export default function TransferTokens(props) {
                         value={sendingAmount}
                         onChange={(e) => setSendingAmount(e.target.value)}/>
             </form>
+            
             <div className='transfer-button-container'>
                 <button className='btn send-btn' onClick={transferTokens}>{'<Send/>'}</button>
                 <span className='link-span' onClick={() => dispatch({type: 'TOGGLE_TOKEN_TRANSFER', payload:false})}>Cancel</span>

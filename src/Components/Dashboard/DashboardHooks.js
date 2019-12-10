@@ -37,66 +37,72 @@ export default function Dashboard(props) {
     const setMetaMask = (bool) => dispatch({type: 'SET_METAMASK', payload: bool});
     const setInitialState = (initalState) => dispatch({type: 'SET_INITIAL_STATE', payload: initalState});
 
-    useEffect(() => {
+    useEffect(async () => {
     // Makes sure that the user can't access the dashboard page if they aren't logged in. 
-        axios.get('/api/check_session')
-            .then(() => {
-                checkSessionRefresh(); 
-            })
-            .catch(() => {
-                props.history.push('/');
-            })
+        try {
+            await axios.get('/api/check_session');
+            checkSessionRefresh(); 
+        } catch (error) {
+            props.history.push('/');
+        }
     }, []);
  
     // If the user has refreshed the page and there still is a session then it grabs the email and click_balance from the session and sets it to state in redux. 
-    const checkSessionRefresh = () => {
+    const checkSessionRefresh = async() => {
         if(email === '') {
-            axios.get('/api/session_info')
-                .then((res) => {
-                    setInitialState(res.data);
-                })
+            try {
+                const response = await axios.get('/api/session_info');
+                setInitialState(response.data);
+            } catch (error) {
+                console.log(error);
+            }
         }
-    };
+    }
 
     // Enables the website to view the user's MetaMask's adddresses. If the person doesn't have MM installed, it pushes them to the learn more page where they can download it. 
-    const connectMetaMask = () => {
+    const connectMetaMask = async () => {
         if(window.ethereum === undefined) {
             metaMaskRequiredAlert();
             props.history.push('/about'); 
         }
         else {
-            window.ethereum.enable()
-                .then((response) => {
-                    setAddress(response[0]);
-                    setMetaMask(true);
-                    metaMaskConnectedAlert(response);
-                    checkAccount();
-                    checkNetwork(); 
-                    networkMM();
-                    const web3 = new Web3(Web3.givenProvider);
-                    setWeb3(web3);
-                    // addressMM();
-                    // Prevents the page from reloading when the user changes networks. 
-                    window.ethereum.autoRefreshOnNetworkChange = false;
-                })
-                .catch(err => console.log(err))
+            try {
+                console.log('hit1')
+
+                const accounts = await window.ethereum.enable();
+                const web3 = await new Web3(Web3.givenProvider);
+                await setWeb3(web3);
+                console.log(web3);
+                setAddress(accounts[0]);
+                setMetaMask(true);
+                metaMaskConnectedAlert(accounts);
+                checkAccount();
+                checkNetwork(); 
+                networkMM();
+                console.log('hit')
+                // Prevents the page from reloading when the user changes networks. 
+                window.ethereum.autoRefreshOnNetworkChange = false;
+
+            } catch (error) {
+                console.log(error)
+            }
         }
-    };
+    }
 
     // Gets token balance for user's address. The method will return 0 if the user isn't on the Ropsten Network. 
-    const getTokenBalance = () => {
+    const getTokenBalance = async () => {
         if(window.ethereum.selectedAddress !== null ) {
             const currentAddress = window.ethereum.selectedAddress; 
-            const contract = web3.eth.contract(abi).at(contract_address);
-            contract.balanceOf.call(currentAddress, (err, res) => {
-                setTokenBalance(web3.fromWei(JSON.parse(res)));
-            }) 
+            console.log(web3)
+            const contract = new web3.eth.Contract(abi, contract_address);
+            const balance = await contract.methods.balanceOf(currentAddress).call();
+            setTokenBalance(balance);
         }
     // Returns the user to the connect MetaMask page if they logout. 
         else {
             setMetaMask(false);
         }
-    };
+    }
     
 
     const checkAccount = () => {
@@ -104,17 +110,18 @@ export default function Dashboard(props) {
             setAddress(accounts[0])
             getTokenBalance(); 
         })
-    };
+    }
 
     // Function is only fired when the user changes the network in MetaMask. Using window.ethereum.on instead of setInterval.
     const networkMM = () => {
         window.ethereum.on('networkChanged', () => {
             checkNetwork(); 
         })
-    };
+    }
 
     // Checks to see which Ethereum network the user is using in their MetaMask extension. 
     const checkNetwork = () => {
+        console.log('web3', web3)
         web3.version.getNetwork((err, netId) => {
             switch (netId) {
                 case "1":
@@ -134,23 +141,25 @@ export default function Dashboard(props) {
                 return setNetwork('Unknown Network')
             }
             })
-    };
+    }
 
-    const logout = () => {
-        axios.post('/api/logout', {click_balance})
-            .then( () => {
-                toggleMenu();
-                setMetaMask(false); 
-                toggleTokenTransfer(false); 
-                props.history.push('/'); 
-            })
-            .catch(err => console.log(err))
-    };
+    const logout = async () => {
+        try {
+            await axios.post('/api/logout', {click_balance});
+            toggleMenu();
+            setMetaMask(false); 
+            toggleTokenTransfer(false); 
+            props.history.push('/'); 
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     // Slides out the menu for mobile user's.
     const toggleMenu = () => {
         setMenuToggle(!menuToggle);
-    };
+    }
 
     return (
         <div>
@@ -236,4 +245,4 @@ export default function Dashboard(props) {
         }
         </div>
     )
-};
+}

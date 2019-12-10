@@ -151,3 +151,11 @@ export const tokenAmountErrorAlert = () => {
                 text: `Please make sure that you are entering in a valid token amount.`
             });
 }
+
+export const networkErrorAlert = () => {
+    return swal({
+            icon: "error",
+            title: "Network Error",
+            text: "Please switch to the Ropsten Test Network"
+        })
+}

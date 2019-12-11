@@ -4,10 +4,10 @@ import React from 'react';
 // Images 
 import blockLoad from '../img/green-blockchainLoading.png';
 
-export const metaMaskRequiredAlert = () => {
+export const ethWalletRequired = () => {
     return swal({
                 icon: "warning",
-                title: "MetaMask Required",
+                title: "Ethereum Wallet Required",
                 timer: 23000,
                 content: (<div>
                     <p>Please download the MetaMask Chrome extension.</p>
@@ -19,8 +19,8 @@ export const metaMaskRequiredAlert = () => {
 
 export const metaMaskConnectedAlert = (response) => {
     return swal({
-                icon: "success",
-                title: "MetaMask Connected 🦊",
+                icon: false,
+                title: "Wallet Connected",
                 timer: 150000,
                 content: (<div>
                     <p>Address:</p><br/><p>{`${response[0]}`}</p>
@@ -55,7 +55,7 @@ export const clickingSpeedAlert = () => {
             });
 }
 
-export const tokenizeLoadingAlert = () => {
+export const blockchainLoadingAlert = () => {
     return swal({
                 closeOnClickOutside: false,
                 button: false, 
@@ -63,7 +63,7 @@ export const tokenizeLoadingAlert = () => {
                     <img className='block-load-img' src={blockLoad} alt='block loading'/>
                     <p>Blockchain magic in progress...</p>
                     <br/>
-                    <p>*Do not refresh page.</p>
+                    <p>*Do not refresh page</p>
                     <br/>
                 </div>)
                 });

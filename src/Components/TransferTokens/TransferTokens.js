@@ -2,12 +2,16 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'; 
 import './TransferTokens.css'; 
 
+// Ethereum Items
+import { abi } from '../../utils/contractAbi';
+
 // Alerts
 import { 
     tokenTransferSuccessAlert, 
     tokenTransferErorrAlert, 
     tokenAddressErorrAlert,
-    tokenAmountErrorAlert 
+    tokenAmountErrorAlert,
+    blockchainLoadingAlert 
 } from '../../utils/alerts';
 
 export default function TransferTokens(props) {
@@ -17,41 +21,41 @@ export default function TransferTokens(props) {
     //Redux
     const token_balance = useSelector(state => state.token_balance);
     const contract_address = useSelector(state => state.contract_address);
-    const abi = useSelector(state => state.abi);
+    const userAddress = useSelector(state => state.address);
+    const web3 = useSelector(state => state.web3);
     const dispatch = useDispatch(); 
 
     const transferTokens = (event) => {
         // Prevents the form from submitting 
         event.preventDefault(); 
-        const { web3 } = window
         const { getTokenBalance } = props; 
 
-        const contract = web3.eth.contract(abi).at(contract_address);
-        const weiSendingAmount = web3.toWei(sendingAmount);
+        const contract = new web3.eth.Contract(abi, contract_address);
+        const weiSendingAmount = web3.utils.toWei(sendingAmount);
 
-        // token_balance is returned from MetaMask as a string. Adding a + to token_balance changes it to a num for the comparison logic. 
+        // token_balance is returned as a string. Adding a + to token_balance changes it to an int for the comparison logic. 
         if(recipientAddress.includes('0x') && recipientAddress.length === 42 && sendingAmount > 0 && sendingAmount <= +token_balance) {
-            contract.transfer.sendTransaction(recipientAddress, weiSendingAmount, (err, res) => {
-                if(!err) {
-                    tokenTransferSuccessAlert(res);
-                    setRecipientAddress(''); 
-                    setSendingAmount(0);
+            blockchainLoadingAlert();
 
-                    // Updates the token balance in redux after tokens are sent. 
-                    setTimeout(() => {getTokenBalance()}, 35000)
-                }
-                else {
-                    tokenTransferErorrAlert();
-                }
+            contract.methods.transfer(recipientAddress, weiSendingAmount).send({from: userAddress})
+            .on('receipt', receipt => {
+                tokenTransferSuccessAlert(receipt.transactionHash);
+                setRecipientAddress(''); 
+                setSendingAmount(0);
+                getTokenBalance();
             })
-        }
-        else if(!recipientAddress.includes('0x') || recipientAddress.length !== 42) {
+            .on('error', error => {
+                console.log(error);
+                tokenTransferErorrAlert();
+            });
+            
+        } else if(!recipientAddress.includes('0x') || recipientAddress.length !== 42) {
             tokenAddressErorrAlert();
-        }
-        else if(0 > sendingAmount || sendingAmount > +token_balance) {
+            
+        } else {
             tokenAmountErrorAlert();
         }
-    };
+    }
 
     return (
         <div className='transfer-page-container'>
@@ -80,5 +84,5 @@ export default function TransferTokens(props) {
             </div>
         </div>
     )
-};
+}
 

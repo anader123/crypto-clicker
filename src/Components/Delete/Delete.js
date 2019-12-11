@@ -13,25 +13,27 @@ export default function Delete(props) {
     const user_id = useSelector(state => state.user_id);
 
     // Makes sure that the user can't access the delete page if they aren't logged in. 
-    useEffect((props) => {
-        axios.get('/api/check_session')
-            .then({})
-            .catch(() => {
+    useEffect( async (props) => {
+        try {
+            await axios.get('/api/check_session')
+        } 
+        catch {
                 props.history.push('/')
-            })
-    }, []);
+            };
+    }, [])
 
     // User's password is required for them to delete their account. 
-    const deleteAccount = (event) => {
+    const deleteAccount = async event => {
         event.preventDefault();
-        axios.post(`/api/delete/${user_id}`, {password, email})
-            .then(() => {
-                accountDeletedSuccessAlert();
-                props.history.push('/');
-            })
-            .catch(() => {
-                incorrectPasswordAlert();
-            });
+        try {
+            await axios.post(`/api/delete/${user_id}`, {password, email})
+            accountDeletedSuccessAlert();
+            props.history.push('/');
+        } 
+        catch (error) {
+            console.log(error);
+            incorrectPasswordAlert();
+        };
     }
 
     return (

@@ -10,7 +10,7 @@ import blockLoad from '../../img/green-blockchainLoading.png';
 // Alerts 
 import { 
     clickingSpeedAlert, 
-    tokenizeLoadingAlert, 
+    blockchainLoadingAlert, 
     tokensSuccessfullyExchangedAlert, 
     tokensExchangedErorrAlert 
 } from '../../utils/alerts';
@@ -59,23 +59,24 @@ export default function EthClicker(props) {
     }
 
     // Creates an axios call to the server that will mint tokens based on the user's click_balance and sets the state of click_balance to 0. Then an alert will tell the user if the transaction was successfull and display the transaction hash which links to Etherscan. 
-    const exchangeClicks = () => {
+    const exchangeClicks = async () => {
         const { getTokenBalance } = props; 
-        tokenizeLoadingAlert();
-        axios.put('/api/exchanage', {click_balance, address})
-            .then((res) => {
-                tokensSuccessfullyExchangedAlert(res);
-
-                dispatch({type: 'RESET_COUNT'});
-                // Makes sure that the user is connected to Ropsten before checking their token balance. 
-                if(network === 'Ropsten') {
-                    setTimeout(() => {getTokenBalance()}, 30000)
-                }
-            })
-            .catch(() => {
-                tokensExchangedErorrAlert();
-            })
-    };
+        blockchainLoadingAlert();
+        try {
+            const response = await axios.put('/api/exchanage', {click_balance, address});
+            tokensSuccessfullyExchangedAlert(response);
+    
+            dispatch({type: 'RESET_COUNT'});
+            // Makes sure that the user is connected to Ropsten before checking their token balance. 
+            if(network === 'Ropsten') {
+                setTimeout(() => {getTokenBalance()}, 10000);
+            }
+        } 
+        catch (error) {
+            console.log(error);
+            tokensExchangedErorrAlert();
+        }
+    }
 
     return (
         <div className='mid-dashboard-container'>

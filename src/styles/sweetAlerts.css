@@ -17,7 +17,6 @@
 .swal-title {
     font-family: 'Source Code Pro', monospace;
     color: #00ff00;
-    padding-bottom: 200em;
 }
 
 .swal-text, .swal-content, .swal-content a {
@@ -58,7 +57,7 @@
 
 @media (max-width: 450px) { 
   .swal-modal {
-    height: 73%;
+    height: 53%;
     width: 90%;
   }
   .network-container {

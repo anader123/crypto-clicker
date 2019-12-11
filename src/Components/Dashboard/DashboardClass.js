@@ -4,7 +4,9 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom'; 
 import './Dashboard.css';
 
+// Ethereum Items 
 import Web3 from 'web3';
+import { abi } from '../../utils/contractAbi';
 
 // Redux Actions
 import { 
@@ -19,7 +21,7 @@ import {
 
 // Alerts
 import { 
-    metaMaskRequiredAlert, 
+    ethWalletRequired, 
     metaMaskConnectedAlert, 
     networkErrorAlert 
 } from '../../utils/alerts';
@@ -47,7 +49,8 @@ class DashboardClass extends Component {
             this.checkSessionRefresh(); 
             const web3 = await new Web3(Web3.givenProvider);
             setWeb3(web3);
-        } catch (error) {
+        } 
+        catch (error) {
             this.props.history.push('/');
         }
     }
@@ -59,49 +62,61 @@ class DashboardClass extends Component {
             try {
                 const response = await axios.get('/api/session_info');
                 setInitialState(response.data);
-            } catch (error) {
+            } 
+            catch (error) {
                 console.log(error);
             }
         }
     }
 
-    // Enables the website to view the user's MetaMask's adddresses. If the person doesn't have MM installed, it pushes them to the learn more page where they can download it. 
+    // Enables the website to view the user's wallet adddresses. If the person doesn't have a wallet installed, it pushes them to the learn more page where they can download it. 
     connectMetaMask = async () => {
         const { setAddress, setMetaMask, } = this.props;
         if(window.ethereum === undefined) {
-            metaMaskRequiredAlert();
+            ethWalletRequired();
             this.props.history.push('/about'); 
         }
         else {
-            try {
-                const accounts = await window.ethereum.enable();
-
-                setAddress(accounts[0]);
-                setMetaMask(true);
-                metaMaskConnectedAlert(accounts);
-                this.checkAccount();
-                this.checkNetwork(); 
-                this.networkMM();
-
-                // Prevents the page from reloading when the user changes networks. 
-                window.ethereum.autoRefreshOnNetworkChange = false;
-
-            } catch (error) {
-                console.log(error)
+            if(window.ethereum.networkVersion === '3') {
+                try {
+                    const accounts = await window.ethereum.enable();
+    
+                    setAddress(accounts[0]);
+                    setMetaMask(true);
+                    metaMaskConnectedAlert(accounts);
+                    this.checkAccount();
+                    this.checkNetwork(); 
+                    this.networkMM();
+    
+                    // Prevents the page from reloading when the user changes networks. 
+                    window.ethereum.autoRefreshOnNetworkChange = false;
+    
+                } 
+                catch (error) {
+                    console.log(error)
+                }
+            } 
+            else {
+                networkErrorAlert();
             }
         }
     }
 
     // Gets token balance for user's address. The method will return 0 if the user isn't on the Ropsten Network. 
     getTokenBalance = async () => {
-        const { web3, abi, contract_address, setTokenBalance } = this.props;
+        const { web3, contract_address, setTokenBalance } = this.props;
         if(window.ethereum.selectedAddress !== null ) {
             const currentAddress = window.ethereum.selectedAddress; 
-            const contract = new web3.eth.Contract(abi, contract_address);
-            const balance = await contract.methods.balanceOf(currentAddress).call();
-            setTokenBalance(balance);
+            try {
+                const contract = new web3.eth.Contract(abi, contract_address);
+                const balance = await contract.methods.balanceOf(currentAddress).call();
+                setTokenBalance(balance);
+            }
+            catch (error) {
+                console.log(error);
+            }
         }
-    // Returns the user to the connect MetaMask page if they logout. 
+    // Returns the user to the connect wallet page if they logout. 
         else {
             setMetaMask(false);
         }
@@ -126,12 +141,8 @@ class DashboardClass extends Component {
     // Checks to see which Ethereum network the user is using in their MetaMask extension. 
     checkNetwork = () => {
         const { setNetwork } = this.props;
-        if(window.ethereum.networkVersion === '3') {
-            this.getTokenBalance();
-            setNetwork('Ropsten');
-        } else {
-            networkErrorAlert();
-        }
+        this.getTokenBalance();
+        setNetwork('Ropsten');
     }
 
     logout = async () => {
@@ -144,7 +155,8 @@ class DashboardClass extends Component {
             toggleTokenTransfer(false); 
             this.props.history.push('/'); 
 
-        } catch (error) {
+        } 
+        catch (error) {
             console.log(error)
         }
     }

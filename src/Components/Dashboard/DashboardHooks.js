@@ -8,7 +8,7 @@ import './Dashboard.css';
 import Web3 from 'web3';
 
 // Alerts
-import { metaMaskRequiredAlert, metaMaskConnectedAlert } from '../../utils/alerts';
+import { ethWalletRequired, metaMaskConnectedAlert } from '../../utils/alerts';
 
 
 // Components
@@ -62,7 +62,7 @@ export default function Dashboard(props) {
     // Enables the website to view the user's MetaMask's adddresses. If the person doesn't have MM installed, it pushes them to the learn more page where they can download it. 
     const connectMetaMask = async () => {
         if(window.ethereum === undefined) {
-            metaMaskRequiredAlert();
+            ethWalletRequired();
             props.history.push('/about'); 
         }
         else {

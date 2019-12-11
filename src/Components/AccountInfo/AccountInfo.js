@@ -14,30 +14,19 @@ export default function AccountInfo(props) {
             {!metaMaskConnected 
             ?
             (<div className='network-container'>
-                <p className='network-warning-text'>*Please make sure that you are connected to the 
-                    <Link to='/about' className='ropsten-info-text'>Ropsten Network</Link>
+                <p className='network-warning-text'>*Please make sure that you are connected to the <Link to='/about' className='ropsten-info-text'>Ropsten Network</Link>
                 </p>
-
                 <h3>Email: $ {email}</h3>
             </div>)
             :
             (<div className='network-container'>
-                <p className='network-warning-text'>*Please make sure that you are connected to the 
-                    <Link to='/about' className='ropsten-info-text'>Ropsten Network</Link>
+                <p className='network-warning-text'>*Please make sure that you are connected to the <Link to='/about' className='ropsten-info-text'>Ropsten Network</Link>
                 </p>
                 
                 <div className='user-eth-info'>
                     <h3>Email: $ {email}</h3>
-
                     <h3>Network: {network}</h3>
     
-                    <h3>Token Contract: 
-                        <a target="_blank" 
-                            rel="noopener noreferrer" 
-                            href={`https://ropsten.etherscan.io/token/${contract_address}`}>{contract_address}
-                        </a>
-                    </h3>
-
                     <h3>User Address: 
                         <a target="_blank" 
                             rel="noopener noreferrer" 
@@ -45,6 +34,7 @@ export default function AccountInfo(props) {
                         </a>
                     </h3>
 
+                    <h3>Token Contract:{contract_address}</h3>
                     <h3>Token Balance: {token_balance}</h3>
                 </div>
             </div>)

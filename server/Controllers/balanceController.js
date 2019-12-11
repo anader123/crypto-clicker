@@ -2,7 +2,7 @@
 require('dotenv').config();
 const Web3 = require('web3'); 
 const contractABI = require('./contractABI'); 
-const abi = contractABI.abi; 
+const { abi } = contractABI; 
 
 // ETH ENV Variables
 const {

@@ -5,7 +5,6 @@ import './EthClicker.css';
 
 // Images
 import ethLogo from '../../img/ethlogo.png';
-import blockLoad from '../../img/green-blockchainLoading.png';
 
 // Alerts 
 import { 
@@ -60,7 +59,7 @@ export default function EthClicker(props) {
 
     // Creates an axios call to the server that will mint tokens based on the user's click_balance and sets the state of click_balance to 0. Then an alert will tell the user if the transaction was successfull and display the transaction hash which links to Etherscan. 
     const exchangeClicks = async () => {
-        const { getTokenBalance } = props; 
+        const { getTokenBalance, address } = props; 
         blockchainLoadingAlert();
         try {
             const response = await axios.put('/api/exchanage', {click_balance, address});
@@ -69,7 +68,7 @@ export default function EthClicker(props) {
             dispatch({type: 'RESET_COUNT'});
             // Makes sure that the user is connected to Ropsten before checking their token balance. 
             if(network === 'Ropsten') {
-                setTimeout(() => {getTokenBalance()}, 10000);
+                setTimeout(() => {getTokenBalance(address)}, 10000);
             }
         } 
         catch (error) {

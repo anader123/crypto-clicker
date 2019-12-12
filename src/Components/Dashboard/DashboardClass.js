@@ -103,14 +103,14 @@ class DashboardClass extends Component {
     }
 
     // Gets token balance for user's address. The method will return 0 if the user isn't on the Ropsten Network. 
-    getTokenBalance = async () => {
-        const { web3, contract_address, setTokenBalance } = this.props;
-        if(window.ethereum.selectedAddress !== null ) {
-            const currentAddress = window.ethereum.selectedAddress; 
+    getTokenBalance = async (address) => {
+        const { web3, contract_address, setTokenBalance, setMetaMask } = this.props;
+        if(address) {
             try {
                 const contract = new web3.eth.Contract(abi, contract_address);
-                const balance = await contract.methods.balanceOf(currentAddress).call();
-                setTokenBalance(balance);
+                const balance = await contract.methods.balanceOf(address).call();
+                const convertedBalance = web3.utils.fromWei(balance, 'ether');
+                setTokenBalance(convertedBalance);
             }
             catch (error) {
                 console.log(error);
@@ -121,13 +121,12 @@ class DashboardClass extends Component {
             setMetaMask(false);
         }
     }
-    
 
     checkAccount = () => {
         const { setAddress } = this.props; 
         window.ethereum.on('accountsChanged', (accounts) => {
             setAddress(accounts[0])
-            this.getTokenBalance(); 
+            this.getTokenBalance(accounts[0]); 
         })
     }
 
@@ -140,8 +139,8 @@ class DashboardClass extends Component {
 
     // Checks to see which Ethereum network the user is using in their MetaMask extension. 
     checkNetwork = () => {
-        const { setNetwork } = this.props;
-        this.getTokenBalance();
+        const { setNetwork, address } = this.props;
+        this.getTokenBalance(address);
         setNetwork('Ropsten');
     }
 

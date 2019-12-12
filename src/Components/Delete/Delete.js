@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'; 
-import { useSelector } from 'react-redux';
+import React, { Component } from 'react'
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom'; 
 import axios from 'axios';
 import './Delete.css';
@@ -7,28 +7,37 @@ import './Delete.css';
 // Alerts
 import { accountDeletedSuccessAlert, incorrectPasswordAlert } from '../../utils/alerts';
 
-export default function Delete(props) {
-    const [password, setPassword] = useState('');
-    const email = useSelector(state => state.email);
-    const user_id = useSelector(state => state.user_id);
+class Delete extends Component {
+    constructor() {
+        super();
+        
+        this.state = {
+            password: ''
+        }
+    }
 
-    // Makes sure that the user can't access the delete page if they aren't logged in. 
-    useEffect( async (props) => {
+    componentDidMount = async () => {
         try {
             await axios.get('/api/check_session')
         } 
         catch {
-                props.history.push('/')
-            };
-    }, [])
+                this.props.history.push('/')
+        };
+    }
 
-    // User's password is required for them to delete their account. 
-    const deleteAccount = async event => {
+    deleteAccount = async event => {
+        const { user_id, email } = this.props;
+        const { password } = this.state;
         event.preventDefault();
         try {
-            await axios.post(`/api/delete/${user_id}`, {password, email})
-            accountDeletedSuccessAlert();
-            props.history.push('/');
+            if(password !== '') {
+                await axios.post(`/api/delete/${user_id}`, {password, email})
+                accountDeletedSuccessAlert();
+                this.props.history.push('/');
+            }
+            else {
+                incorrectPasswordAlert();
+            }
         } 
         catch (error) {
             console.log(error);
@@ -36,7 +45,10 @@ export default function Delete(props) {
         };
     }
 
-    return (
+    render() {
+        const { email } = this.props;
+        const { password } = this.state;
+        return (
         <div className='delete-page-container'>
             <h3 className='delete-page-title'>Are you sure that you want to delete your account?</h3>
             <p className='delete-page-text'>Please enter in your password below to confirm that you would like to delete your account.</p>
@@ -48,14 +60,21 @@ export default function Delete(props) {
                         type='password'
                         name='password'
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)}/> 
+                        onChange={(e) => this.setState({ password: e.target.value })}/> 
             </form>
 
             <div className='delete-page-buttons'>
-                <button className='btn red-btn delete-btn' onClick={deleteAccount}>{'<Delete Account/>'}</button>
+                <button className='btn red-btn delete-btn' onClick={this.deleteAccount}>{'<Delete Account/>'}</button>
                 <Link to='/dashboard'><span className='link-span'>Cancel</span></Link>
             </div>
             
         </div>
-    )
+        )
+    }
 }
+
+function mapStateToProps(state) {
+    return state; 
+}
+
+export default connect(mapStateToProps)(Delete); 

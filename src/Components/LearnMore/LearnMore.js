@@ -29,7 +29,7 @@ export default function LearnMore(props) {
 
             {/* Explains how to set up MetaMask for CryptoClicker  */}
             <h1 className='mm-title'>Installing and Setting Up MetaMask</h1>
-            <p className='warning-text'>*If you were redirected to this page after clicking "Connect MetaMask", it means that you need to install the MetaMask Chrome extension.</p>
+            <p className='warning-text'>*If you were redirected to this page after clicking "Connect Wallet", it means that you need to install the MetaMask Chrome extension.</p>
             <span className='mm-download-button'><a target="_blank" rel="noopener noreferrer" href='https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn'>{'<Download MetaMask/>'}</a></span>
 
             <p className='mm-text'>CryptoClicker runs on the Ropsten Test Network. As a result, you will first need to make sure that you are connected to Ropsten.</p>

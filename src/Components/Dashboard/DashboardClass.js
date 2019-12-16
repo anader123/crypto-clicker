@@ -153,7 +153,6 @@ class DashboardClass extends Component {
             setMetaMask(false); 
             toggleTokenTransfer(false); 
             this.props.history.push('/'); 
-
         } 
         catch (error) {
             console.log(error)

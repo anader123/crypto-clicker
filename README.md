@@ -19,7 +19,7 @@ Similar to Cookie Clicker, CryptoClicker is an incremental game where users can 
 require('dotenv').config();
 const Web3 = require('web3'); 
 const contractABI = require('./contractABI'); 
-const abi = contractABI.abi; 
+const { abi } = contractABI; 
 
 // ETH ENV Variables
 const {
@@ -34,8 +34,8 @@ const web3 = new Web3(WEB3_PROVIDER);
 web3.eth.accounts.wallet.add(MINTING_KEY); 
 const contract = new web3.eth.Contract(abi, CONTRACT_ADDRESS);
 
-// Function turns clicks into CryptoClicker Tokens and sets DB and session click_balance to 0
-const exchangeClicks = (req, res) => {
+// Turns clicks into CryptoClicker Tokens and sets DB click_balance to 0
+const exchangeClicks = async (req, res) => {
     const { click_balance, address } = req.body; 
     const user_id = req.session.user_id; 
     const string_click_balance = click_balance.toString();
@@ -56,13 +56,20 @@ const exchangeClicks = (req, res) => {
             data: tokenMintData
         };
 
-        // Sends transaction to the blockchain and setting click_balance in DB and session to 0. 
-        web3.eth.sendTransaction(transactionObject)
-            .then(web3Response => {
-                res.status(200).send(web3Response.transactionHash)
-                db.update_balance([0, user_id])
-                req.session.click_balance = 0;
-            })
-            .catch(err => console.log(err));
+        // Sends transaction to the blockchain and setting click_balance in DB and session to 0.
+        try {
+            await web3.eth.sendTransaction(transactionObject)
+                .on('receipt', (receipt) => {
+                    res.status(200).send(receipt.transactionHash);
+                    db.update_balance([0, user_id]);
+                    req.session.click_balance = 0;
+                })
+                .on('error', err => {
+                    console.log(err.message);
+                });
+        }
+        catch (err) {
+            console.log(err)
+        }
     }
 };

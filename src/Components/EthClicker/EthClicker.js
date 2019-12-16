@@ -21,7 +21,6 @@ export default function EthClicker(props) {
     // Redux 
     let click_balance = useSelector(state => state.click_balance); 
     const address = useSelector(state => state.address); 
-    const network = useSelector(state => state.network); 
     const dispatch = useDispatch(); 
     const incrementClick = (click_balance) => dispatch({type: 'INCREMENT_CLICK', payload: ++click_balance}); 
 
@@ -59,20 +58,25 @@ export default function EthClicker(props) {
 
     // Creates an axios call to the server that will mint tokens based on the user's click_balance and sets the state of click_balance to 0. Then an alert will tell the user if the transaction was successfull and display the transaction hash which links to Etherscan. 
     const exchangeClicks = async () => {
-        const { getTokenBalance, address } = props; 
-        blockchainLoadingAlert();
-        try {
-            const response = await axios.put('/api/exchanage', {click_balance, address});
-            tokensSuccessfullyExchangedAlert(response);
-    
-            dispatch({type: 'RESET_COUNT'});
-            // Makes sure that the user is connected to Ropsten before checking their token balance. 
-            if(network === 'Ropsten') {
-                setTimeout(() => {getTokenBalance(address)}, 10000);
+        const { getTokenBalance } = props; 
+        if(click_balance >= 50) {
+            blockchainLoadingAlert();
+            try {
+                const response = await axios.put('/api/exchanage', {click_balance, address});
+                tokensSuccessfullyExchangedAlert(response);
+        
+                dispatch({type: 'RESET_COUNT'});
+                // Makes sure that the user is connected to Ropsten before checking their token balance. 
+                if(window.ethereum.networkVersion === '3') {
+                    setTimeout(() => {getTokenBalance(address)}, 10000);
+                }
+            } 
+            catch (error) {
+                console.log(error);
+                tokensExchangedErorrAlert();
             }
-        } 
-        catch (error) {
-            console.log(error);
+        }
+        else {
             tokensExchangedErorrAlert();
         }
     }

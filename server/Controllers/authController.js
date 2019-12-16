@@ -17,7 +17,7 @@ const register = async (req, res) => {
     const newUser = await db.register_user([email, passwordHash]); 
 
     // Initializing a balance for the user 
-    const newUserBalance = await db.create_new_balance([newUser[0].user_id])
+    const newUserBalance = await db.create_new_balance([newUser[0].user_id]);
 
     // Deleting Unhashed Password 
     delete newUser[0].password;
@@ -34,7 +34,7 @@ const register = async (req, res) => {
     };
 
     res.status(200).send(accountInfo)
-};
+}
 
 const login = async (req, res) => {
     const { email, password } = req.body; 
@@ -64,18 +64,21 @@ const login = async (req, res) => {
     } else {
         res.status(401).send('Invalid credentials, please try again');
     }
-};
+}
 
 const logout = async (req, res) => {
     const click_balance = req.body.click_balance; 
     const user_id = req.session.user_id; 
     const db = req.app.get('db'); 
-    db.update_balance([click_balance, user_id])
-        .then(() => {
-            req.session.destroy();
-            res.status(200).send('User logged out')
-        })
-};
+    try {
+        await db.update_balance([click_balance, user_id]);
+        req.session.destroy();
+        res.status(200).send('User logged out');
+    }
+    catch {
+        res.status(500).send('Error logging out');
+    }
+}
 
 const deleteUser = async (req, res) => {
     const user_id = +req.params.user_id; 
@@ -86,14 +89,19 @@ const deleteUser = async (req, res) => {
 
     if(authedPassword) {
         const db = req.app.get('db'); 
-        db.delete_user([user_id, user_id])
-        .then(() => {
+        try {
+            await db.delete_user([user_id, user_id]);
             req.session.destroy();
-            res.status(200).send('Account has been deleted')
-        })} else {
-            res.status(401).send('Invalid credentials, please try again');
+            res.status(200).send('Account has been deleted');
         }
-};
+        catch {
+            res.status(500).send('Error deleting your account')
+        }
+    }  
+    else {
+        res.status(401).send('Invalid credentials, please try again');
+    }
+}
 
 // Checks to see if the users is logged in. 
 const checkSession = (req, res) => {
@@ -103,7 +111,7 @@ const checkSession = (req, res) => {
     else {
         res.status(200).send('user is signed in')
     }
-};
+}
 
 const getSessionInfo = (req, res) => {
     const userInfo = {
@@ -112,7 +120,7 @@ const getSessionInfo = (req, res) => {
         email: req.session.email
     }
     res.status(200).send(userInfo)
-};
+}
 
 const verifySession = (req, res, next) => {
     if(req.session.email !== undefined) {
@@ -121,7 +129,7 @@ const verifySession = (req, res, next) => {
     else {
         res.status(403).send('not authorized')
     }
-};
+}
 
 module.exports = {
     register, 

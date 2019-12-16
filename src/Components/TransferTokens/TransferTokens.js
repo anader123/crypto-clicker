@@ -28,7 +28,7 @@ export default function TransferTokens(props) {
     const transferTokens = (event) => {
         // Prevents the form from submitting 
         event.preventDefault(); 
-        const { getTokenBalance, address } = props; 
+        const { getTokenBalance } = props; 
 
         const contract = new web3.eth.Contract(abi, contract_address);
         const weiSendingAmount = web3.utils.toWei(sendingAmount);
@@ -42,7 +42,7 @@ export default function TransferTokens(props) {
                 tokenTransferSuccessAlert(receipt.transactionHash);
                 setRecipientAddress(''); 
                 setSendingAmount(0);
-                getTokenBalance(address);
+                getTokenBalance(userAddress);
             })
             .on('error', error => {
                 console.log(error);
